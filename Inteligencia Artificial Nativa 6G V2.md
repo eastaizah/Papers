@@ -22,7 +22,7 @@ El concepto de "IA nativa" (AI-native) en el contexto de 6G se refiere a arquite
 
 2. **Sustitución de algoritmos clásicos**: Técnicas tradicionales basadas en estimadores de máxima verosimilitud (ML) o mínimos cuadrados (LS) son reemplazadas o aumentadas por modelos de aprendizaje profundo que capturan no-linealidades complejas del canal [5], [6].
 
-3. **Colaboración distribuida**: Múltiples agentes de IA distribuidos en la red (en estaciones base, dispositivos de usuario, y superficies inteligentes) colaboran mediante aprendizaje federado o multi-agente para optimizar el rendimiento global, [7].
+3. **Colaboración distribuida**: Múltiples agentes de IA distribuidos en la red (en estaciones base, dispositivos de usuario, y superficies inteligentes) colaboran mediante aprendizaje federado o multi-agente para optimizar el rendimiento global [7].
 
 ### C. Estructura del Artículo
 
@@ -376,7 +376,7 @@ $$
 \boldsymbol{\Phi} = \text{diag}(\beta_1 e^{j\theta_1}, \beta_2 e^{j\theta_2}, \ldots, \beta_M e^{j\theta_M}) \tag{27}
 $$
 
-donde $\beta_m \in $ es la amplitud de reflexión y $\theta_m \in [0, 2\pi)$ es el desplazamiento de fase del elemento $m$.
+donde $\beta_m \in [0,1]$ es la amplitud de reflexión y $\theta_m \in [0, 2\pi)$ es el desplazamiento de fase del elemento $m$.
 
 El canal efectivo en un sistema con RIS se compone de dos enlaces [25]:
 
@@ -400,7 +400,7 @@ $$
 \end{aligned} \tag{29}
 $$
 
-Este es un problema de optimización no-convexo altamente acoplado. Métodos clásicos como la optimización alternada (AO), sucesivas aproximaciones convexas (SCA), o el método de Riemannian manifold tienen alta complejidad computacional ($O(M^3 K^2)$) y requieren múltiples iteraciones ($10-100$), inviable para actualización en tiempo real, [27].
+Este es un problema de optimización no-convexo altamente acoplado. Métodos clásicos como la optimización alternada (AO), sucesivas aproximaciones convexas (SCA), o el método de Riemannian manifold tienen alta complejidad computacional ($O(M^3 K^2)$) y requieren múltiples iteraciones ($10-100$), inviable para actualización en tiempo real [27].
 
 ### C. Aprendizaje Profundo para Configuración de RIS
 
@@ -420,7 +420,7 @@ $$
 \theta_m = \pi(\tanh(z_m^{\theta}) + 1) \tag{31}
 $$
 
-- **Capa de amplitud**: Aplica sigmoide para asegurar $\beta_m \in $:
+- **Capa de amplitud**: Aplica sigmoide para asegurar $\beta_m \in [0,1]$:
 
 $$
 \beta_m = \sigma(z_m^{\beta}) \tag{32}
@@ -480,7 +480,7 @@ Esta arquitectura garantiza interpretabilidad (cada capa corresponde a una itera
 
 ### F. Desempeño y Resultados
 
-Experimentos en sistemas con $M = 64$-$256$ elementos RIS muestran,:
+Experimentos en sistemas con $M = 64$-$256$ elementos RIS muestran:
 
 - **DNN-based RIS** logran $90-95\%$ del rendimiento de métodos iterativos con $100\times$ reducción en tiempo de cómputo
 - **MADDPG** converge en $500-1000$ episodios y supera métodos distribuidos baseline en $20-30\%$ en throughput
