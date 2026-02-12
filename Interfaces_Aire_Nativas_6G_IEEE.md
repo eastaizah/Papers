@@ -1014,9 +1014,7 @@ Salida: Parámetros optimizados θ_enc, θ_dec
 12.  Si e mod k_eval == 0:
 13.    Evaluar BLER en conjunto de validación
 14.    Si BLER_val < BLER_best:
-15.      Guardar checkpoi
-
-nt θ_enc, θ_dec
+15.      Guardar checkpoint θ_enc, θ_dec
 16.    Fin si
 17.  Fin si
 18. Fin para (época)
