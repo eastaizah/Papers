@@ -139,8 +139,6 @@ Este artículo realiza las siguientes contribuciones principales al estado del a
 
 ### E. Estructura del Artículo
 
-### D. Estructura del Artículo
-
 El resto de este artículo está organizado como sigue. La Sección II presenta técnicas de IA para estimación y predicción de canal. La Sección III analiza detección de señales con redes neuronales. La Sección IV explora beamforming inteligente y gestión de haz. La Sección V examina gestión de recursos espectrales mediante aprendizaje por refuerzo. La Sección VI discute modulación adaptativa y formas de onda inteligentes. La Sección VII introduce comunicaciones semánticas y orientadas a tareas. La Sección VIII aborda desafíos de implementación y consideraciones prácticas. La Sección IX concluye con direcciones futuras de investigación.
 
 
