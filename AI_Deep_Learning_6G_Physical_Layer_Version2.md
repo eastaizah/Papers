@@ -8,21 +8,21 @@
 
 ## I. INTRODUCCIÓN
 
-La evolución de las redes de comunicaciones inalámbricas [1]. ha estado marcada por incrementos sistemáticos en capacidad, velocidad, latencia reducida y eficiencia espectral. Mientras que las generaciones anteriores (3G, 4G, 5G) se basaron principalmente en refinamientos de técnicas tradicionales de procesamiento de señales y teoría de la información, la sexta generación (6G) y sistemas posteriores [1] representan un cambio paradigmático hacia arquitecturas nativas de Inteligencia Artificial (IA) en todos los niveles del stack de comunicaciones, particularmente en la capa física,.
+La evolución de las redes de comunicaciones inalámbricas ha estado marcada por incrementos sistemáticos en capacidad, velocidad, latencia reducida y eficiencia espectral [1]. Mientras que las generaciones anteriores (3G, 4G, 5G) se basaron principalmente en refinamientos de técnicas tradicionales de procesamiento de señales y teoría de la información, la sexta generación (6G) y sistemas posteriores [1] representan un cambio paradigmático hacia arquitecturas nativas de Inteligencia Artificial (IA) en todos los niveles del stack de comunicaciones, particularmente en la capa física.
 
-La capa física de los sistemas de comunicaciones inalámbricas tradicionales se ha diseñado históricamente mediante enfoques analíticos basados en modelos matemáticos del canal de propagación, teoría de la información, y optimizaciones convexas [2]. Sin embargo, estos métodos enfrentan limitaciones fundamentales cuando se confrontan con la complejidad creciente de escenarios 6G, que incluyen comunicaciones terahertz, superficies inteligentes reconfigurables (RIS) [2, 3], MIMO masivo de ultra-alta dimensión, canales altamente no lineales, y requisitos de latencia ultra-baja,. En este contexto, las técnicas de Deep Learning (DL) emergen como una alternativa prometedora capaz de aprender representaciones óptimas directamente de los datos sin asumir modelos de canal simplificados [4].
+La capa física de los sistemas de comunicaciones inalámbricas tradicionales se ha diseñado históricamente mediante enfoques analíticos basados en modelos matemáticos del canal de propagación, teoría de la información, y optimizaciones convexas [2]. Sin embargo, estos métodos enfrentan limitaciones fundamentales cuando se confrontan con la complejidad creciente de escenarios 6G, que incluyen comunicaciones terahertz, superficies inteligentes reconfigurables (RIS) [2, 3], MIMO masivo de ultra-alta dimensión, canales altamente no lineales, y requisitos de latencia ultra-baja. En este contexto, las técnicas de Deep Learning (DL) emergen como una alternativa prometedora capaz de aprender representaciones óptimas directamente de los datos sin asumir modelos de canal simplificados [4].
 
 ### A. Motivación para IA en la Capa Física
 
-La motivación fundamental para integrar IA y DL en la capa física de sistemas 6G surge de múltiples factores convergentes,:
+La motivación fundamental para integrar IA y DL en la capa física de sistemas 6G surge de múltiples factores convergentes:
 
-1. **Complejidad de Modelado**: Los canales de comunicación modernos, especialmente en frecuencias milimétricas (mmWave) y terahertz (THz), exhiben características de propagación extremadamente complejas incluyendo desvanecimiento severo, bloqueo dinámico, dispersión no lineal, y efectos atmosféricos que son difíciles de modelar analíticamente,.
+1. **Complejidad de Modelado**: Los canales de comunicación modernos, especialmente en frecuencias milimétricas (mmWave) y terahertz (THz), exhiben características de propagación extremadamente complejas incluyendo desvanecimiento severo, bloqueo dinámico, dispersión no lineal, y efectos atmosféricos que son difíciles de modelar analíticamente.
 
-2 [4]. **Alta Dimensionalidad**: Los sistemas MIMO masivos con cientos o miles de antenas generan espacios de señales de dimensionalidad extremadamente alta donde los métodos de optimización tradicionales se vuelven computacionalmente intratables,.
+2. **Alta Dimensionalidad**: Los sistemas MIMO masivos con cientos o miles de antenas generan espacios de señales de dimensionalidad extremadamente alta donde los métodos de optimización tradicionales se vuelven computacionalmente intratables [4].
 
 3. **Adaptabilidad Dinámica**: Los sistemas 6G requieren adaptación en tiempo real a condiciones de canal rápidamente cambiantes, patrones de tráfico heterogéneos, y requisitos de calidad de servicio (QoS) diversos que superan las capacidades de algoritmos pre-programados [7].
 
-4. **Optimización End-to-End**: El enfoque tradicional de optimización por componentes individuales puede resultar sub-óptimo. Las redes neuronales profundas permiten optimización conjunta de toda la cadena de transmisión-recepción,.
+4. **Optimización End-to-End**: El enfoque tradicional de optimización por componentes individuales puede resultar sub-óptimo. Las redes neuronales profundas permiten optimización conjunta de toda la cadena de transmisión-recepción.
 
 5. **Aprendizaje de Patrones Ocultos**: El DL puede descubrir estructuras y regularidades en datos de canal que no son evidentes para diseñadores humanos, potencialmente superando esquemas diseñados manualmente [9].
 
@@ -42,13 +42,13 @@ $$\hat{\mathbf{s}} = f_{\text{RX}}(\mathbf{y}, \hat{\mathbf{H}}) = f_{\text{RX}}
 
 donde $\mathbf{s}$ son los bits de información, $\hat{\mathbf{H}}$ es una estimación del canal, y $\hat{\mathbf{s}}$ son los bits decodificados [12].
 
-En contraste, el enfoque nativo de IA considera el sistema de comunicación completo como una función parametrizada por redes neuronales profundas $f_{\theta}(\cdot)$ y $g_{\phi}(\cdot)$ para transmisión y recepción respectivamente, optimizadas end-to-end: [13].
+En contraste, el enfoque nativo de IA considera el sistema de comunicación completo como una función parametrizada por redes neuronales profundas $f_{\theta}(\cdot)$ y $g_{\phi}(\cdot)$ para transmisión y recepción respectivamente, optimizadas end-to-end [13]:
 
 $$\theta^*, \phi^* = \arg\min_{\theta,\phi} \mathbb{E}_{\mathbf{s},\mathbf{H},\mathbf{n}}\left[\mathcal{L}(\mathbf{s}, g_{\phi}(\mathbf{H}f_{\theta}(\mathbf{s}) + \mathbf{n}))\right]$$
 
-donde $\mathcal{L}(\cdot)$ es una función de pérdida diferenciable (típicamente entropía cruzada para clasificación de símbolos) [14]. y la esperanza se toma sobre la distribución conjunta de mensajes, realizaciones de canal, y ruido,.
+donde $\mathcal{L}(\cdot)$ es una función de pérdida diferenciable (típicamente entropía cruzada para clasificación de símbolos) [14] y la esperanza se toma sobre la distribución conjunta de mensajes, realizaciones de canal, y ruido.
 
-Esta formulación permite que el sistema aprenda representaciones óptimas directamente de los datos [4]., potencialmente superando diseños manuales al explotar regularidades estadísticas que no son capturadas por modelos simplificados.
+Esta formulación permite que el sistema aprenda representaciones óptimas directamente de los datos [4], potencialmente superando diseños manuales al explotar regularidades estadísticas que no son capturadas por modelos simplificados.
 
 ### C. Arquitecturas Fundamentales de Deep Learning para PHY
 
@@ -73,7 +73,7 @@ donde el índice $k$ representa desplazamiento temporal o espacial. Las CNN son 
 $$\mathbf{h}_t = \sigma(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{W}_{xh}\mathbf{x}_t + \mathbf{b}_h)$$
 $$\mathbf{o}_t = \mathbf{W}_{ho}\mathbf{h}_t + \mathbf{b}_o$$
 
-Las Long Short-Term Memory (LSTM) [27] networks extienden este concepto con mecanismos de compuerta para capturar dependencias de largo alcance:
+Las Long Short-Term Memory (LSTM) [27] redes extienden este concepto con mecanismos de compuerta para capturar dependencias de largo alcance:
 
 $$\mathbf{f}_t = \sigma_g(\mathbf{W}_f\mathbf{x}_t + \mathbf{U}_f\mathbf{h}_{t-1} + \mathbf{b}_f)$$
 $$\mathbf{i}_t = \sigma_g(\mathbf{W}_i\mathbf{x}_t + \mathbf{U}_i\mathbf{h}_{t-1} + \mathbf{b}_i)$$
@@ -1182,7 +1182,7 @@ Entrenamiento end-to-end maximiza recompensa de tarea sujeto a restricciones de 
 
 **Generalización**: Modelos entrenados en datasets específicos pueden no generalizar a datos out-of-distribution.
 
-**Solución**: Meta-learning, domain adaptation , continual learning
+**Solución**: Meta-learning, domain adaptation, continual learning
 
 **Seguridad y Privacidad**: Representaciones semánticas pueden revelar información sensible.
 
