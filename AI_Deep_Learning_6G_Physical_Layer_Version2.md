@@ -68,7 +68,7 @@ $$\mathbf{h}^{(l)}_i = \sigma\left(\sum_{j}\sum_{k}\mathbf{W}^{(l)}_{i,j,k}\math
 
 donde el índice $k$ representa desplazamiento temporal o espacial. Las CNN son particularmente efectivas para procesamiento de secuencias temporales de símbolos o explotar correlación espacial en arrays de antenas,.
 
-**3) Redes Neuronales Recurrentes (RNN) y LSTM**: Para capturar dependencias temporales en secuencias de símbolos o evolución temporal del canal [19]., se utilizan arquitecturas recurrentes:
+**3) Redes Neuronales Recurrentes (RNN) y LSTM**: Para capturar dependencias temporales en secuencias de símbolos o evolución temporal del canal [19], se utilizan arquitecturas recurrentes:
 
 $$\mathbf{h}_t = \sigma(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{W}_{xh}\mathbf{x}_t + \mathbf{b}_h)$$
 $$\mathbf{o}_t = \mathbf{W}_{ho}\mathbf{h}_t + \mathbf{b}_o$$
@@ -268,7 +268,7 @@ donde $\mathbf{h}_i$ son estados ocultos del encoder, $\mathbf{s}_t$ es el estad
 
 ### D. Explotación de Estructura Dispersa
 
-Los canales mmWave y THz típicamente exhiben estructura dispersa en el dominio angular debido a propagación limitada por trayectorias, [17]. Esta dispersidad puede explotarse para reducir overhead de estimación y complejidad computacional.
+Los canales mmWave y THz típicamente exhiben estructura dispersa en el dominio angular debido a propagación limitada por trayectorias [17]. Esta dispersidad puede explotarse para reducir overhead de estimación y complejidad computacional.
 
 **Compressed Sensing (CS) con DL**: La teoría de compressed sensing establece que señales dispersas pueden recuperarse de mediciones sub-Nyquist mediante optimización $\ell_1$:
 
@@ -294,7 +294,7 @@ Los parámetros $\mathbf{W}^{(k)}$ y $\lambda^{(k)}$ se aprenden para cada capa 
 
 ### E. Estimación de Canal sin Pilotos mediante DL
 
-Los esquemas de estimación sin pilotos (blind channel estimation) explotan estructura de señales de datos para estimar el canal sin dedicar recursos explícitos a pilotos, maximizando eficiencia espectral, [11].
+Los esquemas de estimación sin pilotos (blind channel estimation) explotan estructura de señales de datos para estimar el canal sin dedicar recursos explícitos a pilotos, maximizando eficiencia espectral [11].
 
 **Autocodificadores para Estimación Blind**: Un autocodificador puede aprender conjuntamente codificación, estimación de canal, y decodificación:
 
@@ -1624,7 +1624,7 @@ Revela qué patrones detecta neurona $l$.
 - Pre-train once on large dataset
 - Fine-tune for specific scenarios ($\approx 1\%$ del costo)
 
-**3) Neural Architecture Search Eficiente**: Métodos como ENAS, DARTS reducen costo de búsqueda de arquitecturas en $1000\times$ [50].
+**3) Neural Architecture Search Eficiente**: Métodos como ENAS y DARTS reducen costo de búsqueda de arquitecturas en órdenes de magnitud.
 
 **4) Model Sharing**: Múltiples aplicaciones comparten modelos base:
 
