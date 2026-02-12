@@ -8,9 +8,9 @@
 
 ## I. INTRODUCCIÓN
 
-La evolución de las redes de comunicaciones inalámbricas ha estado marcada por incrementos sistemáticos en capacidad, velocidad, latencia reducida y eficiencia espectral. Mientras que las generaciones anteriores (3G, 4G, 5G) se basaron principalmente en refinamientos de técnicas tradicionales de procesamiento de señales y teoría de la información, la sexta generación (6G) y sistemas posteriores representan un cambio paradigmático [1], [2] hacia arquitecturas nativas de Inteligencia Artificial (IA) en todos los niveles del stack de comunicaciones, particularmente en la capa física.
+La evolución de las redes de comunicaciones inalámbricas ha estado marcada por incrementos sistemáticos en capacidad, velocidad, latencia reducida y eficiencia espectral. Mientras que las generaciones anteriores (3G, 4G, 5G) se basaron principalmente en refinamientos de técnicas tradicionales de procesamiento de señales y teoría de la información, la sexta generación (6G) y sistemas posteriores representan un cambio paradigmático [1], [2], hacia arquitecturas nativas de Inteligencia Artificial (IA) en todos los niveles del stack de comunicaciones, particularmente en la capa física.
 
-La capa física de los sistemas de comunicaciones inalámbricas tradicionales se ha diseñado históricamente mediante enfoques analíticos basados en modelos matemáticos del canal de propagación, teoría de la información, y optimizaciones convexas. Sin embargo, estos métodos enfrentan limitaciones fundamentales cuando se confrontan con la complejidad creciente de escenarios 6G, que incluyen comunicaciones terahertz, superficies inteligentes reconfigurables (RIS) [7], MIMO masivo de ultra-alta dimensión, canales altamente no lineales, y requisitos de latencia ultra-baja. En este contexto, las técnicas de Deep Learning (DL) emergen como una alternativa prometedora [3], [4] capaz de aprender representaciones óptimas directamente de los datos sin asumir modelos de canal simplificados.
+La capa física de los sistemas de comunicaciones inalámbricas tradicionales se ha diseñado históricamente mediante enfoques analíticos basados en modelos matemáticos del canal de propagación, teoría de la información, y optimizaciones convexas. Sin embargo, estos métodos enfrentan limitaciones fundamentales cuando se confrontan con la complejidad creciente de escenarios 6G, que incluyen comunicaciones terahertz, superficies inteligentes reconfigurables (RIS) [3], MIMO masivo de ultra-alta dimensión, canales altamente no lineales, y requisitos de latencia ultra-baja. En este contexto, las técnicas de Deep Learning (DL) emergen como una alternativa prometedora [4], [5], capaz de aprender representaciones óptimas directamente de los datos sin asumir modelos de canal simplificados.
 
 ### A. Motivación para IA en la Capa Física
 
@@ -18,17 +18,17 @@ La motivación fundamental para integrar IA y DL en la capa física de sistemas 
 
 1. **Complejidad de Modelado**: Los canales de comunicación modernos, especialmente en frecuencias milimétricas (mmWave) y terahertz (THz), exhiben características de propagación extremadamente complejas incluyendo desvanecimiento severo, bloqueo dinámico, dispersión no lineal, y efectos atmosféricos que son difíciles de modelar analíticamente.
 
-2. **Alta Dimensionalidad**: Los sistemas MIMO masivos con cientos o miles de antenas [25], [26] generan espacios de señales de dimensionalidad extremadamente alta donde los métodos de optimización tradicionales se vuelven computacionalmente intratables.
+2. **Alta Dimensionalidad**: Los sistemas MIMO masivos con cientos o miles de antenas [6], [7], generan espacios de señales de dimensionalidad extremadamente alta donde los métodos de optimización tradicionales se vuelven computacionalmente intratables.
 
 3. **Adaptabilidad Dinámica**: Los sistemas 6G requieren adaptación en tiempo real a condiciones de canal rápidamente cambiantes, patrones de tráfico heterogéneos, y requisitos de calidad de servicio (QoS) diversos que superan las capacidades de algoritmos pre-programados.
 
 4. **Optimización End-to-End**: El enfoque tradicional de optimización por componentes individuales puede resultar sub-óptimo. Las redes neuronales profundas permiten optimización conjunta de toda la cadena de transmisión-recepción.
 
-5. **Aprendizaje de Patrones Ocultos**: El DL puede descubrir estructuras y regularidades en datos de canal que no son evidentes para diseñadores humanos, potencialmente superando esquemas diseñados manualmente. [8], [9]
+5. **Aprendizaje de Patrones Ocultos**: El DL puede descubrir estructuras y regularidades en datos de canal que no son evidentes para diseñadores humanos, potencialmente superando esquemas diseñados manualmente [8].,
 
 ### B. Transición desde Enfoques Tradicionales a Nativos de IA
 
-El diseño tradicional de la capa física se fundamenta en la descomposición del sistema de comunicaciones en bloques funcionales independientes: codificación de canal, modulación, ecualización, demodulación, y decodificación. Cada bloque se optimiza individualmente basándose en modelos teóricos del canal y criterios como la minimización de la probabilidad de error de bit (BER) o maximización de la capacidad de Shannon [5], [6].
+El diseño tradicional de la capa física se fundamenta en la descomposición del sistema de comunicaciones en bloques funcionales independientes: codificación de canal, modulación, ecualización, demodulación, y decodificación. Cada bloque se optimiza individualmente basándose en modelos teóricos del canal y criterios como la minimización de la probabilidad de error de bit (BER) o maximización de la capacidad de Shannon,.
 
 Matemáticamente, consideremos el modelo de sistema discreto en tiempo:
 
@@ -42,7 +42,7 @@ $$\hat{\mathbf{s}} = f_{\text{RX}}(\mathbf{y}, \hat{\mathbf{H}}) = f_{\text{RX}}
 
 donde $\mathbf{s}$ son los bits de información, $\hat{\mathbf{H}}$ es una estimación del canal, y $\hat{\mathbf{s}}$ son los bits decodificados.
 
-En contraste, el enfoque nativo de IA considera el sistema de comunicación completo [8], [9] como una función parametrizada por redes neuronales profundas $f_{\theta}(\cdot)$ y $g_{\phi}(\cdot)$ para transmisión y recepción respectivamente, optimizadas end-to-end:
+En contraste, el enfoque nativo de IA considera el sistema de comunicación completo, como una función parametrizada por redes neuronales profundas $f_{\theta}(\cdot)$ y $g_{\phi}(\cdot)$ para transmisión y recepción respectivamente, optimizadas end-to-end:
 
 $$\theta^*, \phi^* = \arg\min_{\theta,\phi} \mathbb{E}_{\mathbf{s},\mathbf{H},\mathbf{n}}\left[\mathcal{L}(\mathbf{s}, g_{\phi}(\mathbf{H}f_{\theta}(\mathbf{s}) + \mathbf{n}))\right]$$
 
@@ -54,7 +54,7 @@ Esta formulación permite que el sistema aprenda representaciones óptimas direc
 
 Las arquitecturas de DL aplicadas a la capa física incluyen diversos paradigmas, cada uno con características particulares adecuadas para diferentes sub-problemas,:
 
-**1) Redes Feedforward Profundas (DNN)**: Las redes neuronales totalmente conectadas con múltiples capas ocultas [10], [11] constituyen la arquitectura más básica. Para un problema de detección de símbolos, una DNN mapea señales recibidas $\mathbf{y}$ a estimaciones de bits transmitidos:
+**1) Redes Feedforward Profundas (DNN)**: Las redes neuronales totalmente conectadas con múltiples capas ocultas, constituyen la arquitectura más básica. Para un problema de detección de símbolos, una DNN mapea señales recibidas $\mathbf{y}$ a estimaciones de bits transmitidos:
 
 $$\mathbf{h}^{(0)} = \mathbf{y}$$
 $$\mathbf{h}^{(l)} = \sigma\left(\mathbf{W}^{(l)}\mathbf{h}^{(l-1)} + \mathbf{b}^{(l)}\right), \quad l = 1,\ldots,L-1$$
@@ -66,14 +66,14 @@ donde $\sigma(\cdot)$ es una función de activación no lineal (ReLU, tanh), $\m
 
 $$\mathbf{h}^{(l)}_i = \sigma\left(\sum_{j}\sum_{k}\mathbf{W}^{(l)}_{i,j,k}\mathbf{h}^{(l-1)}_{j,k} + b^{(l)}_i\right)$$
 
-donde el índice $k$ representa desplazamiento temporal o espacial. [11] Las CNN son particularmente efectivas para procesamiento de secuencias temporales de símbolos o explotar correlación espacial en arrays de antenas,.
+donde el índice $k$ representa desplazamiento temporal o espacial. Las CNN son particularmente efectivas para procesamiento de secuencias temporales de símbolos o explotar correlación espacial en arrays de antenas,.
 
 **3) Redes Neuronales Recurrentes (RNN) y LSTM**: Para capturar dependencias temporales en secuencias de símbolos o evolución temporal del canal, se utilizan arquitecturas recurrentes:
 
 $$\mathbf{h}_t = \sigma(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{W}_{xh}\mathbf{x}_t + \mathbf{b}_h)$$
 $$\mathbf{o}_t = \mathbf{W}_{ho}\mathbf{h}_t + \mathbf{b}_o$$
 
-Las redes Long Short-Term Memory (LSTM) extienden este concepto [12] con mecanismos de compuerta para capturar dependencias de largo alcance:
+Las redes Long Short-Term Memory (LSTM) extienden este concepto con mecanismos de compuerta para capturar dependencias de largo alcance:
 
 $$\mathbf{f}_t = \sigma_g(\mathbf{W}_f\mathbf{x}_t + \mathbf{U}_f\mathbf{h}_{t-1} + \mathbf{b}_f)$$
 $$\mathbf{i}_t = \sigma_g(\mathbf{W}_i\mathbf{x}_t + \mathbf{U}_i\mathbf{h}_{t-1} + \mathbf{b}_i)$$
@@ -94,23 +94,23 @@ La función objetivo es minimizar la pérdida de reconstrucción:
 
 $$\mathcal{L}(\theta_{\text{enc}}, \theta_{\text{dec}}) = \mathbb{E}_{\mathbf{s},\mathcal{C}}\left[\|\mathbf{s} - \hat{\mathbf{s}}\|^2\right]$$
 
-Los autocodificadores variacionales (VAE) introducen regularización probabilística [13]:
+Los autocodificadores variacionales (VAE) introducen regularización probabilística:
 
 $$\mathcal{L}_{\text{VAE}} = \mathbb{E}_{q_{\phi}(\mathbf{z}|\mathbf{s})}\left[\log p_{\theta}(\mathbf{s}|\mathbf{z})\right] - D_{KL}(q_{\phi}(\mathbf{z}|\mathbf{s})\|p(\mathbf{z}))$$
 
 donde $D_{KL}$ es la divergencia de Kullback-Leibler que actúa como regularizador,.
 
-**5) Redes Generativas Adversarias (GAN)**: Las GAN se utilizan para modelado y síntesis de canales realistas [14] mediante competencia entre generador y discriminador:
+**5) Redes Generativas Adversarias (GAN)**: Las GAN se utilizan para modelado y síntesis de canales realistas mediante competencia entre generador y discriminador:
 
 $$\min_G \max_D \mathbb{E}_{\mathbf{h}\sim p_{\text{data}}(\mathbf{h})}\left[\log D(\mathbf{h})\right] + \mathbb{E}_{\mathbf{z}\sim p_{\mathbf{z}}(\mathbf{z})}\left[\log(1-D(G(\mathbf{z})))\right]$$
 
-El generador $G(\mathbf{z})$ aprende a generar realizaciones de canal sintéticas [14] indistinguibles de datos reales según el discriminador $D(\mathbf{h})$,.
+El generador $G(\mathbf{z})$ aprende a generar realizaciones de canal sintéticas indistinguibles de datos reales según el discriminador $D(\mathbf{h})$,.
 
-**6) Transformers y Mecanismos de Atención**: Introducidos originalmente para procesamiento de lenguaje natural, los transformers [15] se han adaptado para procesamiento de señales en comunicaciones mediante mecanismos de auto-atención:
+**6) Transformers y Mecanismos de Atención**: Introducidos originalmente para procesamiento de lenguaje natural, los transformers se han adaptado para procesamiento de señales en comunicaciones mediante mecanismos de auto-atención:
 
 $$\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}}\right)\mathbf{V}$$
 
-donde $\mathbf{Q}$, $\mathbf{K}$, $\mathbf{V}$ son matrices de consulta, clave y valor derivadas de las señales de entrada mediante proyecciones lineales. Los transformers son particularmente efectivos para capturar dependencias de largo alcance [15] en secuencias temporales y correlaciones espaciales en sistemas MIMO masivos,.
+donde $\mathbf{Q}$, $\mathbf{K}$, $\mathbf{V}$ son matrices de consulta, clave y valor derivadas de las señales de entrada mediante proyecciones lineales. Los transformers son particularmente efectivos para capturar dependencias de largo alcance en secuencias temporales y correlaciones espaciales en sistemas MIMO masivos,.
 
 **7) Aprendizaje por Refuerzo Profundo (DRL)**: Para problemas de optimización secuencial y asignación de recursos, el DRL modela el sistema como un proceso de decisión de Markov (MDP) con tupla $(\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma)$ donde $\mathcal{S}$ es el espacio de estados, $\mathcal{A}$ es el espacio de acciones, $\mathcal{P}$ define transiciones, $\mathcal{R}$ es la función de recompensa, y $\gamma$ es el factor de descuento.
 
@@ -118,7 +118,7 @@ El objetivo es aprender una política óptima $\pi^*$ que maximice el retorno es
 
 $$\pi^* = \arg\max_{\pi} \mathbb{E}\left[\sum_{t=0}^{\infty}\gamma^t R(s_t, a_t) \Big| \pi\right]$$
 
-Algoritmos como Deep Q-Networks (DQN), Policy Gradient, Actor-Critic, y Proximal Policy Optimization (PPO) [16], [17] se utilizan para aproximar $\pi^*$ mediante redes neuronales,.
+Algoritmos como Deep Q-Networks (DQN), Policy Gradient, Actor-Critic, y Proximal Policy Optimization (PPO), se utilizan para aproximar $\pi^*$ mediante redes neuronales,.
 
 ### D. Aportes del Artículo
 
@@ -144,7 +144,7 @@ El resto de este artículo está organizado como sigue. La Sección II presenta 
 
 ## II. ESTIMACIÓN Y PREDICCIÓN DE CANAL MEDIANTE DEEP LEARNING
 
-La estimación precisa del canal de comunicación es fundamental para sistemas de comunicaciones inalámbricas coherentes [18], [19], afectando directamente el rendimiento de ecualización, detección, y procesamiento MIMO. Los métodos tradicionales como estimación por mínimos cuadrados (LS), mínimo error cuadrático medio (MMSE) [5], [18], y técnicas basadas en pilotos enfrentan limitaciones en escenarios 6G caracterizados por alta movilidad, canales de alta dimensionalidad [1], [19], y recursos de piloto limitados,.
+La estimación precisa del canal de comunicación es fundamental para sistemas de comunicaciones inalámbricas coherentes [9],, afectando directamente el rendimiento de ecualización, detección, y procesamiento MIMO. Los métodos tradicionales como estimación por mínimos cuadrados (LS), mínimo error cuadrático medio (MMSE) [9],, y técnicas basadas en pilotos enfrentan limitaciones en escenarios 6G caracterizados por alta movilidad, canales de alta dimensionalidad,, y recursos de piloto limitados [13],.
 
 ### A. Formulación del Problema de Estimación de Canal
 
@@ -172,7 +172,7 @@ El estimador MMSE requiere conocimiento de estadísticas de segundo orden del ca
 
 ### B. Arquitecturas de DL para Estimación de Canal
 
-**1) DNN para Estimación Directa**: Una aproximación directa utiliza DNNs para mapear señales recibidas de piloto a estimaciones de canal,:
+**1) DNN para Estimación Directa**: Una aproximación directa utiliza DNNs para mapear señales recibidas de piloto a estimaciones de canal [10],:
 
 $$\hat{\mathbf{H}} = f_{\text{DNN}}(\mathbf{Y}_p; \theta)$$
 
@@ -187,21 +187,21 @@ Para un sistema con $N_t = 4$ antenas transmisoras, $N_r = 4$ receptoras, y $N_p
 $$\text{Input}(128) \rightarrow \text{Dense}(256, \text{ReLU}) \rightarrow \text{Dense}(512, \text{ReLU}) \rightarrow$$
 $$\text{Dense}(512, \text{ReLU}) \rightarrow \text{Dense}(256, \text{ReLU}) \rightarrow \text{Output}(32)$$
 
-**2) CNN para Explotación de Correlación Espacio-Frecuencial**: Los canales inalámbricos exhiben correlación en dominios espacial (entre antenas), frecuencial (entre subportadoras), y temporal. Las CNNs pueden explotar esta estructura mediante filtros convolucionales:
+**2) CNN para Explotación de Correlación Espacio-Frecuencial**: Los canales inalámbricos exhiben correlación en dominios espacial (entre antenas), frecuencial (entre subportadoras), y temporal [11]. Las CNNs pueden explotar esta estructura mediante filtros convolucionales:
 
 $$\mathbf{H}^{(l)}[i,j,k] = \sigma\left(\sum_{m,n,p}\mathbf{W}^{(l)}[m,n,p]\mathbf{H}^{(l-1)}[i+m,j+n,k+p] + b^{(l)}\right)$$
 
 donde los índices $i,j,k$ corresponden a dimensiones de antena, frecuencia, y tiempo,.
 
-Estudios recientes demuestran que CNNs con arquitectura ResNet pueden reducir el MSE de estimación en 3-5 dB comparado con MMSE en canales con alta correlación espacial.
+Estudios recientes demuestran que CNNs con arquitectura ResNet pueden reducir el MSE de estimación en 3-5 dB comparado con MMSE [12] en canales con alta correlación espacial.
 
-**3) Arquitecturas Basadas en Transformers**: Los transformers con mecanismos de auto-atención pueden capturar dependencias de largo alcance en el dominio de frecuencia sin asumir modelos de correlación específicos:
+**3) Arquitecturas Basadas en Transformers**: Los transformers con mecanismos de auto-atención pueden capturar dependencias de largo alcance en el dominio de frecuencia [9] sin asumir modelos de correlación específicos:
 
 $$\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}}\right)\mathbf{V}$$
 
 donde las matrices de consulta, clave y valor se derivan de las observaciones de canal mediante proyecciones lineales aprendidas. El mecanismo de atención asigna pesos dinámicos a diferentes posiciones de frecuencia basándose en su relevancia para estimar una posición objetivo.
 
-**4) Estimación de Canal Asistida por GAN**: Las GANs se utilizan para refinar estimaciones preliminares generando realizaciones de canal más realistas,:
+**4) Estimación de Canal Asistida por GAN**: Las GANs se utilizan para refinar estimaciones preliminares generando realizaciones de canal más realistas [10],:
 
 $$\hat{\mathbf{H}}_{\text{refined}} = G(\hat{\mathbf{H}}_{\text{LS}}; \theta_G)$$
 
@@ -224,7 +224,7 @@ $$\mathbf{H}[t+1] = f(\mathbf{H}[t], \mathbf{H}[t-1], \ldots, \mathbf{H}[t-L]) +
 
 donde $f(\cdot)$ es una función no lineal y $\mathbf{e}[t]$ representa innovación estocástica.
 
-**RNN/LSTM para Predicción Temporal**: Las LSTMs son particularmente efectivas para capturar dependencias temporales en secuencias de canal,:
+**RNN/LSTM para Predicción Temporal**: Las LSTMs son particularmente efectivas para capturar dependencias temporales en secuencias de canal [11],:
 
 $$\hat{\mathbf{H}}[t+\Delta t] = f_{\text{LSTM}}(\mathbf{H}[t], \mathbf{H}[t-1], \ldots, \mathbf{H}[t-L]; \theta)$$
 
@@ -371,7 +371,7 @@ El despliegue eficiente requiere técnicas de cuantización, poda, y destilació
 
 ## III. DETECCIÓN DE SEÑALES CON REDES NEURONALES
 
-La detección de señales es un componente crítico del receptor [22], [31], responsable de estimar símbolos o bits transmitidos desde señales recibidas ruidosas. En sistemas MIMO de alta dimensión, la detección óptima tiene complejidad exponencial [22], [28], motivando aproximaciones subóptimas. El DL ofrece detectores que balancean rendimiento y complejidad mediante aprendizaje de estructuras de detección efectivas.
+La detección de señales es un componente crítico del receptor,,[12] responsable de estimar símbolos o bits transmitidos desde señales recibidas ruidosas. En sistemas MIMO de alta dimensión, la detección óptima tiene complejidad exponencial,,[14] motivando aproximaciones subóptimas. El DL ofrece detectores que balancean rendimiento y complejidad mediante aprendizaje de estructuras de detección efectivas.
 
 ### A. Problema de Detección en Sistemas MIMO
 
@@ -392,11 +392,11 @@ Complejidad: $\mathcal{O}(M^{N_t})$ evaluaciones, exponencial en número de ante
 $$\hat{\mathbf{x}}_{\text{ZF}} = (\mathbf{H}^H\mathbf{H})^{-1}\mathbf{H}^H\mathbf{y}$$
 $$\hat{\mathbf{x}}_{\text{MMSE}} = (\mathbf{H}^H\mathbf{H} + \sigma^2\mathbf{I})^{-1}\mathbf{H}^H\mathbf{y}$$
 
-Rendimiento subóptimo especialmente en alta carga del sistema ($N_t \approx N_r$).
+Rendimiento subóptimo especialmente en alta carga del sistema ($N_t \approx N_r$). [15]
 
 ### B. Redes Neuronales para Detección Directa
 
-**DNN Detector**: Mapeo directo de señal recibida y CSI a símbolos detectados:
+**DNN Detector**: Mapeo directo de señal recibida y CSI a símbolos detectados: [16]
 
 $$\hat{\mathbf{x}} = f_{\text{DNN}}(\mathbf{y}, \mathbf{H}; \theta)$$
 
@@ -415,7 +415,7 @@ $$\mathcal{L}(\theta) = -\mathbb{E}\left[\sum_{i=1}^{N_t\log_2 M}b_i\log\hat{b}_
 
 ### D. Detección con Atención y Transformers
 
-**Attention-Based Detection**: Los mecanismos de atención permiten al detector enfocarse en componentes relevantes de la señal recibida:
+**Attention-Based Detection**: Los mecanismos de atención permiten al detector enfocarse en componentes relevantes de la señal recibida: [17]
 
 $$\mathbf{c}_i = \sum_{j=1}^{N_r}\alpha_{i,j}\mathbf{y}_j$$
 $$\alpha_{i,j} = \frac{\exp(\text{score}(\mathbf{q}_i, \mathbf{k}_j))}{\sum_{j'}\exp(\text{score}(\mathbf{q}_i, \mathbf{k}_{j'}))}$$
@@ -488,7 +488,7 @@ donde $T$ es número de iteraciones/capas.
 
 ## IV. BEAMFORMING INTELIGENTE Y GESTIÓN DE HAZ
 
-El beamforming es una técnica fundamental en sistemas MIMO y mmWave que concentra energía de transmisión en direcciones específicas, mejorando SNR y reduciendo interferencia. En sistemas 6G con arrays masivos y entornos dinámicos, el beamforming adaptativo mediante IA ofrece ventajas sustanciales sobre métodos tradicionales.
+El beamforming es una técnica fundamental en sistemas MIMO [20] y mmWave que concentra energía de transmisión en direcciones específicas, mejorando SNR y reduciendo interferencia [18]. En sistemas 6G con arrays masivos y entornos dinámicos, el beamforming adaptativo mediante IA ofrece ventajas sustanciales sobre métodos tradicionales [19].
 
 ### A. Fundamentos de Beamforming
 
@@ -516,7 +516,7 @@ Solución mediante optimización convexa o proyección.
 
 ### B. Deep Learning para Predicción de Beams
 
-**Beam Prediction desde CSI**: En lugar de búsqueda exhaustiva sobre codebook de beams, predecir beam óptimo directamente:
+**Beam Prediction desde CSI**: En lugar de búsqueda exhaustiva sobre codebook de beams, predecir beam óptimo directamente [20]:
 
 $$i^* = f_{\text{DNN}}(\mathbf{H}; \theta)$$
 
@@ -541,7 +541,7 @@ donde $y_i = 1$ si $i$ es el beam óptimo, 0 en otro caso.
 
 **Problema de Tracking**: En escenarios de alta movilidad (vehículos, drones), el beam óptimo cambia rápidamente. Tracking proactivo reduce latencia y overhead.
 
-**RNN/LSTM para Beam Tracking**: Predecir beam futuro desde historial:
+**RNN/LSTM para Beam Tracking**: Predecir beam futuro desde historial [21]:
 
 $$i_{t+\Delta t}^* = f_{\text{LSTM}}(i_t^*, i_{t-1}^*, \ldots, i_{t-L}^*, \mathbf{features}_t; \theta)$$
 
@@ -560,7 +560,7 @@ Esto permite anticipar cambios de beam varios pasos adelante.
 
 ### D. Beamforming Sin CSI Explícito
 
-**Aprendizaje Directo desde Señales**: En lugar de estimar CSI y luego computar beamformers, aprender mapeo directo de mediciones de canal a beamformers:
+**Aprendizaje Directo desde Señales**: En lugar de estimar CSI y luego computar beamformers, aprender mapeo directo de mediciones de canal a beamformers [22]:
 
 $$\mathbf{w} = f_{\text{DNN}}(\mathbf{Y}_{\text{pilot}}; \theta)$$
 
@@ -610,7 +610,7 @@ $$\mathcal{L}(\theta) = -\mathbb{E}\left[\sum_{k=1}^{K}\log_2(1 + \text{SINR}_k(
 - **Nodos**: Pares BS-usuario
 - **Aristas**: Enlaces de interferencia
 
-**GNN para Coord. Beamforming**: El GNN propaga información entre nodos para aprender beamformers que consideran interferencia de red:
+**GNN para Coord. Beamforming**: El GNN propaga información entre nodos para aprender beamformers que consideran interferencia de red [23]:
 
 $$\mathbf{h}_v^{(0)} = [\mathbf{H}_v; \text{features}_v]$$
 $$\mathbf{h}_v^{(l+1)} = \sigma\left(\mathbf{W}_{\text{self}}^{(l)}\mathbf{h}_v^{(l)} + \sum_{u \in \mathcal{N}(v)}\mathbf{W}_{\text{neigh}}^{(l)}\mathbf{h}_u^{(l)}\right)$$
@@ -618,7 +618,7 @@ $$\mathbf{w}_v = f_{\text{out}}(\mathbf{h}_v^{(L)})$$
 
 El GNN aprende estrategias de coordinación que balancean ganancia local vs. interferencia a vecinos.
 
-### G. Hybrid Analog-Digital Beamforming [25]
+### G. Hybrid Analog-Digital Beamforming
 
 **Arquitectura Híbrida**: Combinación de beamforming analógico (phase shifters) y digital (baseband):
 
@@ -669,7 +669,7 @@ Agentes como DDPG aprenden políticas de configuración óptimas sin modelo expl
 
 ## V. GESTIÓN DE RECURSOS ESPECTRALES MEDIANTE APRENDIZAJE POR REFUERZO
 
-La asignación eficiente de recursos espectrales (potencia, ancho de banda, tiempo, bloques de recursos) es crucial para maximizar eficiencia espectral y satisfacer requisitos heterogéneos de QoS en sistemas 6G. La naturaleza dinámica y combinatorial del problema motiva uso de aprendizaje por refuerzo profundo (DRL).
+La asignación eficiente de recursos espectrales (potencia, ancho de banda, tiempo, bloques de recursos) es crucial para maximizar eficiencia espectral y satisfacer requisitos heterogéneos de QoS en sistemas 6G [24]. La naturaleza dinámica y combinatorial del problema motiva uso de aprendizaje por refuerzo profundo (DRL) [25].
 
 ### A. Formulación como MDP
 
@@ -698,7 +698,7 @@ $$J(\pi) = \mathbb{E}_{\pi}\left[\sum_{t=0}^{\infty}\gamma^t R(s_t, a_t)\right]$
 
 $$Q^*(s,a) = \mathbb{E}\left[R(s,a) + \gamma\max_{a'}Q^*(s',a')\right]$$
 
-**DQN**: Aproximar $Q^*(s,a)$ mediante red neuronal profunda:
+**DQN**: Aproximar $Q^*(s,a)$ mediante red neuronal profunda [26]:
 
 $$Q(s,a;\theta) \approx Q^*(s,a)$$
 
@@ -713,7 +713,7 @@ $$\mathcal{L}(\theta) = \mathbb{E}_{(s,a,r,s')\sim\mathcal{D}}\left[\left(r + \g
 
 donde $\mathcal{D}$ es replay buffer y $\theta^-$ son parámetros de target network actualizados periódicamente.
 
-**Double DQN**: Reduce sobrestimación de Q-valores usando dos redes:
+**Double DQN**: Reduce sobrestimación de Q-valores usando dos redes [27]:
 
 $$y = r + \gamma Q(s', \arg\max_{a'}Q(s',a';\theta); \theta^-)$$
 
@@ -735,7 +735,7 @@ $$\nabla_{\theta}J(\theta) = \mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta}\log\
 
 donde $G_t = \sum_{k=0}^{\infty}\gamma^k R_{t+k}$ es el retorno.
 
-**Actor-Critic**: Combina policy gradient (actor) con función de valor (critic) para reducir varianza:
+**Actor-Critic**: Combina policy gradient (actor) con función de valor (critic) para reducir varianza [28]:
 
 **Actor**: Actualizar política en dirección sugerida por critic
 $$\theta \leftarrow \theta + \alpha\nabla_{\theta}\log\pi(a|s;\theta)A(s,a;\phi)$$
@@ -747,7 +747,7 @@ $$\phi \leftarrow \phi - \beta\nabla_{\phi}(R + \gamma V(s';\phi) - V(s;\phi))^2
 
 ### D. Proximal Policy Optimization (PPO)
 
-PPO es un algoritmo de policy gradient que limita actualizaciones de política para evitar cambios drásticos que degradan rendimiento:
+PPO es un algoritmo de policy gradient que limita actualizaciones de política para evitar cambios drásticos que degradan rendimiento [29]:
 
 $$\mathcal{L}^{\text{CLIP}}(\theta) = \mathbb{E}\left[\min\left(r_t(\theta)A_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)A_t\right)\right]$$
 
@@ -763,7 +763,7 @@ es el ratio de probabilidades, y $\epsilon$ (típicamente 0.2) controla la magni
 
 ### E. Multi-Agent Reinforcement Learning (MARL)
 
-En redes multi-celda o multi-usuario, múltiples agentes (BSs, usuarios) deben coordinar asignación de recursos.
+En redes multi-celda o multi-usuario, múltiples agentes (BSs, usuarios) deben coordinar asignación de recursos [30].
 
 **Paradigmas MARL**:
 
@@ -778,7 +778,7 @@ En redes multi-celda o multi-usuario, múltiples agentes (BSs, usuarios) deben c
 3. **CTDE (Centralized Training, Decentralized Execution)**: Entrenar con información global, ejecutar con información local
  - Balance óptimo para muchas aplicaciones
 
-**MADDPG (Multi-Agent DDPG)**: Extensión de DDPG para multi-agente con CTDE:
+**MADDPG (Multi-Agent DDPG)**: Extensión de DDPG para multi-agente con CTDE [31]:
 
 Cada agente $i$ tiene:
 - **Actor**: $\pi_i(a_i|s_i;\theta_i)$ usa solo observación local $s_i$
@@ -840,7 +840,7 @@ Multi-objective RL con trade-off aprendido entre tasa y energía.
 
 ### G. Transfer Learning y Meta-RL para Adaptación
 
-**Desafío**: Entrenar agentes RL desde cero para cada escenario es costoso. Transfer learning permite reutilizar conocimiento [37].
+**Desafío**: Entrenar agentes RL desde cero para cada escenario es costoso. Transfer learning permite reutilizar conocimiento.
 
 **Domain Adaptation**: Entrenar en simulación, adaptar a mundo real mediante fine-tuning:
 
@@ -865,7 +865,7 @@ $$\theta^* = \arg\min_{\theta}\sum_{\mathcal{T}_i}J_{\mathcal{T}_i}(\theta - \al
 
 ## VI. MODULACIÓN ADAPTATIVA Y FORMAS DE ONDA INTELIGENTES
 
-La selección de esquemas de modulación y forma de onda óptimos basándose en condiciones instantáneas del canal es crítica para maximizar eficiencia espectral y confiabilidad. El DL permite adaptación más granular y predicción proactiva superando esquemas tradicionales.
+La selección de esquemas de modulación y forma de onda óptimos basándose en condiciones instantáneas del canal es crítica para maximizar eficiencia espectral y confiabilidad [32]. El DL permite adaptación más granular y predicción proactiva superando esquemas tradicionales [33].
 
 ### A. Link Adaptation Clásica
 
@@ -891,7 +891,7 @@ Mapeo típico mediante umbrales:
 
 ### B. DL para Selección de MCS
 
-**Clasificación Neural**: Entrenar clasificador que mapea estado de canal a MCS óptimo:
+**Clasificación Neural**: Entrenar clasificador que mapea estado de canal a MCS óptimo [34]:
 
 $$\text{MCS}^* = f_{\text{DNN}}(\mathbf{h}, \text{SNR}, \text{features}; \theta)$$
 
@@ -918,7 +918,7 @@ donde $w_{\text{MCS}} = R_{\text{MCS}}$ pondera por tasa del MCS, incentivando e
 
 **Desafío**: Latencia de feedback causa mismatch entre CSI y condiciones actuales, especialmente en alta movilidad.
 
-**LSTM para Predicción**: Predecir MCS óptimo pasos adelante:
+**LSTM para Predicción**: Predecir MCS óptimo pasos adelante [35]:
 
 $$\text{MCS}_{t+\Delta t}^* = f_{\text{LSTM}}(\text{MCS}_t, \text{SINR}_t, \ldots, \text{MCS}_{t-L}, \text{SINR}_{t-L}; \theta)$$
 
@@ -930,7 +930,7 @@ $$[\text{MCS}_{t+1}, \ldots, \text{MCS}_{t+H}] = f_{\text{Seq2Seq}}(\text{histor
 
 ### D. Learned Modulation: Constelaciones Neurales
 
-**Más allá de QAM**: Las constelaciones convencionales (M-PSK, M-QAM) se diseñaron para canales AWGN. DL permite aprender constelaciones optimizadas para canales específicos.
+**Más allá de QAM**: Las constelaciones convencionales (M-PSK, M-QAM) se diseñaron para canales AWGN. DL permite aprender constelaciones optimizadas para canales específicos [36].
 
 **Autocodificador de Constelación**: Aprender mapeo de bits a símbolos y viceversa:
 
@@ -955,7 +955,7 @@ $$\min_{\theta_{\text{map}}, \theta_{\text{demap}}} \mathbb{E}\left[-\sum_i b_i\
 
 ### E. Formas de Onda Inteligentes
 
-**Más allá de OFDM**: OFDM es dominante por su simplicidad y robustez a dispersión multi-trayectoria, pero tiene limitaciones (PAPR alto, sensibilidad a CFO, overhead de CP).
+**Más allá de OFDM**: OFDM es dominante por su simplicidad y robustez a dispersión multi-trayectoria, pero tiene limitaciones (PAPR alto, sensibilidad a CFO, overhead de CP) [37].
 
 **DL para Diseño de Forma de Onda**: Aprender señalización temporal completa:
 
@@ -1030,7 +1030,7 @@ Filtros aprendidos logran 10-15 dB mejor ACLR (Adjacent Channel Leakage Ratio) q
 
 ## VII. COMUNICACIONES SEMÁNTICAS Y ORIENTADAS A TAREAS
 
-Un cambio paradigmático emergente es la comunicación semántica, donde el objetivo es transmitir significado (semántica) en lugar de bits exactos, potencialmente logrando eficiencias exponenciales,. El DL es habilitador clave al extraer y codificar representaciones semánticas.
+Un cambio paradigmático emergente es la comunicación semántica, donde el objetivo es transmitir significado (semántica) en lugar de bits exactos, potencialmente logrando eficiencias exponenciales [38]. El DL es habilitador clave al extraer y codificar representaciones semánticas [39].
 
 ### A. Fundamentos de Comunicación Semántica
 
@@ -1042,7 +1042,7 @@ Objetivo: Reconstruir bits exactos con probabilidad de error arbitrariamente peq
 
 **Limitación**: Para aplicaciones como visión por máquina, traducción, o control, reconstrucción exacta de bits puede ser innecesaria si se preserva tarea objetivo.
 
-**Arquitectura de Weaver**: Extender con niveles de semántica y efectividad:
+**Arquitectura de Weaver**: Extender con niveles de semántica y efectividad [40]:
 
 - **Nivel A (Técnico)**: ¿Qué tan precisos son los símbolos transmitidos? (Shannon)
 - **Nivel B (Semántico)**: ¿Qué tan precisamente transmiten el significado deseado?
@@ -1052,7 +1052,7 @@ Objetivo: Reconstruir bits exactos con probabilidad de error arbitrariamente peq
 
 ### B. Deep Learning para Extracción Semántica
 
-**Representaciones Latentes**: Usar encoders profundos para extraer características semánticas compactas:
+**Representaciones Latentes**: Usar encoders profundos para extraer características semánticas compactas [41]:
 
 $$\mathbf{z} = f_{\text{semantic}}(\mathbf{x}; \theta_{\text{sem}})$$
 
@@ -1077,7 +1077,7 @@ donde $(i,j)$ son pares positivos (semánticamente similares) y $k$ incluye nega
 
 ### C. Comunicación Semántica End-to-End
 
-**Arquitectura**: Transmitir representaciones semánticas en lugar de datos brutos:
+**Arquitectura**: Transmitir representaciones semánticas en lugar de datos brutos [42]:
 
 1. **Semantic Encoder**: $\mathbf{z} = f_{\text{sem}}(\mathbf{x}; \theta_{\text{sem}})$
 2. **Channel Encoder**: $\mathbf{s} = f_{\text{ch}}(\mathbf{z}; \theta_{\text{ch}})$
@@ -1099,7 +1099,7 @@ Ejemplos:
 
 ### D. Aplicaciones Específicas
 
-**1) Transmisión de Imagen para Clasificación**: Objetivo es clasificar imagen correctamente en receptor, no reconstruir pixels exactos.
+**1) Transmisión de Imagen para Clasificación**: Objetivo es clasificar imagen correctamente en receptor, no reconstruir pixels exactos [43].
 
 **Arquitectura**:
 - **Encoder**: CNN que extrae features relevantes para clasificación
@@ -1131,7 +1131,7 @@ Ejemplos:
 
 ### E. Knowledge Base Compartida
 
-**Background Knowledge**: Transmisor y receptor comparten base de conocimiento (modelos pre-entrenados, contexto) que reduce información a transmitir.
+**Background Knowledge**: Transmisor y receptor comparten base de conocimiento (modelos pre-entrenados, contexto) que reduce información a transmitir [44].
 
 **Ejemplo - Imágenes**: Ambos lados tienen modelo generativo pre-entrenado (GAN, Diffusion Model):
 
@@ -1154,7 +1154,7 @@ Compresión masiva cuando predicción es precisa.
 
 ### F. Goal-Oriented Communication
 
-**Más allá de reconstrucción**: Optimizar directamente para objetivo de downstream task.
+**Más allá de reconstrucción**: Optimizar directamente para objetivo de downstream task [45].
 
 **Ejemplo - Control Remoto**: Robot controlado remotamente basándose en sensores:
 
@@ -1167,7 +1167,7 @@ Compresión masiva cuando predicción es precisa.
 2. Transmitir representación compacta
 3. Controller: Ejecutar acción
 
-**Formulación RL**: Agente aprende política de comunicación que maximiza recompensa de tarea:
+**Formulación RL**: Agente aprende política de comunicación que maximiza recompensa de tarea [45]:
 
 $$\pi_{\text{comm}}(\mathbf{z}|\mathbf{x}, \text{task}) = \text{qué información transmitir}$$
 $$\pi_{\text{action}}(a|\hat{\mathbf{z}}) = \text{acción basada en información recibida}$$
@@ -1182,7 +1182,7 @@ Entrenamiento end-to-end maximiza recompensa de tarea sujeto a restricciones de 
 
 **Generalización**: Modelos entrenados en datasets específicos pueden no generalizar a datos out-of-distribution.
 
-**Solución**: Meta-learning, domain adaptation, continual learning [37]
+**Solución**: Meta-learning, domain adaptation, continual learning
 
 **Seguridad y Privacidad**: Representaciones semánticas pueden revelar información sensible.
 
@@ -1628,7 +1628,7 @@ Revela qué patrones detecta neurona $l$.
 
 **4) Model Sharing**: Múltiples aplicaciones comparten modelos base:
 
-- Foundation models [10], [11] for wireless
+- Foundation models, for wireless
 - Reduce duplicación de esfuerzo de entrenamiento
 
 **5) Green AI**: Métricas que consideran eficiencia energética además de precisión:
@@ -1663,7 +1663,7 @@ Contexto incluye metadatos (frecuencia, configuración, QoS), permitiendo modelo
 - Mejora generalización mediante pre-entrenamiento en datos diversos
 - Facilita estandarización (architecture única con diferentes pesos)
 
-**2) Self-Supervised Learning [11]**: Reducir dependencia de datos etiquetados costosos:
+**2) Self-Supervised Learning**: Reducir dependencia de datos etiquetados costosos:
 
 **Contrastive Learning**: Aprender representaciones que distinguen muestras:
 
@@ -1706,7 +1706,7 @@ donde $U(\theta)$ son puertas cuánticas parametrizadas.
 
 **Desafíos**: Hardware cuántico aún en etapa temprana, ruido, escalabilidad limitada.
 
-**5) Neuromorphic Computing [11]**: Hardware inspirado en el cerebro para procesamiento eficiente:
+**5) Neuromorphic Computing**: Hardware inspirado en el cerebro para procesamiento eficiente:
 
 **Spiking Neural Networks**: Usar spikes temporales en lugar de activaciones continuas:
 
@@ -1918,91 +1918,90 @@ La investigación presentada en este artículo demuestra que las bases técnicas
 
 [1] K. B. Letaief, W. Chen, Y. Shi, J. Zhang, and Y.-J. A. Zhang, "The roadmap to 6G: AI empowered wireless networks," IEEE Communications Magazine, vol. 57, no. 8, pp. 84-90, Aug. 2019.
 
-[2] Y. Liu, X. Yuan, Z. Xiong, J. Kang, X. Wang, and D. Niyato, "Federated learning for 6G communications: Challenges, methods, and future directions," China Communications, vol. 17, no. 9, pp. 105-118, Sep. 2020.
+[2] M. Giordani, M. Polese, M. Mezzavilla, S. Rangan, and M. Zorzi, "Toward 6G networks: Use cases and technologies," IEEE Communications Magazine, vol. 58, no. 3, pp. 55-61, Mar. 2020.
 
-[3] C. Zhang, P. Patras, and H. Haddadi, "Deep learning in mobile and wireless networking: A survey," IEEE Communications Surveys & Tutorials, vol. 21, no. 3, pp. 2224-2287, Third Quarter 2019.
+[3] E. Basar, M. Di Renzo, J. De Rosny, M. Debbah, M. S. Alouini, and R. Zhang, "Wireless communications through reconfigurable intelligent surfaces," IEEE Access, vol. 7, pp. 116753-116773, 2019.
 
-[4] M. Chen, U. Challita, W. Saad, C. Yin, and M. Debbah, "Artificial neural networks-based machine learning for wireless networks: A tutorial," IEEE Communications Surveys & Tutorials, vol. 21, no. 4, pp. 3039-3071, Fourth Quarter 2019.
+[4] C. Zhang, P. Patras, and H. Haddadi, "Deep learning in mobile and wireless networking: A survey," IEEE Communications Surveys & Tutorials, vol. 21, no. 3, pp. 2224-2287, Third Quarter 2019.
 
-[5] A. Goldsmith, Wireless Communications. Cambridge, UK: Cambridge University Press, 2005.
+[5] M. Chen, U. Challita, W. Saad, C. Yin, and M. Debbah, "Artificial neural networks-based machine learning for wireless networks: A tutorial," IEEE Communications Surveys & Tutorials, vol. 21, no. 4, pp. 3039-3071, Fourth Quarter 2019.
 
-[6] D. Tse and P. Viswanath, Fundamentals of Wireless Communication. Cambridge, UK: Cambridge University Press, 2005.
+[6] E. G. Larsson, O. Edfors, F. Tufvesson, and T. L. Marzetta, "Massive MIMO for next generation wireless systems," IEEE Communications Magazine, vol. 52, no. 2, pp. 186-195, Feb. 2014.
 
-[7] E. Basar, M. Di Renzo, J. De Rosny, M. Debbah, M. S. Alouini, and R. Zhang, "Wireless communications through reconfigurable intelligent surface [7], [29], [30]s," IEEE Access, vol. 7, pp. 116753-116773, 2019.
+[7] T. L. Marzetta, "Noncooperative cellular wireless with unlimited numbers of base station antennas," IEEE Trans. Wireless Communications, vol. 9, no. 11, pp. 3590-3600, Nov. 2010.
 
 [8] T. O'Shea and J. Hoydis, "An introduction to deep learning for the physical layer," IEEE Trans. Cognitive Communications and Networking, vol. 3, no. 4, pp. 563-575, Dec. 2017.
 
-[9] Z. Qin, H. Ye, G. Y. Li, and B.-H. F. Juang, "Deep learning in physical layer communications," IEEE Wireless Communications, vol. 26, no. 2, pp. 93-99, Apr. 2019.
+[9] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polosukhin, "Attention is all you need," in Proc. Advances Neural Information Processing Systems (NIPS), 2017, pp. 5998-6008.
 
-[10] I. Goodfellow, Y. Bengio, and A. Courville, Deep Learning. Cambridge, MA: MIT Press, 2016.
+[9] I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville, and Y. Bengio, "Generative adversarial nets," in Proc. Advances Neural Information Processing Systems (NIPS), 2014, pp. 2672-2680.
 
-[11] Y. LeCun, Y. Bengio, and G. Hinton, "Deep learning," Nature, vol. 521, no. 7553, pp. 436-444, May 2015.
+[10] H. He, C.-K. Wen, S. Jin, and G. Y. Li, "Model-driven deep learning for MIMO detection," IEEE Trans. Signal Processing, vol. 68, pp. 1702-1715, 2020.
 
-[12] S. Hochreiter and J. Schmidhuber, "Long short-term memory," Neural Computation, vol. 9, no. 8, pp. 1735-1780, Nov. 1997.
+[11] Z. Qin, H. Ye, G. Y. Li, and B.-H. F. Juang, "Deep learning in physical layer communications," IEEE Wireless Communications, vol. 26, no. 2, pp. 93-99, Apr. 2019.
 
-[13] D. P. Kingma and M. Welling, "Auto-encoding variational Bayes," in Proc. Int. Conf. Learning Representations (ICLR), 2014.
+[9] N. Samuel, T. Diskin, and A. Wiesel, "Deep MIMO detection," in Proc. IEEE Int. Workshop Signal Process. Advances Wireless Commun. (SPAWC), Jul. 2017, pp. 1-5.
 
-[14] I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville, and Y. Bengio, "Generative adversarial nets," in Proc. Advances Neural Information Processing Systems (NIPS), 2014, pp. 2672-2680.
+[9] H. Ye, G. Y. Li, and B.-H. Juang, "Power of deep learning for channel estimation and signal detection in OFDM systems," IEEE Wireless Communications Letters, vol. 7, no. 1, pp. 114-117, Feb. 2018.
 
-[15] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polosukhin, "Attention is all you need," in Proc. Advances Neural Information Processing Systems (NIPS), 2017, pp. 5998-6008.
+[10] T. Wang, C.-K. Wen, H. Wang, F. Gao, T. Jiang, and S. Jin, "Deep learning for wireless physical layer: Opportunities and challenges," China Communications, vol. 14, no. 11, pp. 92-111, Nov. 2017.
 
-[16] V. Mnih, K. Kavukcuoglu, D. Silver, A. Graves, I. Antonoglou, D. Wierstra, and M. Riedmiller, "Playing Atari with deep reinforcement learning," arXiv preprint arXiv:1312.5602, 2013.
+[11] S. Dörner, S. Cammerer, J. Hoydis, and S. ten Brink, "Deep learning based communication over the air," IEEE J. Selected Topics in Signal Processing, vol. 12, no. 1, pp. 132-143, Feb. 2018.
 
-[17] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, "Proximal policy optimization algorithms," arXiv preprint arXiv:1707.06347, 2017.
+[12] A. Alkhateeb, S. Alex, P. Varkey, Y. Li, Q. Qu, and D. Tujkovic, "Deep learning coordinated beamforming for highly-mobile millimeter wave systems," IEEE Access, vol. 6, pp. 37328-37348, 2018.
 
-[18] H. Ye, G. Y. Li, and B.-H. Juang, "Power of deep learning for channel estimation and signal detection in OFDM systems," IEEE Wireless Communications Letters, vol. 7, no. 1, pp. 114-117, Feb. 2018.
+[13] C.-K. Wen, W.-T. Shih, and S. Jin, "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, Oct. 2018.
 
-[19] H. He, C.-K. Wen, S. Jin, and G. Y. Li, "Deep learning-based channel estimation for beamspace mmWave massive MIMO systems," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 852-855, Oct. 2018.
+[15] C. Huang, G. C. Alexandropoulos, A. Zappone, M. Debbah, and C. Yuen, "Reconfigurable intelligent surfaces for energy efficiency in wireless communication," IEEE Trans. Wireless Communications, vol. 18, no. 8, pp. 4157-4170, Aug. 2019.
 
-[20] C.-K. Wen, W.-T. Shih, and S. Jin, "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, Oct. 2018.
+[16] D. Tse and P. Viswanath, Fundamentals of Wireless Communication. Cambridge, UK: Cambridge University Press, 2005.
 
-[21] T. Wang, C.-K. Wen, H. Wang, F. Gao, T. Jiang, and S. Jin, "Deep learning for wireless physical layer: Opportunities and challenges," China Communications, vol. 14, no. 11, pp. 92-111, Nov. 2017.
+[17] Q. Wu and R. Zhang, "Beamforming optimization for wireless network aided by intelligent reflecting surface with discrete phase shifts," IEEE Trans. Communications, vol. 68, no. 3, pp. 1838-1851, Mar. 2020.
 
-[22] N. Samuel, T. Diskin, and A. Wiesel, "Deep MIMO detection," in Proc. IEEE Int. Workshop Signal Process. Advances Wireless Commun. (SPAWC), Jul. 2017, pp. 1-5.
+[18] M. L. Rahman, J. A. Zhang, X. Huang, Y. J. Guo, and R. W. Heath, "Framework for a perceptive mobile network using joint communication and radar sensing," IEEE Trans. Aerospace and Electronic Systems, vol. 56, no. 3, pp. 1926-1941, Jun. 2020.
 
-[23] S. Dörner, S. Cammerer, J. Hoydis, and S. ten Brink, "Deep learning based communication over the air," IEEE J. Selected Topics in Signal Processing, vol. 12, no. 1, pp. 132-143, Feb. 2018.
+[19] P. Zhou, X. Fang, X. Wang, Y. Long, R. He, and X. Han, "Deep learning-based beam tracking for millimeter-wave communications under mobility," IEEE Access, vol. 8, pp. 141789-141797, 2020.
 
-[24] F. A. Aoudia and J. Hoydis, "End-to-end learning of communications systems without a channel model," in Proc. Asilomar Conf. Signals, Systems, and Computers, Oct. 2018, pp. 298-303.
+[20] F. Rusek, D. Persson, B. K. Lau, E. G. Larsson, T. L. Marzetta, O. Edfors, and F. Tufvesson, "Scaling up MIMO: Opportunities and challenges with very large arrays," IEEE Signal Processing Magazine, vol. 30, no. 1, pp. 40-60, Jan. 2013.
 
-[25] E. G. Larsson, O. Edfors, F. Tufvesson, and T. L. Marzetta, "Massive MIMO for next generation wireless systems," IEEE Communications Magazine, vol. 52, no. 2, pp. 186-195, Feb. 2014.
+[21] Q. Wu and R. Zhang, "Intelligent reflecting surface enhanced wireless network via joint active and passive beamforming," IEEE Trans. Wireless Communications, vol. 18, no. 11, pp. 5394-5409, Nov. 2019.
 
-[26] T. L. Marzetta, "Noncooperative cellular wireless with unlimited numbers of base station antennas," IEEE Trans. Wireless Communications, vol. 9, no. 11, pp. 3590-3600, Nov. 2010.
+[22] H. Sun, X. Chen, Q. Shi, M. Hong, X. Fu, and N. D. Sidiropoulos, "Learning to optimize: Training deep neural networks for interference management," IEEE Trans. Signal Processing, vol. 66, no. 20, pp. 5438-5453, Oct. 2018.
 
-[27] F. Rusek, D. Persson, B. K. Lau, E. G. Larsson, T. L. Marzetta, O. Edfors, and F. Tufvesson, "Scaling up MIMO: Opportunities and challenges with very large arrays," IEEE Signal Processing Magazine, vol. 30, no. 1, pp. 40-60, Jan. 2013.
+[23] V. Mnih, K. Kavukcuoglu, D. Silver, A. Graves, I. Antonoglou, D. Wierstra, and M. Riedmiller, "Playing Atari with deep reinforcement learning," arXiv preprint arXiv:1312.5602, 2013.
 
-[28] X. Gao, L. Dai, Y. Ma, and Z. Wang, "Low-complexity near-optimal signal detection for uplink large-scale MIMO systems," Electronics Letters, vol. 50, no. 18, pp. 1326-1328, Aug. 2014.
+[24] R. S. Sutton and A. G. Barto, Reinforcement Learning: An Introduction, 2nd ed. Cambridge, MA: MIT Press, 2018.
 
-[29] C. Huang, G. C. Alexandropoulos, A. Zappone, M. Debbah, and C. Yuen, "Reconfigurable intelligent surfaces for energy efficiency in wireless communication," IEEE Trans. Wireless Communications, vol. 18, no. 8, pp. 4157-4170, Aug. 2019.
+[25] V. Mnih, K. Kavukcuoglu, D. Silver, A. A. Rusu, J. Veness, M. G. Bellemare, A. Graves, M. Riedmiller, A. K. Fidjeland, G. Ostrovski, et al., "Human-level control through deep reinforcement learning," Nature, vol. 518, no. 7540, pp. 529-533, 2015.
 
-[30] Q. Wu and R. Zhang, "Intelligent reflecting surface enhanced wireless network via joint active and passive beamforming," IEEE Trans. Wireless Communications, vol. 18, no. 11, pp. 5394-5409, Nov. 2019.
+[26] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, "Proximal policy optimization algorithms," arXiv preprint arXiv:1707.06347, 2017.
 
-[31] N. Farsad and A. Goldsmith, "Neural network detection of data sequences in communication systems," IEEE Trans. Signal Processing, vol. 66, no. 21, pp. 5663-5678, Nov. 2018.
+[27] L. Liang, H. Ye, G. Yu, and G. Y. Li, "Deep-learning-based wireless resource allocation with application to vehicular networks," Proceedings of the IEEE, vol. 108, no. 2, pp. 341-356, Feb. 2020.
 
-[32] T. Gruber, S. Cammerer, J. Hoydis, and S. ten Brink, "On deep learning-based channel decoding," in Proc. Annu. Conf. Information Sciences and Systems (CISS), Mar. 2017, pp. 1-6.
+[28] C. Finn, P. Abbeel, and S. Levine, "Model-agnostic meta-learning for fast adaptation of deep networks," in Proc. Int. Conf. Machine Learning (ICML), 2017, pp. 1126-1135.
 
-[33] F. A. Aoudia and J. Hoydis, "Model-free training of end-to-end communication systems," IEEE J. Selected Areas in Communications, vol. 37, no. 11, pp. 2503-2516, Nov. 2019.
+[29] S. J. Pan and Q. Yang, "A survey on transfer learning," IEEE Trans. Knowledge and Data Engineering, vol. 22, no. 10, pp. 1345-1359, Oct. 2010.
 
-[34] H. Sun, X. Chen, Q. Shi, M. Hong, X. Fu, and N. D. Sidiropoulos, "Learning to optimize: Training deep neural networks for interference management," IEEE Trans. Signal Processing, vol. 66, no. 20, pp. 5438-5453, Oct. 2018.
+[30] T. J. O'Shea, J. Corgan, and T. C. Clancy, "Convolutional radio modulation recognition networks," in Proc. Int. Conf. Engineering Applications of Neural Networks, 2016, pp. 213-226.
 
-[35] C. Finn, P. Abbeel, and S. Levine, "Model-agnostic meta-learning for fast adaptation of deep networks," in Proc. Int. Conf. Machine Learning (ICML), 2017, pp. 1126-1135.
+[31] F. A. Aoudia and J. Hoydis, "End-to-end learning of communications systems without a channel model," in Proc. Asilomar Conf. Signals, Systems, and Computers, Oct. 2018, pp. 298-303.
 
-[36] J. Snell, K. Swersky, and R. Zemel, "Prototypical networks for few-shot learning," in Proc. Advances Neural Information Processing Systems (NIPS), 2017, pp. 4077-4087.
+[32] S. Rajendran, W. Meert, D. Giustiniano, V. Lenders, and S. Pollin, "Deep learning models for wireless signal classification with distributed low-cost spectrum sensors," IEEE Trans. Cognitive Communications and Networking, vol. 4, no. 3, pp. 433-445, Sep. 2018.
 
-[37] S. J. Pan and Q. Yang, "A survey on transfer learning," IEEE Trans. Knowledge and Data Engineering, vol. 22, no. 10, pp. 1345-1359, Oct. 2010.
+[33] Y. LeCun, Y. Bengio, and G. Hinton, "Deep learning," Nature, vol. 521, no. 7553, pp. 436-444, May 2015.
 
-[38] C. Szegedy, W. Zaremba, I. Sutskever, J. Bruna, D. Erhan, I. Goodfellow, and R. Fergus, "Intriguing properties of neural networks," in Proc. Int. Conf. Learning Representations (ICLR), 2014.
+[34] N. Farsad and A. Goldsmith, "Neural network detection of data sequences in communication systems," IEEE Trans. Signal Processing, vol. 66, no. 21, pp. 5663-5678, Nov. 2018.
 
-[39] A. Madry, A. Makelov, L. Schmidt, D. Tsipras, and A. Vladu, "Towards deep learning models resistant to adversarial attacks," in Proc. Int. Conf. Learning Representations (ICLR), 2018.
+[35] T. Gruber, S. Cammerer, J. Hoydis, and S. ten Brink, "On deep learning-based channel decoding," in Proc. Annu. Conf. Information Sciences and Systems (CISS), Mar. 2017, pp. 1-6.
 
-[40] H. Xie, Z. Qin, G. Y. Li, and B.-H. Juang, "Deep learning enabled semantic communication systems," IEEE Trans. Signal Processing, vol. 69, pp. 2663-2675, 2021.
+[36] H. Xie, Z. Qin, G. Y. Li, and B.-H. Juang, "Deep learning enabled semantic communication systems," IEEE Trans. Signal Processing, vol. 69, pp. 2663-2675, 2021.
 
-[41] J. Bao, P. Basu, M. Dean, C. Partridge, A. Swami, W. Leland, and J. A. Hendler, "Towards a theory of semantic communication," in Proc. IEEE Network Science Workshop, Jun. 2011, pp. 110-117.
+[37] J. Bao, P. Basu, M. Dean, C. Partridge, A. Swami, W. Leland, and J. A. Hendler, "Towards a theory of semantic communication," in Proc. IEEE Network Science Workshop, Jun. 2011, pp. 110-117.
 
-[42] E. Bourtsoulatze, D. B. Kurka, and D. Gündüz, "Deep joint source-channel coding for wireless image transmission," IEEE Trans. Cognitive Communications and Networking, vol. 5, no. 3, pp. 567-579, Sep. 2019.
+[38] E. Bourtsoulatze, D. B. Kurka, and D. Gündüz, "Deep joint source-channel coding for wireless image transmission," IEEE Trans. Cognitive Communications and Networking, vol. 5, no. 3, pp. 567-579, Sep. 2019.
 
-[43] Y. Yang, F. Gao, G. Y. Li, and M. Jian, "Deep learning-based downlink channel prediction for FDD massive MIMO system," IEEE Communications Letters, vol. 23, no. 11, pp. 1994-1998, Nov. 2019.
+[39] C. K. Wen, W. T. Shih, and S. Jin, "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, Oct. 2018.
 
-[44] P. de Kerret and D. Gesbert, "CSI sharing strategies for transmitter cooperation in wireless networks," IEEE Wireless Communications, vol. 20, no. 1, pp. 43-49, Feb. 2013.
+[40] G. Gui, H. Huang, Y. Song, and H. Sari, "Deep learning for an effective nonorthogonal multiple access scheme," IEEE Trans. Vehicular Technology, vol. 67, no. 9, pp. 8440-8450, Sep. 2018.
 
-[45] O-RAN Alliance, "O-RAN: Towards an open and smart RAN," White Paper, Oct. 2018.
-
+[41] F. A. Aoudia and J. Hoydis, "Model-free training of end-to-end communication systems," IEEE J. Selected Areas in Communications, vol. 37, no. 11, pp. 2503-2516, Nov. 2019.
