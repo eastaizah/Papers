@@ -1932,76 +1932,76 @@ La investigación presentada en este artículo demuestra que las bases técnicas
 
 [8] T. O'Shea and J. Hoydis, "An introduction to deep learning for the physical layer," IEEE Trans. Cognitive Communications and Networking, vol. 3, no. 4, pp. 563-575, Dec. 2017.
 
-[9] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polosukhin, "Attention is all you need," in Proc. Advances Neural Information Processing Systems (NIPS), 2017, pp. 5998-6008.
-
-[9] I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville, and Y. Bengio, "Generative adversarial nets," in Proc. Advances Neural Information Processing Systems (NIPS), 2014, pp. 2672-2680.
+[9] Y. Yang, F. Gao, G. Y. Li, and M. Jian, "Deep learning-based channel estimation for massive MIMO systems," IEEE Wireless Communications Letters, vol. 8, no. 3, pp. 852-855, Jun. 2019.
 
 [10] H. He, C.-K. Wen, S. Jin, and G. Y. Li, "Model-driven deep learning for MIMO detection," IEEE Trans. Signal Processing, vol. 68, pp. 1702-1715, 2020.
 
-[11] Z. Qin, H. Ye, G. Y. Li, and B.-H. F. Juang, "Deep learning in physical layer communications," IEEE Wireless Communications, vol. 26, no. 2, pp. 93-99, Apr. 2019.
+[11] I. Goodfellow, Y. Bengio, and A. Courville, Deep Learning. Cambridge, MA: MIT Press, 2016.
 
-[9] N. Samuel, T. Diskin, and A. Wiesel, "Deep MIMO detection," in Proc. IEEE Int. Workshop Signal Process. Advances Wireless Commun. (SPAWC), Jul. 2017, pp. 1-5.
-
-[9] H. Ye, G. Y. Li, and B.-H. Juang, "Power of deep learning for channel estimation and signal detection in OFDM systems," IEEE Wireless Communications Letters, vol. 7, no. 1, pp. 114-117, Feb. 2018.
-
-[10] T. Wang, C.-K. Wen, H. Wang, F. Gao, T. Jiang, and S. Jin, "Deep learning for wireless physical layer: Opportunities and challenges," China Communications, vol. 14, no. 11, pp. 92-111, Nov. 2017.
-
-[11] S. Dörner, S. Cammerer, J. Hoydis, and S. ten Brink, "Deep learning based communication over the air," IEEE J. Selected Topics in Signal Processing, vol. 12, no. 1, pp. 132-143, Feb. 2018.
-
-[12] A. Alkhateeb, S. Alex, P. Varkey, Y. Li, Q. Qu, and D. Tujkovic, "Deep learning coordinated beamforming for highly-mobile millimeter wave systems," IEEE Access, vol. 6, pp. 37328-37348, 2018.
+[12] S. Hochreiter and J. Schmidhuber, "Long short-term memory," Neural Computation, vol. 9, no. 8, pp. 1735-1780, Nov. 1997.
 
 [13] C.-K. Wen, W.-T. Shih, and S. Jin, "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, Oct. 2018.
 
-[15] C. Huang, G. C. Alexandropoulos, A. Zappone, M. Debbah, and C. Yuen, "Reconfigurable intelligent surfaces for energy efficiency in wireless communication," IEEE Trans. Wireless Communications, vol. 18, no. 8, pp. 4157-4170, Aug. 2019.
+[14] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polosukhin, "Attention is all you need," in Proc. Advances Neural Information Processing Systems (NIPS), 2017, pp. 5998-6008.
 
-[16] D. Tse and P. Viswanath, Fundamentals of Wireless Communication. Cambridge, UK: Cambridge University Press, 2005.
+[15] I. Goodfellow, J. Pouget-Abadie, M. Mirza, B. Xu, D. Warde-Farley, S. Ozair, A. Courville, and Y. Bengio, "Generative adversarial nets," in Proc. Advances Neural Information Processing Systems (NIPS), 2014, pp. 2672-2680.
 
-[17] Q. Wu and R. Zhang, "Beamforming optimization for wireless network aided by intelligent reflecting surface with discrete phase shifts," IEEE Trans. Communications, vol. 68, no. 3, pp. 1838-1851, Mar. 2020.
+[16] S. Dörner, S. Cammerer, J. Hoydis, and S. ten Brink, "Deep learning based communication over the air," IEEE J. Selected Topics in Signal Processing, vol. 12, no. 1, pp. 132-143, Feb. 2018.
 
-[18] M. L. Rahman, J. A. Zhang, X. Huang, Y. J. Guo, and R. W. Heath, "Framework for a perceptive mobile network using joint communication and radar sensing," IEEE Trans. Aerospace and Electronic Systems, vol. 56, no. 3, pp. 1926-1941, Jun. 2020.
+[17] Z. Qin, H. Ye, G. Y. Li, and B.-H. F. Juang, "Deep learning in physical layer communications," IEEE Wireless Communications, vol. 26, no. 2, pp. 93-99, Apr. 2019.
 
-[19] P. Zhou, X. Fang, X. Wang, Y. Long, R. He, and X. Han, "Deep learning-based beam tracking for millimeter-wave communications under mobility," IEEE Access, vol. 8, pp. 141789-141797, 2020.
+[18] N. Samuel, T. Diskin, and A. Wiesel, "Deep MIMO detection," in Proc. IEEE Int. Workshop Signal Process. Advances Wireless Commun. (SPAWC), Jul. 2017, pp. 1-5.
 
-[20] F. Rusek, D. Persson, B. K. Lau, E. G. Larsson, T. L. Marzetta, O. Edfors, and F. Tufvesson, "Scaling up MIMO: Opportunities and challenges with very large arrays," IEEE Signal Processing Magazine, vol. 30, no. 1, pp. 40-60, Jan. 2013.
+[19] H. Ye, G. Y. Li, and B.-H. Juang, "Power of deep learning for channel estimation and signal detection in OFDM systems," IEEE Wireless Communications Letters, vol. 7, no. 1, pp. 114-117, Feb. 2018.
 
-[21] Q. Wu and R. Zhang, "Intelligent reflecting surface enhanced wireless network via joint active and passive beamforming," IEEE Trans. Wireless Communications, vol. 18, no. 11, pp. 5394-5409, Nov. 2019.
+[20] T. Wang, C.-K. Wen, H. Wang, F. Gao, T. Jiang, and S. Jin, "Deep learning for wireless physical layer: Opportunities and challenges," China Communications, vol. 14, no. 11, pp. 92-111, Nov. 2017.
 
-[22] H. Sun, X. Chen, Q. Shi, M. Hong, X. Fu, and N. D. Sidiropoulos, "Learning to optimize: Training deep neural networks for interference management," IEEE Trans. Signal Processing, vol. 66, no. 20, pp. 5438-5453, Oct. 2018.
+[21] N. Farsad and A. Goldsmith, "Neural network detection of data sequences in communication systems," IEEE Trans. Signal Processing, vol. 66, no. 21, pp. 5663-5678, Nov. 2018.
 
-[23] V. Mnih, K. Kavukcuoglu, D. Silver, A. Graves, I. Antonoglou, D. Wierstra, and M. Riedmiller, "Playing Atari with deep reinforcement learning," arXiv preprint arXiv:1312.5602, 2013.
+[22] D. Tse and P. Viswanath, Fundamentals of Wireless Communication. Cambridge, UK: Cambridge University Press, 2005.
 
-[24] R. S. Sutton and A. G. Barto, Reinforcement Learning: An Introduction, 2nd ed. Cambridge, MA: MIT Press, 2018.
+[23] A. Alkhateeb, S. Alex, P. Varkey, Y. Li, Q. Qu, and D. Tujkovic, "Deep learning coordinated beamforming for highly-mobile millimeter wave systems," IEEE Access, vol. 6, pp. 37328-37348, 2018.
 
-[25] V. Mnih, K. Kavukcuoglu, D. Silver, A. A. Rusu, J. Veness, M. G. Bellemare, A. Graves, M. Riedmiller, A. K. Fidjeland, G. Ostrovski, et al., "Human-level control through deep reinforcement learning," Nature, vol. 518, no. 7540, pp. 529-533, 2015.
+[24] C. Huang, G. C. Alexandropoulos, A. Zappone, M. Debbah, and C. Yuen, "Reconfigurable intelligent surfaces for energy efficiency in wireless communication," IEEE Trans. Wireless Communications, vol. 18, no. 8, pp. 4157-4170, Aug. 2019.
 
-[26] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, "Proximal policy optimization algorithms," arXiv preprint arXiv:1707.06347, 2017.
+[25] Q. Wu and R. Zhang, "Beamforming optimization for wireless network aided by intelligent reflecting surface with discrete phase shifts," IEEE Trans. Communications, vol. 68, no. 3, pp. 1838-1851, Mar. 2020.
 
-[27] L. Liang, H. Ye, G. Yu, and G. Y. Li, "Deep-learning-based wireless resource allocation with application to vehicular networks," Proceedings of the IEEE, vol. 108, no. 2, pp. 341-356, Feb. 2020.
+[26] M. L. Rahman, J. A. Zhang, X. Huang, Y. J. Guo, and R. W. Heath, "Framework for a perceptive mobile network using joint communication and radar sensing," IEEE Trans. Aerospace and Electronic Systems, vol. 56, no. 3, pp. 1926-1941, Jun. 2020.
 
-[28] C. Finn, P. Abbeel, and S. Levine, "Model-agnostic meta-learning for fast adaptation of deep networks," in Proc. Int. Conf. Machine Learning (ICML), 2017, pp. 1126-1135.
+[27] P. Zhou, X. Fang, X. Wang, Y. Long, R. He, and X. Han, "Deep learning-based beam tracking for millimeter-wave communications under mobility," IEEE Access, vol. 8, pp. 141789-141797, 2020.
 
-[29] S. J. Pan and Q. Yang, "A survey on transfer learning," IEEE Trans. Knowledge and Data Engineering, vol. 22, no. 10, pp. 1345-1359, Oct. 2010.
+[28] F. Rusek, D. Persson, B. K. Lau, E. G. Larsson, T. L. Marzetta, O. Edfors, and F. Tufvesson, "Scaling up MIMO: Opportunities and challenges with very large arrays," IEEE Signal Processing Magazine, vol. 30, no. 1, pp. 40-60, Jan. 2013.
 
-[30] T. J. O'Shea, J. Corgan, and T. C. Clancy, "Convolutional radio modulation recognition networks," in Proc. Int. Conf. Engineering Applications of Neural Networks, 2016, pp. 213-226.
+[29] Q. Wu and R. Zhang, "Intelligent reflecting surface enhanced wireless network via joint active and passive beamforming," IEEE Trans. Wireless Communications, vol. 18, no. 11, pp. 5394-5409, Nov. 2019.
 
-[31] F. A. Aoudia and J. Hoydis, "End-to-end learning of communications systems without a channel model," in Proc. Asilomar Conf. Signals, Systems, and Computers, Oct. 2018, pp. 298-303.
+[30] H. Sun, X. Chen, Q. Shi, M. Hong, X. Fu, and N. D. Sidiropoulos, "Learning to optimize: Training deep neural networks for interference management," IEEE Trans. Signal Processing, vol. 66, no. 20, pp. 5438-5453, Oct. 2018.
 
-[32] S. Rajendran, W. Meert, D. Giustiniano, V. Lenders, and S. Pollin, "Deep learning models for wireless signal classification with distributed low-cost spectrum sensors," IEEE Trans. Cognitive Communications and Networking, vol. 4, no. 3, pp. 433-445, Sep. 2018.
+[31] V. Mnih, K. Kavukcuoglu, D. Silver, A. A. Rusu, J. Veness, M. G. Bellemare, A. Graves, M. Riedmiller, A. K. Fidjeland, G. Ostrovski, et al., "Human-level control through deep reinforcement learning," Nature, vol. 518, no. 7540, pp. 529-533, 2015.
 
-[33] Y. LeCun, Y. Bengio, and G. Hinton, "Deep learning," Nature, vol. 521, no. 7553, pp. 436-444, May 2015.
+[32] R. S. Sutton and A. G. Barto, Reinforcement Learning: An Introduction, 2nd ed. Cambridge, MA: MIT Press, 2018.
 
-[34] N. Farsad and A. Goldsmith, "Neural network detection of data sequences in communication systems," IEEE Trans. Signal Processing, vol. 66, no. 21, pp. 5663-5678, Nov. 2018.
+[33] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, "Proximal policy optimization algorithms," arXiv preprint arXiv:1707.06347, 2017.
 
-[35] T. Gruber, S. Cammerer, J. Hoydis, and S. ten Brink, "On deep learning-based channel decoding," in Proc. Annu. Conf. Information Sciences and Systems (CISS), Mar. 2017, pp. 1-6.
+[34] L. Liang, H. Ye, G. Yu, and G. Y. Li, "Deep-learning-based wireless resource allocation with application to vehicular networks," Proceedings of the IEEE, vol. 108, no. 2, pp. 341-356, Feb. 2020.
 
-[36] H. Xie, Z. Qin, G. Y. Li, and B.-H. Juang, "Deep learning enabled semantic communication systems," IEEE Trans. Signal Processing, vol. 69, pp. 2663-2675, 2021.
+[35] C. Finn, P. Abbeel, and S. Levine, "Model-agnostic meta-learning for fast adaptation of deep networks," in Proc. Int. Conf. Machine Learning (ICML), 2017, pp. 1126-1135.
 
-[37] J. Bao, P. Basu, M. Dean, C. Partridge, A. Swami, W. Leland, and J. A. Hendler, "Towards a theory of semantic communication," in Proc. IEEE Network Science Workshop, Jun. 2011, pp. 110-117.
+[36] S. J. Pan and Q. Yang, "A survey on transfer learning," IEEE Trans. Knowledge and Data Engineering, vol. 22, no. 10, pp. 1345-1359, Oct. 2010.
 
-[38] E. Bourtsoulatze, D. B. Kurka, and D. Gündüz, "Deep joint source-channel coding for wireless image transmission," IEEE Trans. Cognitive Communications and Networking, vol. 5, no. 3, pp. 567-579, Sep. 2019.
+[37] T. J. O'Shea, J. Corgan, and T. C. Clancy, "Convolutional radio modulation recognition networks," in Proc. Int. Conf. Engineering Applications of Neural Networks, 2016, pp. 213-226.
 
-[39] C. K. Wen, W. T. Shih, and S. Jin, "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, Oct. 2018.
+[38] F. A. Aoudia and J. Hoydis, "End-to-end learning of communications systems without a channel model," in Proc. Asilomar Conf. Signals, Systems, and Computers, Oct. 2018, pp. 298-303.
 
-[40] G. Gui, H. Huang, Y. Song, and H. Sari, "Deep learning for an effective nonorthogonal multiple access scheme," IEEE Trans. Vehicular Technology, vol. 67, no. 9, pp. 8440-8450, Sep. 2018.
+[39] S. Rajendran, W. Meert, D. Giustiniano, V. Lenders, and S. Pollin, "Deep learning models for wireless signal classification with distributed low-cost spectrum sensors," IEEE Trans. Cognitive Communications and Networking, vol. 4, no. 3, pp. 433-445, Sep. 2018.
 
-[41] F. A. Aoudia and J. Hoydis, "Model-free training of end-to-end communication systems," IEEE J. Selected Areas in Communications, vol. 37, no. 11, pp. 2503-2516, Nov. 2019.
+[40] Y. LeCun, Y. Bengio, and G. Hinton, "Deep learning," Nature, vol. 521, no. 7553, pp. 436-444, May 2015.
+
+[41] T. Gruber, S. Cammerer, J. Hoydis, and S. ten Brink, "On deep learning-based channel decoding," in Proc. Annu. Conf. Information Sciences and Systems (CISS), Mar. 2017, pp. 1-6.
+
+[42] H. Xie, Z. Qin, G. Y. Li, and B.-H. Juang, "Deep learning enabled semantic communication systems," IEEE Trans. Signal Processing, vol. 69, pp. 2663-2675, 2021.
+
+[43] J. Bao, P. Basu, M. Dean, C. Partridge, A. Swami, W. Leland, and J. A. Hendler, "Towards a theory of semantic communication," in Proc. IEEE Network Science Workshop, Jun. 2011, pp. 110-117.
+
+[44] E. Bourtsoulatze, D. B. Kurka, and D. Gündüz, "Deep joint source-channel coding for wireless image transmission," IEEE Trans. Cognitive Communications and Networking, vol. 5, no. 3, pp. 567-579, Sep. 2019.
+
+[45] F. A. Aoudia and J. Hoydis, "Model-free training of end-to-end communication systems," IEEE J. Selected Areas in Communications, vol. 37, no. 11, pp. 2503-2516, Nov. 2019.
