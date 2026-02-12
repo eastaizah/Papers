@@ -73,7 +73,7 @@ donde el índice $k$ representa desplazamiento temporal o espacial. Las CNN son 
 $$\mathbf{h}_t = \sigma(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{W}_{xh}\mathbf{x}_t + \mathbf{b}_h)$$
 $$\mathbf{o}_t = \mathbf{W}_{ho}\mathbf{h}_t + \mathbf{b}_o$$
 
-Las Long Short-Term Memory (LSTM) [27] redes extienden este concepto con mecanismos de compuerta para capturar dependencias de largo alcance:
+Las redes Long Short-Term Memory (LSTM) [27] extienden este concepto con mecanismos de compuerta para capturar dependencias de largo alcance:
 
 $$\mathbf{f}_t = \sigma_g(\mathbf{W}_f\mathbf{x}_t + \mathbf{U}_f\mathbf{h}_{t-1} + \mathbf{b}_f)$$
 $$\mathbf{i}_t = \sigma_g(\mathbf{W}_i\mathbf{x}_t + \mathbf{U}_i\mathbf{h}_{t-1} + \mathbf{b}_i)$$
