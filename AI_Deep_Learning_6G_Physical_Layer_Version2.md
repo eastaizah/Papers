@@ -371,7 +371,7 @@ El despliegue eficiente requiere técnicas de cuantización, poda, y destilació
 
 ## III. DETECCIÓN DE SEÑALES CON REDES NEURONALES
 
-La detección de señales es un componente crítico del receptor, responsable de estimar símbolos o bits transmitidos desde señales recibidas ruidosas. En sistemas MIMO de alta dimensión, la detección óptima tiene complejidad exponencial, motivando aproximaciones subóptimas. El DL ofrece detectores que balancean rendimiento y complejidad mediante aprendizaje de estructuras de detección efectivas.
+La detección de señales es un componente crítico del receptor [22], [31], responsable de estimar símbolos o bits transmitidos desde señales recibidas ruidosas. En sistemas MIMO de alta dimensión, la detección óptima tiene complejidad exponencial [22], [28], motivando aproximaciones subóptimas. El DL ofrece detectores que balancean rendimiento y complejidad mediante aprendizaje de estructuras de detección efectivas.
 
 ### A. Problema de Detección en Sistemas MIMO
 
@@ -618,7 +618,7 @@ $$\mathbf{w}_v = f_{\text{out}}(\mathbf{h}_v^{(L)})$$
 
 El GNN aprende estrategias de coordinación que balancean ganancia local vs. interferencia a vecinos.
 
-### G. Hybrid Analog-Digital Beamforming
+### G. Hybrid Analog-Digital Beamforming [25]
 
 **Arquitectura Híbrida**: Combinación de beamforming analógico (phase shifters) y digital (baseband):
 
@@ -1182,7 +1182,7 @@ Entrenamiento end-to-end maximiza recompensa de tarea sujeto a restricciones de 
 
 **Generalización**: Modelos entrenados en datasets específicos pueden no generalizar a datos out-of-distribution.
 
-**Solución**: Meta-learning, domain adaptation, continual learning
+**Solución**: Meta-learning, domain adaptation, continual learning [37]
 
 **Seguridad y Privacidad**: Representaciones semánticas pueden revelar información sensible.
 
@@ -1628,7 +1628,7 @@ Revela qué patrones detecta neurona $l$.
 
 **4) Model Sharing**: Múltiples aplicaciones comparten modelos base:
 
-- Foundation models for wireless
+- Foundation models [10], [11] for wireless
 - Reduce duplicación de esfuerzo de entrenamiento
 
 **5) Green AI**: Métricas que consideran eficiencia energética además de precisión:
@@ -1663,7 +1663,7 @@ Contexto incluye metadatos (frecuencia, configuración, QoS), permitiendo modelo
 - Mejora generalización mediante pre-entrenamiento en datos diversos
 - Facilita estandarización (architecture única con diferentes pesos)
 
-**2) Self-Supervised Learning**: Reducir dependencia de datos etiquetados costosos:
+**2) Self-Supervised Learning [11]**: Reducir dependencia de datos etiquetados costosos:
 
 **Contrastive Learning**: Aprender representaciones que distinguen muestras:
 
@@ -1706,7 +1706,7 @@ donde $U(\theta)$ son puertas cuánticas parametrizadas.
 
 **Desafíos**: Hardware cuántico aún en etapa temprana, ruido, escalabilidad limitada.
 
-**5) Neuromorphic Computing**: Hardware inspirado en el cerebro para procesamiento eficiente:
+**5) Neuromorphic Computing [11]**: Hardware inspirado en el cerebro para procesamiento eficiente:
 
 **Spiking Neural Networks**: Usar spikes temporales en lugar de activaciones continuas:
 
@@ -1928,7 +1928,7 @@ La investigación presentada en este artículo demuestra que las bases técnicas
 
 [6] D. Tse and P. Viswanath, Fundamentals of Wireless Communication. Cambridge, UK: Cambridge University Press, 2005.
 
-[7] E. Basar, M. Di Renzo, J. De Rosny, M. Debbah, M. S. Alouini, and R. Zhang, "Wireless communications through reconfigurable intelligent surfaces," IEEE Access, vol. 7, pp. 116753-116773, 2019.
+[7] E. Basar, M. Di Renzo, J. De Rosny, M. Debbah, M. S. Alouini, and R. Zhang, "Wireless communications through reconfigurable intelligent surface [7], [29], [30]s," IEEE Access, vol. 7, pp. 116753-116773, 2019.
 
 [8] T. O'Shea and J. Hoydis, "An introduction to deep learning for the physical layer," IEEE Trans. Cognitive Communications and Networking, vol. 3, no. 4, pp. 563-575, Dec. 2017.
 
