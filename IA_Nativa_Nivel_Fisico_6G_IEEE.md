@@ -560,7 +560,7 @@ Los autocodificadores neuronales aprenden implícitamente constelaciones que max
 
 **Bounds de Error para Códigos Neuronales:** La teoría de codificación de canal establece que para tasas $R < C$, existen códigos con probabilidad de error arbitrariamente pequeña. Para códigos neuronales con longitud de bloque $n$, el exponente de error aleatorio de Gallager proporciona:
 
-$$P_e \geq 2^{-n[E_r(R) + o(1)]}$$
+$$P_e \leq 2^{-n[E_r(R) + o(1)]}$$
 
 donde $E_r(R)$ es el exponente de error aleatorio:
 
