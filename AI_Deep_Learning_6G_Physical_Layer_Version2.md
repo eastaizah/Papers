@@ -1629,6 +1629,408 @@ Incentivar desarrollo de modelos eficientes.
 ---
 
 
+## XII. DIRECCIONES FUTURAS Y CONCLUSIONES ### A. Tendencias Emergentes **1) Foundation Models para Comunicaciones Inalámbricas**: Inspirados por éxito en NLP (GPT, BERT), desarrollar modelos de propósito general pre-entrenados en grandes corpus de datos de comunicaciones,: **Concepto**: - Pre-entrenar en datasets diversos (múltiples canales, frecuencias, configuraciones) - Fine-tune para tareas específicas (detección, estimación, beamforming) - Transfer learning facilita adaptación con datos limitados **Arquitectura Transformer Universal**: Usar transformers como backbone universal: $$\mathbf{h} = \text{Transformer}(\mathbf{x}_{\text{pilot}}, \mathbf{x}_{\text{data}}, \text{context})$$ Contexto incluye metadatos (frecuencia, configuración, QoS), permitiendo modelo único para múltiples escenarios. **Ventajas**: - Reduce costo de desarrollo de modelos especializados - Mejora generalización mediante pre-entrenamiento en datos diversos - Facilita estandarización (architecture única con diferentes pesos) **2) Self-Supervised Learning**: Reducir dependencia de datos etiquetados costosos: **Contrastive Learning**: Aprender representaciones que distinguen muestras: $$\mathcal{L} = -\log\frac{\exp(\text{sim}(\mathbf{z}_i,\mathbf{z}^+)/\tau)}{\sum_j\exp(\text{sim}(\mathbf{z}_i,\mathbf{z}_j)/\tau)}$$ donde $\mathbf{z}^+$ es aumentación de $\mathbf{z}_i$. **Masked Autoencoders**: Predecir partes enmascaradas de señales: - Mask porción de símbolos/subportadoras recibidas - Entrenar red para reconstruir partes enmascaradas - Representaciones aprendidas útiles para downstream tasks **3) Neural-Enhanced Physical Layer Security**: Usar DL para seguridad de capa física: **Physical Layer Authentication**: Identificar dispositivos mediante características únicas de canal/hardware: $$\text{Device ID} = f_{\text{DNN}}(\mathbf{h}, \text{RF fingerprint}; \theta)$$ DNNs detectan sutilezas en señales que identifican dispositivo transmisor. **Secure Transmission con GAN**: Generar señales que son difíciles de interceptar: - Generator: Crea señales que maximize secrecy rate - Discriminator: Actúa como eavesdropper - Entrenamiento adversarial maximiza información a receptor legítimo minimizando a eavesdropper **4) Quantum-Enhanced Machine Learning para 6G**: Explorar algoritmos cuánticos para optimización: **Quantum Neural Networks**: Usar computación cuántica para ciertos cálculos: $$|\psi\rangle = U(\theta)|\psi_0\rangle$$ donde $U(\theta)$ son puertas cuánticas parametrizadas. **Aplicaciones potenciales**: - Optimización combinatorial (resource allocation) - Sampling de distribuciones complejas (channel generation) - Speedup cuántico para ciertos problemas **Desafíos**: Hardware cuántico aún en etapa temprana, ruido, escalabilidad limitada. **5) Neuromorphic Computing**: Hardware inspirado en el cerebro para procesamiento eficiente: **Spiking Neural Networks**: Usar spikes temporales en lugar de activaciones continuas: $$\frac{dv}{dt} = -\frac{v}{\tau} + I(t)$$ Si $v(t) > \theta$, neurona emite spike y resetea. **Ventajas**: - Eficiencia energética extrema (event-driven) - Latencia ultra-baja - Procesamiento temporal natural **Aplicaciones en comunicaciones**: - Detección de señales sparse - Procesamiento en tiempo real en edge devices **6) Continual Learning y Lifelong Learning**: Modelos que aprenden continuamente sin olvidar: **Elastic Weight Consolidation**: Penalizar cambios en pesos importantes para tareas previas: $$\mathcal{L}(\theta) = \mathcal{L}_{\text{new}}(\theta) + \sum_i \frac{\lambda}{2}F_i(\theta_i - \theta_i^*)^2$$ donde $F_i$ es importancia del peso $i$ para tareas previas (Fisher information). **Progressive Neural Networks**: Expandir arquitectura para nuevas tareas manteniendo pesos previos congelados. **Aplicaciones**: - Adaptar a nuevos escenarios sin re-entrenar desde cero - Sistemas que mejoran continuamente con deployment ### B. Integración con Tecnologías Emergentes **1) IA Nativa en Arquitecturas O-RAN**: Integración profunda de ML en RAN abierto: **Near-RT RIC (Real-Time RIC)**: ML con latencia 10-1000 ms: - Scheduling inteligente - Mobility management - Interference management **Non-RT RIC**: ML con latencia >1 segundo: - Optimización de políticas - Transfer learning - Model training **xApps y rApps**: Aplicaciones de terceros que usan ML: - Marketplace de algoritmos de IA - Competencia e innovación en optimización de RAN **2) Integración con Comunicaciones Terahertz**: IA para superar desafíos de THz: **Beam Management**: Arrays masivos en THz requieren beam management eficiente: - DL para predicción ultra-rápida de beams - Tracking en movilidad extrema **Compensación de Impairments**: THz sufre phase noise severo, non-linearities: - DNNs para ecualización y compensación adaptativa **Channel Modeling**: Modelado de canales THz complejos mediante GANs. **3) IA para Comunicaciones Underwater y Satélite**: Extender técnicas a entornos extremos: **Underwater Acoustic Communications**: Canales con delay spread masivo, Doppler severo: - RNN para ecualización de canales underwater - Adaptive modulation para condiciones cambiantes **Satellite Communications**: LEO mega-constellations con handoffs frecuentes: - DRL para resource allocation en redes satelitales - Predicción de tráfico y beam steering **4) Integración con Computación Cuántica**: Comunicaciones cuánticas con IA clásica: **Quantum Key Distribution**: Optimizar protocolos con ML: - Detección de eavesdropping mediante anomaly detection - Optimización de rate vs. security **Hybrid Quantum-Classical Networks**: Ruteo y resource allocation en redes híbridas. ### C. Investigación Abierta y Desafíos Fundamentales **1) Límites Teóricos de IA en Comunicaciones**: Establecer límites fundamentales: **Pregunta**: ¿Cuál es la capacidad alcanzable por sistemas de comunicación end-to-end aprendidos? **Conjeturas**: - Con modelo de canal perfecto, IA puede aproximar capacidad de Shannon arbitrariamente - Con incertidumbre de canal, ¿puede IA superar esquemas robustos tradicionales? **Sample Complexity**: ¿Cuántos datos se requieren para aprender comunicación óptima? $$N_{\text{samples}} = \Theta(?)$$ Bounds teóricos ayudarían a guiar diseño práctico. **2) Unificación de Model-Based y Data-Driven Approaches**: Combinar conocimiento físico con aprendizaje: **Physics-Informed Neural Networks**: Incorporar ecuaciones físicas en pérdida: $$\mathcal{L} = \mathcal{L}_{\text{data}} + \lambda\mathcal{L}_{\text{physics}}$$ donde $\mathcal{L}_{\text{physics}}$ penaliza violaciones de leyes físicas (conservación de energía, reciprocidad de canal, etc.). **Neural ODEs para Canal Dynamics**: Modelar evolución temporal de canal con ecuaciones diferenciales aprendidas: $$\frac{d\mathbf{h}(t)}{dt} = f_{\theta}(\mathbf{h}(t), t)$$ Combina modelado físico con flexibilidad de DL. **3) Multi-Objective Optimization**: Balancear objetivos conflictivos: **Pareto Optimality**: Encontrar frente de Pareto entre: - Throughput vs. Latency - Spectral Efficiency vs. Energy Efficiency - Performance vs. Complexity **Multi-Task Learning**: Entrenar un modelo para optimizar múltiples objetivos: $$\mathcal{L} = \sum_{i=1}^{K}w_i\mathcal{L}_i$$ Aprender pesos $w_i$ dinámicamente basándose en importancia relativa. **4) Causalidad en Sistemas de Comunicación**: Entender relaciones causales en lugar de solo correlaciones: **Causal Inference**: Identificar efectos causales de intervenciones: - ¿Qué pasa si cambio potencia de transmisión? - ¿Cómo afecta beam selection a throughput? **Structural Causal Models**: Representar sistema como grafo causal: $$\mathbf{h} \to \text{SINR} \to \text{MCS} \to \text{Throughput}$$ Permite reasoning sobre intervenciones y counterfactuals. **5) Federación Global de Modelos**: Colaboración internacional en desarrollo de IA para 6G: **Global Federated Learning**: Operators de múltiples países colaboran: - Preserva privacidad de datos locales - Modelos benefician de diversidad global - Desafíos: Heterogeneidad extrema, regulaciones, trust **Model Zoos**: Repositorios públicos de modelos pre-entrenados: - Acelera investigación y desarrollo - Benchmarking estandarizado - Reproducibilidad ### F. Conclusiones Este artículo ha presentado una revisión exhaustiva y análisis profundo de la aplicación de Inteligencia Artificial y Deep Learning en la capa física de sistemas de comunicaciones inalámbricas 6G y posteriores. Se han explorado en detalle las arquitecturas de redes neuronales profundas, formulaciones matemáticas subyacentes, y desarrollos analíticos para cada componente crítico de la capa física. **Hallazgos Clave**: 1. **Superación de Métodos Tradicionales**: Las técnicas basadas en DL han demostrado superar consistentemente métodos clásicos en múltiples dimensiones: - **Estimación de Canal**: Ganancias de 3-5 dB en NMSE comparado con MMSE en canales complejos - **Compresión CSI**: Reducción de overhead de feedback en $8\times-16\times$ manteniendo rendimiento - **Detección MIMO**: Aproximación a rendimiento ML con complejidad fija, 90-98% del rendimiento óptimo - **Beamforming**: Latencia reducida en $100\times$ comparado con optimización iterativa - **Resource Allocation**: Coordinación aprendida en sistemas multi-agente supera métodos centralizados 2. **Viabilidad de Implementación**: Los desafíos de complejidad computacional pueden abordarse mediante: - Cuantización (INT8/INT4) reduce recursos en $4\times-8\times$ con degradación <1 dB - Poda estructurada permite reducción de parámetros en $10\times$ - Hardware especializado (FPGAs, ASICs) logra latencia sub-milisegundo con eficiencia energética superior 3. **Adaptabilidad y Generalización**: Meta-learning y transfer learning permiten: - Adaptación rápida a nuevos escenarios con datos limitados - Reducción de costos de entrenamiento en $100\times$ mediante reutilización de modelos - Robustez a domain shift mediante técnicas de domain adaptation 4. **Comunicación Semántica**: Representa cambio paradigmático con: - Compresión de $10\times-100\times$ para tareas específicas - Optimización end-to-end para objetivo final en lugar de reconstrucción exacta - Potencial de redefinir arquitecturas de comunicación 5. **Desafíos Persistentes**: Áreas requiriendo investigación continua: - Estandarización e interoperabilidad entre vendors - Robustez adversarial y seguridad - Interpretabilidad y explicabilidad para deployment en sistemas críticos - Límites teóricos fundamentales de comunicación aprendida - Sostenibilidad ambiental del entrenamiento masivo **Direcciones Futuras Prometedoras**: La convergencia de múltiples tendencias tecnológicas sugiere un futuro donde: - **Foundation Models** pre-entrenados en datos diversos facilitan desarrollo rápido de aplicaciones especializadas - **Self-Supervised Learning** reduce dependencia de datos etiquetados costosos - **Continual Learning** permite sistemas que mejoran continuamente durante deployment - **Integración con O-RAN** democratiza innovación mediante interfaces abiertas y marketplace de algoritmos - **Comunicaciones Terahertz** habilitadas por IA superan limitaciones de técnicas tradicionales - **Neuromorphic Computing** ofrece eficiencia energética revolucionaria para procesamiento en edge **Perspectiva Final**: La integración de Inteligencia Artificial y Deep Learning en la capa física representa no meramente una optimización incremental de tecnologías existentes, sino una transformación fundamental del paradigma de diseño de sistemas de comunicaciones inalámbricas. La transición de enfoques model-based a data-driven, y finalmente a sistemas híbridos que combinan conocimiento físico con capacidad de aprendizaje, promete desbloquear capacidades que eran inalcanzables mediante métodos convencionales. Los sistemas 6G nativos de IA no solo lograrán mejoras cuantitativas en métricas tradicionales (throughput, latencia, eficiencia espectral), sino que habilitarán capacidades cualitativamente nuevas: adaptación instantánea a condiciones cambiantes, comunicación semántica orientada a tareas, coordinación autónoma en redes ultra-densas, y personalización extrema de servicios. Sin embargo, la realización de esta visión requiere esfuerzos concertados en múltiples frentes: desarrollo de teoría fundamental que establezca límites y garantías, creación de datasets públicos representativos, estandarización de arquitecturas e interfaces, desarrollo de hardware eficiente, establecimiento de marcos regulatorios apropiados, y formación de talento especializado. La investigación presentada en este artículo demuestra que las bases técnicas están establecidas. El desafío ahora es traducir estos avances de laboratorio en sistemas desplegados que transformen comunicaciones inalámbricas para la próxima década y más allá. El futuro de las comunicaciones es indudablemente inteligente. --- ## REFERENCIAS
+
+ M. Giordani et al., "Toward 6G networks: Use cases and technologies," IEEE Communications Magazine, vol. 58, no. 3, pp. 55-61, 2020.
+
+ W. Saad, M. Bennis, and M. Chen, "A vision of 6G wireless systems: Applications, trends, technologies, and open research problems," IEEE Network, vol. 34, no. 3, pp. 134-142, 2020.
+
+ T. S. Rappaport et al., "Wireless communications and applications above 100 GHz: Opportunities and challenges for 6G and beyond," IEEE Access, vol. 7, pp. 78729-78757, 2019.
+
+ M. Latva-aho and K. Leppänen, "Key drivers and research challenges for 6G ubiquitous wireless intelligence," University of Oulu, White Paper, 2019.
+
+ T. O'Shea and J. Hoydis, "An introduction to deep learning for the physical layer," IEEE Transactions on Cognitive Communications and Networking, vol. 3, no. 4, pp. 563-575, 2017.
+
+ C. Zhang et al., "Deep learning in mobile and wireless networking: A survey," IEEE Communications Surveys & Tutorials, vol. 21, no. 3, pp. 2224-2287, 2019.
+
+ N. C. Luong et al., "Applications of deep reinforcement learning in communications and sensing: A survey," IEEE Communications Surveys & Tutorials, vol. 21, no. 4, pp. 3133-3174, 2019.
+
+ J. M. Jornet and I. F. Akyildiz, "Channel modeling and capacity analysis for electromagnetic wireless nanonetworks in the terahertz band," IEEE Transactions on Wireless Communications, vol. 10, no. 10, pp. 3211-3221, 2011.
+
+ Z. Chen et al., "A survey on terahertz communications," China Communications, vol. 16, no. 2, pp. 1-35, 2019.
+
+ E. G. Larsson et al., "Massive MIMO for next generation wireless systems," IEEE Communications Magazine, vol. 52, no. 2, pp. 186-195, 2014.
+
+ F. Rusek et al., "Scaling up MIMO: Opportunities and challenges with very large arrays," IEEE Signal Processing Magazine, vol. 30, no. 1, pp. 40-60, 2013.
+
+ K. B. Letaief et al., "The roadmap to 6G: AI empowered wireless networks," IEEE Communications Magazine, vol. 57, no. 8, pp. 84-90, 2019.
+
+ H. Ye, G. Y. Li, and B.-H. Juang, "Power of deep learning for channel estimation and signal detection in OFDM systems," IEEE Wireless Communications Letters, vol. 7, no. 1, pp. 114-117, 2018.
+
+ S. Dörner et al., "Deep learning based communication over the air," IEEE Journal of Selected Topics in Signal Processing, vol. 12, no. 1, pp. 132-143, 2018.
+
+ Q. Mao et al., "Deep learning for intelligent wireless networks: A comprehensive survey," IEEE Communications Surveys & Tutorials, vol. 20, no. 4, pp. 2595-2621, 2018.
+
+ A. Goldsmith, Wireless Communications. Cambridge University Press, 2005.
+
+ D. Tse and P. Viswanath, Fundamentals of Wireless Communication. Cambridge University Press, 2005.
+
+ A. Paulraj, R. Nabar, and D. Gore, Introduction to Space-Time Wireless Communications. Cambridge University Press, 2003.
+
+ T. J. O'Shea, K. Karra, and T. C. Clancy, "Learning to communicate: Channel auto-encoders, domain specific regularizers, and attention," in Proc. IEEE SPAWC, 2016.
+
+ H. Kim et al., "Communication algorithms via deep learning," in Proc. ICLR, 2018.
+
+ F. A. Aoudia and J. Hoydis, "End-to-end learning of communications systems without a channel model," in Proc. IEEE ACSSC, 2018.
+
+ I. Goodfellow, Y. Bengio, and A. Courville, Deep Learning. MIT Press, 2016.
+
+ Y. LeCun, Y. Bengio, and G. Hinton, "Deep learning," Nature, vol. 521, pp. 436-444, 2015.
+
+ V. Nair and G. E. Hinton, "Rectified linear units improve restricted Boltzmann machines," in Proc. ICML, 2010.
+
+ K. He et al., "Deep residual learning for image recognition," in Proc. IEEE CVPR, 2016.
+
+ Y. LeCun et al., "Gradient-based learning applied to document recognition," Proceedings of the IEEE, vol. 86, no. 11, pp. 2278-2324, 1998.
+
+ S. Hochreiter and J. Schmidhuber, "Long short-term memory," Neural Computation, vol. 9, no. 8, pp. 1735-1780, 1997.
+
+ K. Cho et al., "Learning phrase representations using RNN encoder-decoder for statistical machine translation," in Proc. EMNLP, 2014.
+
+ D. P. Kingma and M. Welling, "Auto-encoding variational Bayes," in Proc. ICLR, 2014.
+
+ C. Doersch, "Tutorial on variational autoencoders," arXiv:1606.05908, 2016.
+
+ I. Goodfellow et al., "Generative adversarial nets," in Proc. NIPS, 2014.
+
+ M. Arjovsky, S. Chintala, and L. Bottou, "Wasserstein GAN," in Proc. ICML, 2017.
+
+ A. Vaswani et al., "Attention is all you need," in Proc. NIPS, 2017.
+
+ N. Carion et al., "End-to-end object detection with transformers," in Proc. ECCV, 2020.
+
+ R. S. Sutton and A. G. Barto, Reinforcement Learning: An Introduction, 2nd ed. MIT Press, 2018.
+
+ V. Mnih et al., "Human-level control through deep reinforcement learning," Nature, vol. 518, pp. 529-533, 2015.
+
+ J. Schulman et al., "Proximal policy optimization algorithms," arXiv:1707.06347, 2017.
+
+ M. Biguesh and A. B. Gershman, "Training-based MIMO channel estimation: A study of estimator tradeoffs and optimal training signals," IEEE Transactions on Signal Processing, vol. 54, no. 3, pp. 884-893, 2006.
+
+ E. Björnson, J. Hoydis, and L. Sanguinetti, "Massive MIMO networks: Spectral, energy, and hardware efficiency," Foundations and Trends in Signal Processing, vol. 11, no. 3-4, pp. 154-655, 2017.
+
+ S. Kay, Fundamentals of Statistical Signal Processing: Estimation Theory. Prentice Hall, 1993.
+
+ Y. S. Cho et al., MIMO-OFDM Wireless Communications with MATLAB. Wiley-IEEE Press, 2010.
+
+ M. Morelli and U. Mengali, "A comparison of pilot-aided channel estimation methods for OFDM systems," IEEE Transactions on Signal Processing, vol. 49, no. 12, pp. 3065-3073, 2001.
+
+ O. Edfors et al., "OFDM channel estimation by singular value decomposition," IEEE Transactions on Communications, vol. 46, no. 7, pp. 931-939, 1998.
+
+ J.-J. van de Beek et al., "On channel estimation in OFDM systems," in Proc. IEEE VTC, 1995.
+
+ T. L. Marzetta, "Noncooperative cellular wireless with unlimited numbers of base station antennas," IEEE Transactions on Wireless Communications, vol. 9, no. 11, pp. 3590-3600, 2010.
+
+ H. Ye, G. Y. Li, and B.-H. Juang, "Power of deep learning for channel estimation and signal detection in OFDM systems," IEEE Wireless Communications Letters, vol. 7, no. 1, pp. 114-117, 2018.
+
+ C.-K. Wen et al., "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, 2018.
+
+ M. Soltani et al., "Deep learning-based channel estimation," IEEE Communications Letters, vol. 23, no. 4, pp. 652-655, 2019.
+
+ W. Jakes, Microwave Mobile Communications. Wiley-IEEE Press, 1994.
+
+ P. Dong et al., "Deep CNN-based channel estimation for mmWave massive MIMO systems," IEEE Journal of Selected Topics in Signal Processing, vol. 13, no. 5, pp. 989-1000, 2019.
+
+ X. Gao et al., "ComNet: Combination of deep learning and expert knowledge in OFDM receivers," IEEE Communications Letters, vol. 22, no. 12, pp. 2627-2630, 2018.
+
+ H. He et al., "Deep learning-based channel estimation for beamspace mmWave massive MIMO systems," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 852-855, 2018.
+
+ Y. Yang et al., "Deep learning-based channel estimation for doubly selective fading channels," IEEE Access, vol. 7, pp. 36579-36589, 2019.
+
+ J. Gao et al., "Transformer-based channel estimation for massive MIMO systems," IEEE Communications Letters, vol. 25, no. 6, pp. 1984-1988, 2021.
+
+ H. Huang et al., "Deep learning for physical-layer 5G wireless techniques: Opportunities, challenges and solutions," IEEE Wireless Communications, vol. 27, no. 1, pp. 214-222, 2020.
+
+ Y. Jeon et al., "Two-stage semi-blind channel estimation for OFDM using conditional GAN," IEEE Communications Letters, vol. 24, no. 11, pp. 2561-2565, 2020.
+
+ T. Van Luong et al., "Reconfigurable intelligent surface-assisted wireless communications: Deep reinforcement learning and GAN-based approaches," IEEE Wireless Communications, vol. 28, no. 3, pp. 166-173, 2021.
+
+ W. Jiang and H. D. Schotten, "Deep learning for fading channel prediction," IEEE Open Journal of the Communications Society, vol. 1, pp. 320-332, 2020.
+
+ J. Liu et al., "Channel prediction using ordinary differential equations for MIMO systems," IEEE Transactions on Vehicular Technology, vol. 72, no. 2, pp. 2111-2119, 2023.
+
+ A. Duel-Hallen, "Fading channel prediction for mobile radio adaptive transmission systems," Proceedings of the IEEE, vol. 95, no. 12, pp. 2299-2313, 2007.
+
+ L. Medsker and L. C. Jain, Recurrent Neural Networks: Design and Applications. CRC Press, 1999.
+
+ Z. C. Lipton et al., "A critical review of recurrent neural networks for sequence learning," arXiv:1506.00019, 2015.
+
+ J. Chung et al., "Empirical evaluation of gated recurrent neural networks on sequence modeling," arXiv:1412.3555, 2014.
+
+ G. Bontempi et al., "Machine learning strategies for time series forecasting," in Business Intelligence. Springer, 2013, pp. 62-77.
+
+ I. Sutskever, O. Vinyals, and Q. V. Le, "Sequence to sequence learning with neural networks," in Proc. NIPS, 2014.
+
+ D. Bahdanau, K. Cho, and Y. Bengio, "Neural machine translation by jointly learning to align and translate," in Proc. ICLR, 2015.
+
+ A. Alkhateeb et al., "Channel estimation and hybrid precoding for millimeter wave cellular systems," IEEE Journal of Selected Topics in Signal Processing, vol. 8, no. 5, pp. 831-846, 2014.
+
+ R. W. Heath Jr. et al., "An overview of signal processing techniques for millimeter wave MIMO systems," IEEE Journal of Selected Topics in Signal Processing, vol. 10, no. 3, pp. 436-453, 2016.
+
+ D. L. Donoho, "Compressed sensing," IEEE Transactions on Information Theory, vol. 52, no. 4, pp. 1289-1306, 2006.
+
+ K. Gregor and Y. LeCun, "Learning fast approximations of sparse coding," in Proc. ICML, 2010.
+
+ V. Monga, Y. Li, and Y. C. Eldar, "Algorithm unrolling: Interpretable, efficient deep learning for signal and image processing," IEEE Signal Processing Magazine, vol. 38, no. 2, pp. 18-44, 2021.
+
+ A. Mousavi et al., "A deep learning approach to structured signal recovery," in Proc. IEEE Allerton, 2015.
+
+ K. Dabov et al., "Image denoising by sparse 3-D transform-domain collaborative filtering," IEEE Transactions on Image Processing, vol. 16, no. 8, pp. 2080-2095, 2007.
+
+ Z. Ding et al., "Application of non-orthogonal multiple access in LTE and 5G networks," IEEE Communications Magazine, vol. 55, no. 2, pp. 185-191, 2017.
+
+ R. R. Müller and H. Hoffmann, "Blind pilot decontamination," in Proc. International ITG Workshop on Smart Antennas, 2012.
+
+ J. Hoydis et al., "An introduction to deep learning for the physical layer," IEEE Transactions on Cognitive Communications and Networking, vol. 3, no. 4, pp. 563-575, 2017.
+
+ J. R. Treichler and B. G. Agee, "A new approach to multipath correction of constant modulus signals," IEEE Transactions on Acoustics, Speech, and Signal Processing, vol. 31, no. 2, pp. 459-472, 1983.
+
+ S. Chen et al., "Neural network aided constant modulus algorithm," IEEE Transactions on Neural Networks, vol. 8, no. 3, pp. 637-647, 1997.
+
+ S. J. Pan and Q. Yang, "A survey on transfer learning," IEEE Transactions on Knowledge and Data Engineering, vol. 22, no. 10, pp. 1345-1359, 2010.
+
+ M. Huisman et al., "A survey of deep meta-learning," Artificial Intelligence Review, vol. 54, pp. 4483-4541, 2021.
+
+ J. Yosinski et al., "How transferable are features in deep neural networks?" in Proc. NIPS, 2014.
+
+ C. Finn, P. Abbeel, and S. Levine, "Model-agnostic meta-learning for fast adaptation of deep networks," in Proc. ICML, 2017.
+
+ S. Park et al., "Meta-learning for wireless communications: Motivation, opportunities, and challenges," IEEE Communications Magazine, vol. 60, no. 6, pp. 68-74, 2022.
+
+ 3GPP, "Study on channel model for frequencies from 0.5 to 100 GHz (Release 16)," 3GPP TR 38.901, 2020.
+
+ P. Dong et al., "Deep CNN-based channel estimation for mmWave massive MIMO systems with hybrid precoding," IEEE Transactions on Vehicular Technology, vol. 69, no. 8, pp. 9337-9341, 2020.
+
+ W. Jiang and H. D. Schotten, "Neural network-based fading channel prediction: A comprehensive overview," IEEE Access, vol. 7, pp. 118112-118124, 2019.
+
+ Y. Cheng et al., "A survey of model compression and acceleration for deep neural networks," arXiv:1710.09282, 2017.
+
+ S. Han et al., "Deep compression: Compressing deep neural networks with pruning, trained quantization and Huffman coding," in Proc. ICLR, 2016.
+
+ D. J. Love et al., "An overview of limited feedback in wireless communication systems," IEEE Journal on Selected Areas in Communications, vol. 26, no. 8, pp. 1341-1365, 2008.
+
+ T. L. Marzetta et al., Fundamentals of Massive MIMO. Cambridge University Press, 2016.
+
+ N. Jindal, "MIMO broadcast channels with finite-rate feedback," IEEE Transactions on Information Theory, vol. 52, no. 11, pp. 5045-5060, 2006.
+
+ D. J. Love and R. W. Heath Jr., "Limited feedback unitary precoding for spatial multiplexing systems," IEEE Transactions on Information Theory, vol. 51, no. 8, pp. 2967-2976, 2005.
+
+ B. Clerckx et al., "A new look at dual-layer multiple antenna broadcast channels with finite-rate feedback," IEEE Transactions on Information Theory, vol. 57, no. 1, pp. 34-46, 2011.
+
+ C.-K. Wen et al., "Deep learning for wireless physical layer: Opportunities and challenges," China Communications, vol. 14, no. 11, pp. 92-111, 2017.
+
+ N. Ravindran and N. Jindal, "Limited feedback-based block diagonalization for the MIMO broadcast channel," IEEE Journal on Selected Areas in Communications, vol. 26, no. 8, pp. 1473-1482, 2008.
+
+ W. Santipach and M. L. Honig, "Asymptotic performance of MIMO wireless channels with limited feedback," in Proc. IEEE MILCOM, 2003.
+
+ K.-B. Song et al., "Adaptive time-varying decision feedback equalization," IEEE Transactions on Communications, vol. 47, no. 9, pp. 1350-1357, 1999.
+
+ T. K. Moon and W. C. Stirling, Mathematical Methods and Algorithms for Signal Processing. Prentice Hall, 2000.
+
+ T. Wang et al., "Deep learning for wireless physical layer: Opportunities and challenges," China Communications, vol. 14, no. 11, pp. 92-111, 2017.
+
+ C.-K. Wen et al., "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, 2018.
+
+ T. Wang et al., "Deep learning-based CSI feedback approach for time-varying massive MIMO channels," IEEE Wireless Communications Letters, vol. 8, no. 2, pp. 416-419, 2019.
+
+ C.-K. Wen et al., "Deep learning for massive MIMO CSI feedback," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 748-751, 2018.
+
+ J. Guo et al., "Convolutional neural network-based multiple-rate compressive sensing for massive MIMO CSI feedback: Design, simulation, and analysis," IEEE Transactions on Wireless Communications, vol. 19, no. 4, pp. 2827-2840, 2020.
+
+ K. He et al., "Deep residual learning for image recognition," in Proc. IEEE CVPR, 2016.
+
+ Z. Lu et al., "An attention-based approach for massive MIMO CSI feedback," IEEE Transactions on Vehicular Technology, vol. 70, no. 4, pp. 4017-4021, 2021.
+
+ J. Hu, L. Shen, and G. Sun, "Squeeze-and-excitation networks," in Proc. IEEE CVPR, 2018.
+
+ M. G. Kibria et al., "Transformer-based deep learning for CSI feedback in FDD massive MIMO systems," IEEE Communications Letters, vol. 26, no. 1, pp. 113-117, 2022.
+
+ Z. Dai et al., "Transformer-XL: Attentive language models beyond a fixed-length context," in Proc. ACL, 2019.
+
+ Y. Yang et al., "Deep learning-based channel estimation for massive MIMO systems with one-bit ADCs," IEEE Transactions on Signal Processing, vol. 68, pp. 5228-5242, 2020.
+
+ C. Ledig et al., "Photo-realistic single image super-resolution using a generative adversarial network," in Proc. IEEE CVPR, 2017.
+
+ Z. Wang et al., "Adaptive CSI acquisition for channels with sporadic communication," IEEE Transactions on Wireless Communications, vol. 20, no. 8, pp. 5434-5448, 2021.
+
+ T. P. Lillicrap et al., "Continuous control with deep reinforcement learning," in Proc. ICLR, 2016.
+
+ O. E. Ayach et al., "Spatially sparse precoding in millimeter wave MIMO systems," IEEE Transactions on Wireless Communications, vol. 13, no. 3, pp. 1499-1513, 2014.
+
+ J. Brady, N. Behdad, and A. M. Sayeed, "Beamspace MIMO for millimeter-wave communications: System architecture, modeling, analysis, and measurements," IEEE Transactions on Antennas and Propagation, vol. 61, no. 7, pp. 3814-3827, 2013.
+
+ D. Baron, S. Sarvotham, and R. G. Baraniuk, "Bayesian compressive sensing via belief propagation," IEEE Transactions on Signal Processing, vol. 58, no. 1, pp. 269-280, 2010.
+
+ X. Chen et al., "Learning to optimize: Training deep neural networks for interference management," IEEE Transactions on Signal Processing, vol. 66, no. 20, pp. 5438-5453, 2018.
+
+ K. Lee and Y. Bresler, "Admira: Atomic decomposition for minimum rank approximation," IEEE Transactions on Information Theory, vol. 56, no. 9, pp. 4402-4416, 2010.
+
+ E. J. Candès and B. Recht, "Exact matrix completion via convex optimization," Foundations of Computational Mathematics, vol. 9, no. 6, pp. 717-772, 2009.
+
+ D. Tran et al., "Neural matrix completion for wireless channel estimation," in Proc. IEEE GLOBECOM, 2019.
+
+ Y. Han et al., "Large intelligent surface-assisted wireless communication exploiting statistical CSI," IEEE Transactions on Vehicular Technology, vol. 68, no. 8, pp. 8238-8242, 2019.
+
+ P. Schniter and A. Sayeed, "Channel estimation and precoder design for millimeter-wave communications: The sparse way," in Proc. IEEE Asilomar, 2014.
+
+ X. Rao and V. K. N. Lau, "Distributed compressive CSIT estimation and feedback for FDD multi-user massive MIMO systems," IEEE Transactions on Signal Processing, vol. 62, no. 12, pp. 3261-3271, 2014.
+
+ Z. Gao et al., "Compressive sensing techniques for next-generation wireless communications," IEEE Wireless Communications, vol. 25, no. 3, pp. 144-153, 2018.
+
+ A. Alkhateeb, S. Alex, P. Varkey, Y. Li, Q. Qu, and D. Tujkovic, "Deep learning coordinated beamforming for highly-mobile millimeter wave systems," IEEE Access, vol. 6, pp. 37328-37348, 2018.
+
+ B. Khaled et al., "Efficient channel estimation for millimeter wave systems with adaptive time-domain processing," in Proc. IEEE ICASSP, 2018.
+
+ K.-B. Song et al., "Adaptive time-varying decision feedback equalization using neural networks," IEEE Transactions on Neural Networks, vol. 10, no. 6, pp. 1421-1431, 1999.
+
+ N. Farsad and A. Goldsmith, "Neural network detection of data sequences in communication systems," IEEE Transactions on Signal Processing, vol. 66, no. 21, pp. 5663-5678, 2018.
+
+ T. Wang et al., "Deep learning for wireless communications: An emerging interdisciplinary paradigm," IEEE Wireless Communications, vol. 27, no. 4, pp. 133-139, 2020.
+
+ M. K. Pitt and N. Shephard, "Filtering via simulation: Auxiliary particle filters," Journal of the American Statistical Association, vol. 94, no. 446, pp. 590-599, 1999.
+
+ R. M. Gray and D. L. Neuhoff, "Quantization," IEEE Transactions on Information Theory, vol. 44, no. 6, pp. 2325-2383, 1998.
+
+ A. Gersho and R. M. Gray, Vector Quantization and Signal Compression. Springer Science & Business Media, 2012.
+
+ Y. Linde, A. Buzo, and R. Gray, "An algorithm for vector quantizer design," IEEE Transactions on Communications, vol. 28, no. 1, pp. 84-95, 1980.
+
+ E. Agustsson et al., "Soft-to-hard vector quantization for end-to-end learning compressible representations," in Proc. NIPS, 2017.
+
+ Y. Bengio, N. Léonard, and A. Courville, "Estimating or propagating gradients through stochastic neurons for conditional computation," arXiv:1308.3432, 2013.
+
+ H. Jegou, M. Douze, and C. Schmid, "Product quantization for nearest neighbor search," IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 33, no. 1, pp. 117-128, 2011.
+
+ K. K. Mukkavilli et al., "On beamforming with finite rate feedback in multiple-antenna systems," IEEE Transactions on Information Theory, vol. 49, no. 10, pp. 2562-2579, 2003.
+
+ T. Richardson and R. Urbanke, Modern Coding Theory. Cambridge University Press, 2008.
+
+ Q. Hu et al., "Robust deep learning against adversarial attacks on wireless signal recognition," IEEE Transactions on Cognitive Communications and Networking, vol. 6, no. 2, pp. 571-584, 2020.
+
+ Y. Yang et al., "Federated learning with differential privacy for wireless communications," IEEE Wireless Communications, vol. 28, no. 1, pp. 60-66, 2021.
+
+ W. W. Peterson and E. J. Weldon, Error-Correcting Codes. MIT Press, 1972.
+
+ J. Guo et al., "Deep learning-based CSI feedback for beamforming in single- and multi-cell massive MIMO systems," IEEE Journal on Selected Areas in Communications, vol. 39, no. 7, pp. 1872-1884, 2021.
+
+ M. B. Mashhadi et al., "Learning to compress CSI with recurrent neural networks," IEEE Transactions on Wireless Communications, vol. 20, no. 4, pp. 2621-2634, 2021.
+
+ J. G. Proakis and M. Salehi, Digital Communications, 5th ed. McGraw-Hill, 2008.
+
+ B. Hassibi and H. Vikalo, "On the sphere-decoding algorithm I. Expected complexity," IEEE Transactions on Signal Processing, vol. 53, no. 8, pp. 2806-2818, 2005.
+
+ N. Samuel, T. Diskin, and A. Wiesel, "Deep MIMO detection," in Proc. IEEE SPAWC, 2017.
+
+ G. D. Golden et al., "Detection algorithm and initial laboratory results using V-BLAST space-time communication architecture," Electronics Letters, vol. 35, no. 1, pp. 14-16, 1999.
+
+ E. Viterbo and J. Boutros, "A universal lattice code decoder for fading channels," IEEE Transactions on Information Theory, vol. 45, no. 5, pp. 1639-1642, 1999.
+
+ D. Wübben et al., "MMSE extension of V-BLAST based on sorted QR decomposition," in Proc. IEEE VTC, 2003.
+
+ J. Jalden and B. Ottersten, "On the complexity of sphere decoding in digital communications," IEEE Transactions on Signal Processing, vol. 53, no. 4, pp. 1474-1484, 2005.
+
+ A. Ghasemmehdi and E. Agrell, "Faster recursions in sphere decoding," IEEE Transactions on Information Theory, vol. 57, no. 6, pp. 3530-3536, 2011.
+
+ N. Samuel, T. Diskin, and A. Wiesel, "Deep MIMO detection," in Proc. IEEE SPAWC, 2017.
+
+ H. He et al., "Model-driven deep learning for MIMO detection," IEEE Transactions on Signal Processing, vol. 68, pp. 1702-1715, 2020.
+
+ J. R. Hershey, J. L. Roux, and F. Weninger, "Deep unfolding: Model-based inspiration of novel deep architectures," arXiv:1409.2574, 2014.
+
+ N. Samuel, T. Diskin, and A. Wiesel, "Learning to detect," IEEE Transactions on Signal Processing, vol. 67, no. 10, pp. 2554-2564, 2019.
+
+ Y. S. Jeon, S. N. Hong, and N. Lee, "Blind detection for MIMO systems with low-resolution ADCs using supervised learning," in Proc. IEEE ICC, 2017.
+
+ H. He, C.-K. Wen, and S. Jin, "Deep learning-based channel estimation for beamspace mmWave massive MIMO systems," IEEE Wireless Communications Letters, vol. 7, no. 5, pp. 852-855, 2018.
+
+ W. Ma et al., "Deep learning for the design of near-optimal multiuser MIMO precoding," IEEE Transactions on Wireless Communications, vol. 18, no. 8, pp. 3861-3873, 2019.
+
+ W. Xu et al., "Deep learning-based joint detection and decoding for massive MIMO systems," IEEE Transactions on Wireless Communications, vol. 20, no. 8, pp. 5195-5209, 2021.
+
+ T. Gruber et al., "Deep learning-based successive interference cancellation for the non-orthogonal downlink," IEEE Transactions on Vehicular Technology, vol. 70, no. 2, pp. 1558-1571, 2021.
+
+ J. Lee et al., "Attention-based deep learning for MIMO channel estimation," IEEE Communications Letters, vol. 24, no. 12, pp. 2842-2846, 2020.
+
+ S. Woo et al., "CBAM: Convolutional block attention module," in Proc. ECCV, 2018.
+
+ Y. Yang et al., "Deep learning based signal detection for uplink OFDMA systems," IEEE Access, vol. 8, pp. 166643-166655, 2020.
+
+ N. Srinivas et al., "Transformer neural networks for MIMO detection," IEEE Transactions on Communications, vol. 70, no. 6, pp. 3842-3856, 2022.
+
+ M. Honkala and D. Korpi, "Deeprx: Fully convolutional deep learning receiver," IEEE Transactions on Wireless Communications, vol. 20, no. 6, pp. 3925-3940, 2021.
+
+ T. O'Shea, T. Roy, and T. C. Clancy, "Over-the-air deep learning based radio signal classification," IEEE Journal of Selected Topics in Signal Processing, vol. 12, no. 1, pp. 168-179, 2018.
+
+ M. F. Flanagan and A. D. Fagan, "Iterative channel estimation, equalization and decoding," in Turbo Code Applications. Springer, 2005, pp. 261-280.
+
+ S. Cammerer et al., "Deep learning based communication over the air," IEEE Journal of Selected Topics in Signal Processing, vol. 12, no. 1, pp. 132-143, 2018.
+
+ L. Dai et al., "Non-orthogonal multiple access for 5G: Solutions, challenges, opportunities, and future research trends," IEEE Communications Magazine, vol. 53, no. 9, pp. 74-81, 2015.
+
+ H. Ye and G. Y. Li, "Deep learning based end-to-end wireless communication systems without pilots," IEEE Transactions on Cognitive Communications and Networking, vol. 6, no. 3, pp. 1043-1050, 2020.
+
+ Y. Shen et al., "Graph neural networks for scalable radio resource management: Architecture design and theoretical analysis," IEEE Journal on Selected Areas in Communications, vol. 39, no. 1, pp. 101-115, 2021.
+
+ S. Yang and L. Hanzo, "Fifty years of MIMO detection: The road to large-scale MIMOs," IEEE Communications Surveys & Tutorials, vol. 17, no. 4, pp. 1941-1988, 2015.
+
+ C. Studer et al., "ASIC implementation of soft-input soft-output MIMO detection using MMSE parallel interference cancellation," IEEE Journal of Solid-State Circuits, vol. 46, no. 7, pp. 1754-1765, 2011.
+
+ Z. Wu et al., "FPGA implementation of a deep learning based multi-user MIMO detector," in Proc. IEEE ISCAS, 2019.
+
+ R. Banner, Y. Nahshan, and D. Soudry, "Post training 4-bit quantization of convolutional networks for rapid-deployment," in Proc. NeurIPS, 2019.
+
+ H. Krim and M. Viberg, "Two decades of array signal processing research: The parametric approach," IEEE Signal Processing Magazine, vol. 13, no. 4, pp. 67-94, 1996.
+
+ A. Alkhateeb et al., "DeepMIMO: A generic deep learning dataset for millimeter wave and massive MIMO applications," arXiv:1902.06435, 2019.
+
+ H. L. Van Trees, Optimum Array Processing. Wiley-Interscience, 2002.
+
+ R. J. Mailloux, Phased Array Antenna Handbook, 2nd ed. Artech House, 2005.
+
+ A. Alkhateeb, S. Alex, P. Varkey, Y. Li, Q. Qu, and D. Tujkovic, "Deep learning coordinated beamforming for highly-mobile millimeter wave systems," IEEE Access, vol. 6, pp. 37328-37348, 2018.
+
+ M. Hashemi, A. Sabharwal, C. E. Koksal, and N. B. Shroff, "Efficient beam alignment in millimeter wave systems using contextual bandits," in Proc. IEEE INFOCOM, 2018.
+
+ J. Choi, "Beam selection in mm-wave multiuser MIMO systems using compressive sensing," IEEE Transactions on Communications, vol. 63, no. 8, pp. 2936-2947, 2015.
+
+ V. Va et al., "Inverse multipath fingerprinting for millimeter wave V2I beam alignment," IEEE Transactions on Vehicular Technology, vol. 67, no. 5, pp. 4042-4058, 2018.
+
+ W. Ma, C. Qi, and G. Y. Li, "Machine learning for beam alignment in millimeter wave massive MIMO," IEEE Wireless Communications Letters, vol. 9, no. 6, pp. 875-878, 2020.
+
+ M. Alrabeiah et al., "Deep learning for TDD and FDD massive MIMO: Mapping channels in space and frequency," in Proc. IEEE ACSSC, 2019.
+
+ H. Huang et al., "Deep-learning-based millimeter-wave massive MIMO for hybrid precoding," IEEE Transactions on Vehicular Technology, vol. 68, no. 3, pp. 3027-3032, 2019.
+
+ F. Tang et al., "Wireless communications with reconfigurable intelligent surface: Path loss modeling and experimental measurement," IEEE Transactions on Wireless Communications, vol. 20, no. 1, pp. 421-439, 2021.
+
+ Q. H. Spencer et al., "Zero-forcing methods for downlink spatial multiplexing in multiuser MIMO channels," IEEE Transactions on Signal Processing, vol. 52, no. 2, pp. 461-471, 2004.
+
+ Q. Shi, M. Razaviyayn, Z.-Q. Luo, and C. He, "An iteratively weighted MMSE approach to distributed sum-utility maximization for a MIMO interfering broadcast channel," IEEE Transactions on Signal Processing, vol. 59, no. 9, pp. 4331-4340, 2011.
+
+ H. Huang et al., "Deep learning for physical-layer 5G wireless techniques: Opportunities, challenges and solutions," IEEE Wireless Communications, vol. 27, no. 1, pp. 214-222, 2020.
+
+ F. Liang et al., "Towards optimal power control via ensembling deep neural networks," IEEE Transactions on Communications, vol. 68, no. 3, pp. 1760-1776, 2020.
+
+ D. Gesbert et al., "Multi-cell MIMO cooperative networks: A new look at interference," IEEE Journal on Selected Areas in Communications, vol. 28, no. 9, pp. 1380-1408, 2010.
+
+ Y. Shen et al., "Graph neural networks for wireless communications: From theory to practice," IEEE Transactions on Wireless Communications, vol. 21, no. 5, pp. 3554-3569, 2022.
+
+ M. Lee et al., "Towards distributed federated learning for wireless networks," IEEE Communications Magazine, vol. 59, no. 10, pp. 68-74, 2021.
+
+ O. E. Ayach et al., "Spatially sparse precoding in millimeter wave MIMO systems," IEEE Transactions on Wireless Communications, vol. 13, no. 3, pp. 1499-1513, 2014.
+
+ X. Yu et al., "Alternating minimization algorithms for hybrid precoding in millimeter wave MIMO systems," IEEE Journal of Selected Topics in Signal Processing, vol. 10, no. 3, pp. 485-500, 2016.
+
+ T. Lin et al., "Deep learning based hybrid precoding in dual-band communication systems," IEEE Transactions on Wireless Communications, vol. 20, no. 5, pp. 3298-3312, 2021.
+
+ Q. Wu and R. Zhang, "Intelligent reflecting surface enhanced wireless network via joint active and passive beamforming," IEEE Transactions on Wireless Communications, vol. 18, no. 11, pp. 5394-5409, 2019.
+
+ C. Huang et al., "Reconfigurable intelligent surfaces for energy efficiency in wireless communication," IEEE Transactions on Wireless Communications, vol. 18, no. 8, pp. 4157-4170, 2019.
+
+ A. Taha et al., "Deep reinforcement learning for intelligent reflecting surfaces: Towards standalone operation," in Proc. IEEE WCNC, 2020.
+
+
+---
 ## REFERENCIAS
 
 [1] M. Giordani et al., "Toward 6G networks: Use cases and technologies," IEEE Communications Magazine, vol. 58, no. 3, pp. 55-61, 2020.
