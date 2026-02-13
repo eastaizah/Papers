@@ -324,7 +324,7 @@ donde:
 
 La operación $\mathbf{Q}\mathbf{K}^T$ calcula similitudes entre consultas y claves, la softmax normaliza estas en una distribución de probabilidad, y la multiplicación por $\mathbf{V}$ produce una combinación ponderada de valores.
 
-Los Transformers, basados completamente en mecanismos de atención multi-cabeza (multi-head attention), han revolucionado el procesamiento de secuencias, superando RNNs y LSTMs en numerosas tareas de procesamiento de lenguaje natural y, recientemente, procesamiento de series temporales [57]. La atención multi-cabeza ejecuta múltiples operaciones de atención en paralelo:
+Los Transformers, basados completamente en mecanismos de atención multi-cabeza (multi-head attention), han revolucionado el procesamiento de secuencias, superando RNNs y LSTMs en numerosas tareas de procesamiento de lenguaje natural y, recientemente, procesamiento de series temporales [14]. La atención multi-cabeza ejecuta múltiples operaciones de atención en paralelo:
 
 $$\text{MultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{Concat}(\mathbf{head}_1, \ldots, \mathbf{head}_h)\mathbf{W}^O$$
 
@@ -340,15 +340,15 @@ Para comunicaciones inalámbricas, los Transformers son prometedores para:
 
 #### 2) Técnicas de Regularización y Generalización
 
-La generalización - capacidad de un modelo de rendir bien en datos no vistos durante entrenamiento - es crítica para sistemas de comunicación que deben operar en condiciones variables [58]. Varias técnicas de regularización mejoran la generalización:
+La generalización - capacidad de un modelo de rendir bien en datos no vistos durante entrenamiento - es crítica para sistemas de comunicación que deben operar en condiciones variables [57]. Varias técnicas de regularización mejoran la generalización:
 
-**Dropout**: Durante el entrenamiento, neuronas individuales se desactivan aleatoriamente con probabilidad $p$ [59]:
+**Dropout**: Durante el entrenamiento, neuronas individuales se desactivan aleatoriamente con probabilidad $p$ [58]:
 
 $$\mathbf{h}^{(l)} = \mathbf{m}^{(l)} \odot \sigma(\mathbf{W}^{(l)}\mathbf{h}^{(l-1)} + \mathbf{b}^{(l)})$$
 
 donde $\mathbf{m}^{(l)} \sim \text{Bernoulli}(1-p)$ es un vector de máscara binaria. Durante inferencia, se usan todas las neuronas pero las activaciones se escalan por $(1-p)$ para mantener la magnitud esperada. Dropout previene co-adaptación de características (donde neuronas se especializan excesivamente en presencia de otras específicas) y funciona como un ensamble implícito de redes más pequeñas.
 
-**Normalización por Lotes (Batch Normalization)**: Normaliza activaciones en cada mini-batch para tener media cero y varianza unitaria [60]:
+**Normalización por Lotes (Batch Normalization)**: Normaliza activaciones en cada mini-batch para tener media cero y varianza unitaria [58]:
 
 $$\hat{\mathbf{h}} = \frac{\mathbf{h} - \mu_{\mathcal{B}}}{\sqrt{\sigma^2_{\mathcal{B}} + \epsilon}}$$
 
@@ -364,7 +364,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \sum_{l=1}^{L
 
 donde $\|\mathbf{W}\|_F = \sqrt{\sum_{ij}W_{ij}^2}$ es la norma de Frobenius, y $\lambda > 0$ controla la intensidad de regularización. Esto favorece soluciones con pesos de magnitud pequeña, mejorando generalización al reducir complejidad efectiva del modelo.
 
-**Aumento de Datos (Data Augmentation)**: Para sistemas de comunicación, esto incluye entrenar con variaciones sintéticas que emulan diversidad operacional [61]:
+**Aumento de Datos (Data Augmentation)**: Para sistemas de comunicación, esto incluye entrenar con variaciones sintéticas que emulan diversidad operacional [59]:
 
 - Variaciones de SNR: Entrenar en un rango amplio de condiciones de ruido
 - Realizaciones de canal: Múltiples instancias de desvanecimiento con diferentes perfiles
@@ -376,7 +376,7 @@ El aumento de datos mejora robustez y reduce el riesgo de sobreajuste a condicio
 
 #### 3) Optimización y Entrenamiento
 
-**Descenso de Gradiente Estocástico (SGD)**: El algoritmo fundamental para entrenar redes neuronales es la actualización iterativa de parámetros en dirección opuesta al gradiente de la función de pérdida [62]:
+**Descenso de Gradiente Estocástico (SGD)**: El algoritmo fundamental para entrenar redes neuronales es la actualización iterativa de parámetros en dirección opuesta al gradiente de la función de pérdida [61]:
 
 $$\theta_{t+1} = \theta_t - \eta \nabla_{\theta}\mathcal{L}(\theta_t; \mathcal{B}_t)$$
 
@@ -388,7 +388,7 @@ donde:
 
 El gradiente se calcula mediante el algoritmo de retropropagación (backpropagation), aplicación eficiente de la regla de la cadena a grafos computacionales.
 
-**Optimizadores Adaptativos**: Adam (Adaptive Moment Estimation) combina momentum (término de inercia que acelera convergencia) y tasas de aprendizaje adaptativas por parámetro [63]:
+**Optimizadores Adaptativos**: Adam (Adaptive Moment Estimation) combina momentum (término de inercia que acelera convergencia) y tasas de aprendizaje adaptativas por parámetro [62]:
 
 $$\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1-\beta_1)\mathbf{g}_t$$
 $$\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1-\beta_2)\mathbf{g}_t^2$$
@@ -411,7 +411,7 @@ $$\frac{\partial \mathcal{L}}{\partial \theta} = \frac{\partial \mathcal{L}}{\pa
 
 Para un canal lineal AWGN MIMO $\mathbf{y} = \mathbf{H}\mathbf{x} + \mathbf{n}$, el término medio es simplemente $\partial h/\partial \mathbf{x} = \mathbf{H}$.
 
-Para canales estocásticos (con desvanecimiento aleatorio o ruido), se requiere el **reparametrization trick** para obtener estimados insesgados de gradientes [64]. La aleatoriedad se hace explícita mediante variables auxiliares:
+Para canales estocásticos (con desvanecimiento aleatorio o ruido), se requiere el **reparametrization trick** para obtener estimados insesgados de gradientes [63]. La aleatoriedad se hace explícita mediante variables auxiliares:
 
 $$\mathbf{y} = h(\mathbf{x}, \epsilon), \quad \epsilon \sim p(\epsilon)$$
 
@@ -423,7 +423,7 @@ permitiendo intercambiar gradiente y esperanza, de modo que el gradiente se esti
 
 ### D. Formulación del Problema de Optimización con Restricciones Físicas
 
-La implementación práctica de sistemas de comunicación neuronal requiere incorporar restricciones impuestas por limitaciones físicas de hardware y regulaciones espectrales [65].
+La implementación práctica de sistemas de comunicación neuronal requiere incorporar restricciones impuestas por limitaciones físicas de hardware y regulaciones espectrales [64].
 
 #### 1) Restricción de Potencia
 
@@ -447,7 +447,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{error}} + \mu \max\left(0, \fr
 
 donde $\mu > 0$ es un hiperparámetro de penalización. Esta aproximación es más flexible, permitiendo potencias menores a $P$, pero requiere ajuste cuidadoso de $\mu$ para balancear satisfacción de restricción y minimización de error.
 
-**Capa de Proyección**: Implementar una capa final que proyecta la salida del transmisor sobre el conjunto factible de señales con potencia $\leq P$ [66]. Para restricción de potencia promedio, esto se reduce a escalado adaptativo.
+**Capa de Proyección**: Implementar una capa final que proyecta la salida del transmisor sobre el conjunto factible de señales con potencia $\leq P$ [65]. Para restricción de potencia promedio, esto se reduce a escalado adaptativo.
 
 #### 2) Restricción de Ancho de Banda
 
@@ -461,7 +461,7 @@ donde $\mathcal{F}\{\cdot\}$ denota la transformada de Fourier.
 
 $$s(t) = \sum_{i=0}^{M-1} x_i p(t - iT)$$
 
-donde $\{x_i\}$ son los símbolos complejos de salida del transmisor neuronal, $T$ es el período de símbolo, y $p(t)$ es típicamente un pulso de Nyquist (ej. raised cosine, root raised cosine) con ancho de banda controlado. El filtro de pulso puede implementarse como una capa convolucional con pesos fijos o parcialmente entrenables [67].
+donde $\{x_i\}$ son los símbolos complejos de salida del transmisor neuronal, $T$ es el período de símbolo, y $p(t)$ es típicamente un pulso de Nyquist (ej. raised cosine, root raised cosine) con ancho de banda controlado. El filtro de pulso puede implementarse como una capa convolucional con pesos fijos o parcialmente entrenables [66].
 
 **Implementación en Dominio Frecuencial**: Entrenar el transmisor en el dominio frecuencial y aplicar una máscara binaria $M(f)$ que anula componentes espectrales fuera de banda:
 
@@ -482,13 +482,13 @@ donde $A_{\max}$ es la amplitud máxima del PA. Para incorporar esta no-linealid
 
 $$\mathcal{L} = \mathbb{E}_{\mathbf{s}, \mathbf{n}}[\mathcal{L}_{\text{error}}(\mathbf{s}, g_{\phi}(h(g(f_{\theta}(\mathbf{s}))) + \mathbf{n}))]$$
 
-La función $g(\cdot)$ es casi-en-todas-partes diferenciable, permitiendo gradientes aproximados. Modelos más sofisticados de PA (ej. Rapp model, Saleh model) capturan conversión AM-AM y AM-PM [68].
+La función $g(\cdot)$ es casi-en-todas-partes diferenciable, permitiendo gradientes aproximados. Modelos más sofisticados de PA (ej. Rapp model, Saleh model) capturan conversión AM-AM y AM-PM [67].
 
 La **cuantización** en conversores digital-analógico (DAC) se modela como:
 
 $$x_Q = Q(x) = \Delta \left\lfloor \frac{x}{\Delta} + \frac{1}{2}\right\rfloor$$
 
-donde $\Delta = \frac{x_{\max} - x_{\min}}{2^b}$ es el paso de cuantización para $b$ bits. La función $Q(\cdot)$ no es diferenciable. Durante entrenamiento, se emplea el estimador **straight-through** [69]:
+donde $\Delta = \frac{x_{\max} - x_{\min}}{2^b}$ es el paso de cuantización para $b$ bits. La función $Q(\cdot)$ no es diferenciable. Durante entrenamiento, se emplea el estimador **straight-through** [68]:
 
 $$\frac{\partial Q(x)}{\partial x} \approx 1$$
 
@@ -496,7 +496,7 @@ en la retropropagación (backward pass), mientras que el pase forward usa cuanti
 
 #### 4) Incorporación de Información de Estado de Canal (CSI)
 
-Cuando el transmisor posee información sobre el estado del canal (ej. mediante retroalimentación o reciprocidad en TDD), se puede condicionar la transmisión en $\mathbf{H}$ [70]:
+Cuando el transmisor posee información sobre el estado del canal (ej. mediante retroalimentación o reciprocidad en TDD), se puede condicionar la transmisión en $\mathbf{H}$ [69]:
 
 $$\mathbf{x} = f_{\theta}(\mathbf{s}, \mathbf{H})$$
 
@@ -516,11 +516,11 @@ La red de estimación $h_{\psi}$ puede entrenarse conjuntamente con el receptor 
 **Operación Ciega (Blind)**: El receptor no usa CSI explícita:
 $$\hat{\mathbf{s}} = g_{\phi}(\mathbf{y})$$
 
-La red neuronal debe inferir implícitamente características del canal a partir de la señal recibida. Esta aproximación es robusta a errores de estimación de canal, pero típicamente requiere arquitecturas más complejas [71].
+La red neuronal debe inferir implícitamente características del canal a partir de la señal recibida. Esta aproximación es robusta a errores de estimación de canal, pero típicamente requiere arquitecturas más complejas [70].
 
 ### E. Análisis de Complejidad y Escalabilidad
 
-La viabilidad práctica de sistemas neuronales para el nivel físico depende críticamente de su complejidad computacional y de memoria, especialmente para implementación en tiempo real en dispositivos con recursos limitados [72].
+La viabilidad práctica de sistemas neuronales para el nivel físico depende críticamente de su complejidad computacional y de memoria, especialmente para implementación en tiempo real en dispositivos con recursos limitados [71].
 
 #### 1) Complejidad Computacional
 
@@ -549,7 +549,7 @@ La complejidad escala cuadráticamente con el tamaño del estado oculto y lineal
 **Transformers**: La atención escalada tiene complejidad:
 $$\mathcal{C}_{\text{attention}} = \mathcal{O}(n^2 d)$$
 
-donde $n$ es la longitud de secuencia y $d$ la dimensión de embeddings. La complejidad cuadrática en $n$ es una limitación para secuencias extensas, motivando variantes eficientes como Linformer, Performer, o attention local [73].
+donde $n$ es la longitud de secuencia y $d$ la dimensión de embeddings. La complejidad cuadrática en $n$ es una limitación para secuencias extensas, motivando variantes eficientes como Linformer, Performer, o attention local [72].
 
 #### 2) Complejidad de Memoria
 
@@ -560,7 +560,7 @@ Durante **entrenamiento**, los requisitos de memoria incluyen:
 - **Gradientes**: $\mathcal{O}(|\theta| + |\phi|)$
 - **Momentos del optimizador** (para Adam): $\mathcal{O}(2(|\theta| + |\phi|))$
 
-Para redes muy profundas, el almacenamiento de activaciones domina. **Gradient checkpointing** reduce memoria reteniendo solo activaciones de algunas capas seleccionadas y recomputando las demás durante backpropagation, con un trade-off de $\sim$30-40% más tiempo de cómputo [74].
+Para redes muy profundas, el almacenamiento de activaciones domina. **Gradient checkpointing** reduce memoria reteniendo solo activaciones de algunas capas seleccionadas y recomputando las demás durante backpropagation, con un trade-off de $\sim$30-40% más tiempo de cómputo [73].
 
 Durante **inferencia**, solo se requiere almacenar parámetros y activaciones de la capa actual (para procesamiento secuencial), resultando en requisitos de memoria significativamente menores.
 
@@ -584,11 +584,11 @@ donde $M$ es el tamaño de la constelación (ej. $M=16$ para 16-QAM) y $N_t$ el 
 **Detección MIMO Neuronal**: Una red neuronal con arquitectura eficiente (ej. capas completamente conectadas con $L=5$ capas, $n_l \sim 256$ neuronas) tiene complejidad aproximada:
 $$\mathcal{C}_{\text{NN}} = \mathcal{O}(L \cdot n^2) \sim \mathcal{O}(10^5)$$
 
-operaciones - múltiples órdenes de magnitud menor que ML, con rendimiento cercano a óptimo para SNR moderado-alto [75].
+operaciones - múltiples órdenes de magnitud menor que ML, con rendimiento cercano a óptimo para SNR moderado-alto [74].
 
 **Estimación de Canal**: Métodos tradicionales como Least Squares (LS) o Minimum Mean Square Error (MMSE) tienen complejidad $\mathcal{O}(N_p^3)$ para $N_p$ pilotos (por inversión de matrices). Redes neuronales con arquitecturas CNN o RNN procesan pilotos con complejidad lineal o cuadrática, escalando mejor para sistemas masivos.
 
-En resumen, las arquitecturas neuronales cuidadosamente diseñadas pueden alcanzar complejidad computacional comparable o incluso inferior a métodos tradicionales, mientras ofrecen rendimiento superior en escenarios complejos y no-ideales [76].
+En resumen, las arquitecturas neuronales cuidadosamente diseñadas pueden alcanzar complejidad computacional comparable o incluso inferior a métodos tradicionales, mientras ofrecen rendimiento superior en escenarios complejos y no-ideales [75].
 
 ---
 
@@ -706,42 +706,40 @@ En resumen, las arquitecturas neuronales cuidadosamente diseñadas pueden alcanz
 
 [56] D. Bahdanau, K. Cho, and Y. Bengio, "Neural machine translation by jointly learning to align and translate," in *Proc. International Conference on Learning Representations (ICLR)*, San Diego, CA, USA, May 2015.
 
-[57] A. Vaswani et al., "Attention is all you need," in *Proc. Advances in Neural Information Processing Systems (NeurIPS)*, Long Beach, CA, USA, Dec. 2017, pp. 5998-6008.
+[57] Y. Bengio, A. Courville, and P. Vincent, "Representation learning: A review and new perspectives," *IEEE Transactions on Pattern Analysis and Machine Intelligence*, vol. 35, no. 8, pp. 1798-1828, Aug. 2013.
 
-[58] Y. Bengio, A. Courville, and P. Vincent, "Representation learning: A review and new perspectives," *IEEE Transactions on Pattern Analysis and Machine Intelligence*, vol. 35, no. 8, pp. 1798-1828, Aug. 2013.
+[58] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov, "Dropout: A simple way to prevent neural networks from overfitting," *Journal of Machine Learning Research*, vol. 15, no. 1, pp. 1929-1958, Jun. 2014.
 
-[59] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov, "Dropout: A simple way to prevent neural networks from overfitting," *Journal of Machine Learning Research*, vol. 15, no. 1, pp. 1929-1958, Jun. 2014.
+[59] S. Ioffe and C. Szegedy, "Batch normalization: Accelerating deep network training by reducing internal covariate shift," in *Proc. International Conference on Machine Learning (ICML)*, Lille, France, Jul. 2015, pp. 448-456.
 
-[60] S. Ioffe and C. Szegedy, "Batch normalization: Accelerating deep network training by reducing internal covariate shift," in *Proc. International Conference on Machine Learning (ICML)*, Lille, France, Jul. 2015, pp. 448-456.
+[60] C. Shorten and T. M. Khoshgoftaar, "A survey on image data augmentation for deep learning," *Journal of Big Data*, vol. 6, no. 1, pp. 1-48, Jul. 2019.
 
-[61] C. Shorten and T. M. Khoshgoftaar, "A survey on image data augmentation for deep learning," *Journal of Big Data*, vol. 6, no. 1, pp. 1-48, Jul. 2019.
+[61] L. Bottou, "Large-scale machine learning with stochastic gradient descent," in *Proc. COMPSTAT'2010*, Paris, France, Aug. 2010, pp. 177-186.
 
-[62] L. Bottou, "Large-scale machine learning with stochastic gradient descent," in *Proc. COMPSTAT'2010*, Paris, France, Aug. 2010, pp. 177-186.
+[62] D. P. Kingma and J. Ba, "Adam: A method for stochastic optimization," in *Proc. International Conference on Learning Representations (ICLR)*, San Diego, CA, USA, May 2015.
 
-[63] D. P. Kingma and J. Ba, "Adam: A method for stochastic optimization," in *Proc. International Conference on Learning Representations (ICLR)*, San Diego, CA, USA, May 2015.
+[63] D. P. Kingma and M. Welling, "Auto-encoding variational Bayes," in *Proc. International Conference on Learning Representations (ICLR)*, Banff, AB, Canada, Apr. 2014.
 
-[64] D. P. Kingma and M. Welling, "Auto-encoding variational Bayes," in *Proc. International Conference on Learning Representations (ICLR)*, Banff, AB, Canada, Apr. 2014.
+[64] R. Fritschek, R. F. Schaefer, and G. Wunder, "Deep learning for the Gaussian wiretap channel," in *Proc. IEEE International Conference on Communications (ICC)*, Kansas City, MO, USA, May 2018, pp. 1-6.
 
-[65] R. Fritschek, R. F. Schaefer, and G. Wunder, "Deep learning for the Gaussian wiretap channel," in *Proc. IEEE International Conference on Communications (ICC)*, Kansas City, MO, USA, May 2018, pp. 1-6.
+[65] M. Kim, W. Lee, and D.-H. Cho, "A novel PAPR reduction scheme for OFDM system based on deep learning," *IEEE Communications Letters*, vol. 22, no. 3, pp. 510-513, Mar. 2018.
 
-[66] M. Kim, W. Lee, and D.-H. Cho, "A novel PAPR reduction scheme for OFDM system based on deep learning," *IEEE Communications Letters*, vol. 22, no. 3, pp. 510-513, Mar. 2018.
+[66] S. Cammerer, F. Aït Aoudia, S. Dörner, M. Stark, J. Hoydis, and S. ten Brink, "Trainable communication systems: Concepts and prototype," *IEEE Transactions on Communications*, vol. 68, no. 9, pp. 5489-5503, Sep. 2020.
 
-[67] S. Cammerer, F. Aït Aoudia, S. Dörner, M. Stark, J. Hoydis, and S. ten Brink, "Trainable communication systems: Concepts and prototype," *IEEE Transactions on Communications*, vol. 68, no. 9, pp. 5489-5503, Sep. 2020.
+[67] S. C. Cripps, *RF Power Amplifiers for Wireless Communications*, 2nd ed. Norwood, MA: Artech House, 2006.
 
-[68] S. C. Cripps, *RF Power Amplifiers for Wireless Communications*, 2nd ed. Norwood, MA: Artech House, 2006.
+[68] Y. Bengio, N. Léonard, and A. Courville, "Estimating or propagating gradients through stochastic neurons for conditional computation," *arXiv preprint arXiv:1308.3432*, Aug. 2013.
 
-[69] Y. Bengio, N. Léonard, and A. Courville, "Estimating or propagating gradients through stochastic neurons for conditional computation," *arXiv preprint arXiv:1308.3432*, Aug. 2013.
+[69] H. Huang, W. Xia, J. Xiong, J. Yang, G. Zheng, and X. Zhu, "Unsupervised learning-based fast beamforming design for downlink MIMO," *IEEE Access*, vol. 7, pp. 7599-7605, Jan. 2019.
 
-[70] H. Huang, W. Xia, J. Xiong, J. Yang, G. Zheng, and X. Zhu, "Unsupervised learning-based fast beamforming design for downlink MIMO," *IEEE Access*, vol. 7, pp. 7599-7605, Jan. 2019.
+[70] H. Ye, G. Y. Li, B.-H. Juang, and K. Sivanesan, "Channel agnostic end-to-end learning based communication systems with conditional GAN," in *Proc. IEEE Global Communications Conference (GLOBECOM)*, Waikoloa, HI, USA, Dec. 2018, pp. 1-5.
 
-[71] H. Ye, G. Y. Li, B.-H. Juang, and K. Sivanesan, "Channel agnostic end-to-end learning based communication systems with conditional GAN," in *Proc. IEEE Global Communications Conference (GLOBECOM)*, Waikoloa, HI, USA, Dec. 2018, pp. 1-5.
+[71] Y. Wang, M. Liu, J. Yang, and G. Gui, "Data-driven deep learning for automatic modulation recognition in cognitive radios," *IEEE Transactions on Vehicular Technology*, vol. 68, no. 4, pp. 4074-4077, Apr. 2019.
 
-[72] Y. Wang, M. Liu, J. Yang, and G. Gui, "Data-driven deep learning for automatic modulation recognition in cognitive radios," *IEEE Transactions on Vehicular Technology*, vol. 68, no. 4, pp. 4074-4077, Apr. 2019.
+[72] A. Katharopoulos, A. Vyas, N. Pappas, and F. Fleuret, "Transformers are RNNs: Fast autoregressive transformers with linear attention," in *Proc. International Conference on Machine Learning (ICML)*, Virtual, Jul. 2020, pp. 5156-5165.
 
-[73] A. Katharopoulos, A. Vyas, N. Pappas, and F. Fleuret, "Transformers are RNNs: Fast autoregressive transformers with linear attention," in *Proc. International Conference on Machine Learning (ICML)*, Virtual, Jul. 2020, pp. 5156-5165.
+[73] T. Chen, B. Xu, C. Zhang, and C. Guestrin, "Training deep nets with sublinear memory cost," *arXiv preprint arXiv:1604.06174*, Apr. 2016.
 
-[74] T. Chen, B. Xu, C. Zhang, and C. Guestrin, "Training deep nets with sublinear memory cost," *arXiv preprint arXiv:1604.06174*, Apr. 2016.
+[74] N. Samuel, T. Diskin, and A. Wiesel, "Learning to detect," *IEEE Transactions on Signal Processing*, vol. 67, no. 10, pp. 2554-2564, May 2019.
 
-[75] N. Samuel, T. Diskin, and A. Wiesel, "Learning to detect," *IEEE Transactions on Signal Processing*, vol. 67, no. 10, pp. 2554-2564, May 2019.
-
-[76] Q. Hu, F. Gao, H. Zhang, S. Jin, and G. Y. Li, "Deep learning for channel estimation: Interpretation, performance, and comparison," *IEEE Transactions on Wireless Communications*, vol. 20, no. 4, pp. 2398-2412, Apr. 2021.
+[75] Q. Hu, F. Gao, H. Zhang, S. Jin, and G. Y. Li, "Deep learning for channel estimation: Interpretation, performance, and comparison," *IEEE Transactions on Wireless Communications*, vol. 20, no. 4, pp. 2398-2412, Apr. 2021.
