@@ -1,1 +1,52 @@
-readme
+# Papers
+
+Repositorio de artículos científicos e investigación en redes 6G, Inteligencia Artificial y comunicaciones inalámbricas avanzadas.
+
+## Estructura del repositorio
+
+```
+Papers/
+└── MassiveAI/
+    ├── Massive_AI_Model_Orchestration_6G.md   # Artículo completo
+    ├── Readme                                  # Descripción del directorio
+    └── IA-SS/
+        └── simulations/                        # Scripts de simulación y figuras
+            ├── script_01_main_comparison.py
+            ├── script_02_handover_prediction_lstm.py
+            ├── script_03_channel_estimation_vit.py
+            ├── fig1_baseline_comparison.png
+            ├── fig2_scalability_users.png
+            ├── fig3_pareto_frontier.png
+            ├── fig4_sensitivity_analysis.png
+            ├── fig_accuracy_vs_horizon.png
+            ├── fig_cache_hit_rate.png
+            ├── fig_confusion_matrix.png
+            └── fig_training_curves.png
+```
+
+## Artículos incluidos
+
+### Massive AI Model Orchestration para 6G
+
+> **Título completo:** Massive AI Model Orchestration para 6G: Arquitectura Federada para Gestión Dinámica de Foundation Models en Capa Física mediante Cloud-Edge-Device Collaboration
+
+Propone una arquitectura integral para orquestación de modelos de IA masivos en redes 6G, con colaboración federada cloud-edge-device.
+
+**Palabras clave:** Foundation models, 6G, AI orchestration, cloud-edge-device, physical layer, deep learning, federated learning, energy efficiency.
+
+## Cómo usar los scripts de simulación
+
+Ver [`MassiveAI/IA-SS/simulations/README.md`](MassiveAI/IA-SS/simulations/README.md) para instrucciones detalladas.
+
+**Requisitos rápidos:**
+```bash
+pip install numpy matplotlib scikit-learn torch
+```
+
+```bash
+cd MassiveAI/IA-SS/simulations
+python script_01_main_comparison.py
+python script_02_handover_prediction_lstm.py
+python script_03_channel_estimation_vit.py
+```
+

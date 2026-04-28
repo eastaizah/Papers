@@ -1,1 +1,27 @@
-Readme
+# MassiveAI
+
+Este directorio contiene el artículo científico y los scripts de simulación asociados al trabajo:
+
+> **Massive AI Model Orchestration para 6G: Arquitectura Federada para Gestión Dinámica de Foundation Models en Capa Física mediante Cloud-Edge-Device Collaboration**
+
+## Contenido
+
+| Archivo / Carpeta | Descripción |
+|---|---|
+| `Massive_AI_Model_Orchestration_6G.md` | Artículo completo en formato Markdown |
+| `IA-SS/simulations/` | Scripts Python de validación y figuras generadas |
+
+## Resumen del artículo
+
+Las redes 6G se conciben como sistemas nativos de Inteligencia Artificial donde *foundation models* de gran escala son componentes arquitectónicos fundamentales. Este trabajo presenta una arquitectura de tres niveles (Cloud / Edge / Device) que resuelve la paradoja de ejecutar modelos de 175B parámetros en dispositivos con recursos limitados.
+
+**Principales resultados:**
+- Reducción de latencia del 46 % (17 ms vs 31 ms)
+- Mejora de accuracy del 9 % (F1-score 0.89 vs 0.82)
+- Reducción de consumo energético del 18 % (23 kWh vs 28 kWh / 1000 usuarios·hora)
+- Reducción del 78 % en violaciones de SLA (4 % vs 18 %)
+
+## Scripts de simulación
+
+Ver [`IA-SS/simulations/README.md`](IA-SS/simulations/README.md).
+
