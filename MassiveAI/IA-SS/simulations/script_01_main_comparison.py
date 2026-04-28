@@ -118,6 +118,9 @@ ARTICLE_VALUES = {
 TOLERANCE  = 0.05   # 5 %
 STRATEGIES = list(ARTICLE_VALUES.keys())
 
+SNR_SWEEP_SIGMA  = 2.0   # std-dev of per-user SNR spread in SNR-sweep experiments (dB)
+PLOT_JITTER_SEED = 999   # RNG seed for Pareto-plot jitter cloud
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # 1.  CALIBRATED STRATEGY PARAMETERS
 #
@@ -144,13 +147,13 @@ STRATEGIES = list(ARTICLE_VALUES.keys())
 _P = {
     "Cloud-Only": dict(
         base_lat=67.0, q_scale=11.0, q_alpha=0.40,
-        sigma_lat=17.8, sla_budget=100.0,   # tuned: gives 12 % SLA at obs. mean≈78.8 ms
+        sigma_lat=17.8, sla_budget=100.0,   # tuned: gives 12% SLA at obs. mean≈78.8 ms
         base_acc=0.950, snr_thr=15.0, acc_snr=0.006, mob_gamma=0.030, sigma_acc=0.010,
         base_energy=45.0, snr_lat_k=0.30,
     ),
     "Edge-Static": dict(
         base_lat=14.0, q_scale=8.0, q_alpha=0.415,
-        sigma_lat=8.2, sla_budget=30.0,     # tuned: gives 18 % SLA at obs. mean≈22.4 ms
+        sigma_lat=8.2, sla_budget=30.0,     # tuned: gives 18% SLA at obs. mean≈22.4 ms
         base_acc=0.820, snr_thr=15.0, acc_snr=0.005, mob_gamma=0.050, sigma_acc=0.010,
         base_energy=28.0, snr_lat_k=0.15,
     ),
@@ -162,7 +165,7 @@ _P = {
     ),
     "Hybrid-Adaptive": dict(
         base_lat=7.0, q_scale=5.0, q_alpha=0.25,
-        sigma_lat=4.4, sla_budget=20.0,     # tuned: gives 4 % SLA at obs. mean≈12.2 ms
+        sigma_lat=4.4, sla_budget=20.0,     # tuned: gives 4% SLA at obs. mean≈12.2 ms
         base_acc=0.890, snr_thr=15.0, acc_snr=0.004, mob_gamma=0.018, sigma_acc=0.010,
         base_energy=23.0, snr_lat_k=0.077,
     ),
@@ -347,7 +350,7 @@ def sweep_snr(snr_values_db, n_users: int = 1000,
         for _ in range(n_episodes):
             ep_rng = np.random.default_rng(rng.integers(0, 2**31))
             # small per-user SNR spread around the fixed value
-            sinr = np.full(n_users, snr_val) + ep_rng.normal(0.0, 2.0, n_users)
+            sinr = np.full(n_users, snr_val) + ep_rng.normal(0.0, SNR_SWEEP_SIGMA, n_users)
             v_kmh = random_waypoint_speed(n_users, 120.0, ep_rng)
             for name in STRATEGIES:
                 *_, sla = simulate_strategy(name, n_users, sinr, ep_rng, v_kmh,
@@ -477,7 +480,7 @@ def plot_pareto_frontier(simulated: dict, save_path: str):
     ax  = fig.add_subplot(111, projection="3d")
     ax.set_title("Figure 3 – Pareto Frontier:  Latency × Accuracy × Energy",
                  fontsize=12, fontweight="bold", pad=15)
-    rng_p = np.random.default_rng(999)
+    rng_p = np.random.default_rng(PLOT_JITTER_SEED)
     for name in STRATEGIES:
         lat = simulated[name]["latency"]
         acc = simulated[name]["accuracy"]
