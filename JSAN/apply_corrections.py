@@ -43,8 +43,10 @@ from docx import Document
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
-INPUT_FILE  = '/home/runner/work/Papers/Papers/JSAN/jsan-4242687.docx'
-OUTPUT_FILE = '/home/runner/work/Papers/Papers/JSAN/jsan-4242687-corrected.docx'
+import os
+_HERE = os.path.dirname(os.path.abspath(__file__))
+INPUT_FILE  = os.path.join(_HERE, 'jsan-4242687.docx')
+OUTPUT_FILE = os.path.join(_HERE, 'jsan-4242687-corrected.docx')
 
 doc = Document(INPUT_FILE)
 
