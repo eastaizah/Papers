@@ -1,0 +1,1002 @@
+P0: [MDPI_1.1_article_type] Review
+P1: [MDPI_1.2_title] Computational Architectures for 6G Networks: Integrating Distributed Computing and Edge Artificial Intelligence
+P2: [MDPI_1.3_authornames] Evelio Astaiza Hoyos1, Héctor Fabio Bermúdez-Orozco1,* and Nasly Cristina Rodriguez-Idrobo2
+P3: [MDPI_1.6_affiliation] 1	Electronic Engineering Programme, Faculty of Engineering, University of Quindío, Armenia 630004, Quindío, Colombia; eastaiza@uniquindio.edu.co (E.A.H.); hfbermudez@uniquindio.edu.co (H.F.B.-O)
+P4: [MDPI_1.6_affiliation] 2	Occupational Health and Safety Program, Faculty of Health Sciences, University of Quindío, Armenia 630004, Quindío, Colombia; ncrodriguezi@uniquindio.edu.co. (N.C.R.-I)
+P5: [MDPI_1.6_affiliation] 
+P6: [MDPI_1.6_affiliation] *	Correspondence: hfbermudez@uniquindio.edu.co; Tel.: +057 3206671107
+P7: [MDPI_1.7_abstract] Abstract
+P8: [MDPI_1.7_abstract] The sixth generation of mobile networks (6G) is envisioned as an AI-native and computation-driven infrastructure capable of supporting ultra-low latency, massive connectivity and intelligent services across highly heterogeneous environments. Achieving these objectives challenges traditional centralized architectures and motivates a shift towards distributed computing and intelligence at the network edge. This study presents a structured computational analysis of architectural approaches that integrate distributed computing paradigms and Edge Artificial Intelligence (Edge AI) as core enablers of 6G networks. The methodology follows PRISMA guidelines for systematic reviews and is based on a comprehensive analysis of peer-reviewed literature, architectural proposals and standardization documents retrieved from major scientific databases, including IEEE Xplore, Scopus, Web of Science, MDPI and arXiv, as well as reports from ITU-R, 3GPP and ETSI. The analysis examines the evolution from cloud-centric to edge-centric computing, key Edge AI techniques, such as Federated Learning, Split Learning and edge-adapted large AI models, and their role in enabling intelligent orchestration, resource optimization and context-aware services. The comparative analysis demonstrates that edge computing architectures reduce end-to-end latency by 85-95% relative to cloud-centric deployments, while federated learning with gradient compression achieves communication overhead reductions of up to 99% under 6G channel conditions. The results indicate that the tight integration of distributed computing and Edge AI enhances network responsiveness, scalability and adaptability, while also revealing persistent challenges related to orchestration complexity, resource constraints, security and interoperability. The study concludes that holistic computational architectures and AI-native design principles are essential for the effective realization of 6G networks and for guiding future research and standardization efforts.
+P9: [MDPI_1.8_keywords] Keywords: Distributed Computing; Edge Artificial Intelligence; 6G Network Architectures; Computational Frameworks; AI-Native Networks; Intelligent Orchestration.
+P10: [MDPI_2.1_heading1] Introduction
+P11: [MDPI_3.2_text_no_indent] The evolution of mobile communication systems is increasingly characterized by the convergence of networking, distributed computing and artificial intelligence, transforming communication infrastructures into large-scale computational systems. As network complexity, data volume and service heterogeneity continue to grow, the efficient distribution and orchestration of computational and intelligent functions across the network have become central design challenges. In this context, future mobile networks are no longer conceived merely as platforms for data transmission, but as computation-driven and intelligence-native infrastructures in which communication, computing and data processing are tightly integrated. This computational perspective provides the necessary foundation for understanding the architectural transformations required to support the next generation of mobile systems and frames the discussion of sixth-generation (6G) networks presented in the following sections.
+P12: [MDPI_2.2_heading2] 1.1 The 6G Vision: Beyond Connectivity
+P13: [MDPI_3.2_text_no_indent] Mobile networks have evolved dramatically from the first generation (1G), which introduced mobile telephony, to the fifth generation (5G), which began incorporating intelligence into mobile communications [1]. The sixth generation (6G), expected to reach commercial deployment around 2030, promises an even deeper transformation, marking the transition from "mobile intelligence" to an "Ubiquitous Intelligent Mobile Society" [2], opening new horizons for the integration of comfort, security, and intelligence into everyday life [3]. The 6G vision transcends incremental improvements in connectivity and aspires instead to achieve a seamless fusion of the physical, digital and human worlds [4], where artificial intelligence (AI) is not an overlaying application but an intrinsic capability of the network itself [5].
+P14: [MDPI_3.1_text] The International Telecommunication Union (ITU), through its Radiocommunication Sector (ITU-R), has established the foundational framework for 6G under the designation "IMT-2030" [6]. This framework defines several evolved use scenarios compared with 5G, such as immersive communication (enabling interactive experiences like XR and holographic telepresence), massive communication (supporting the Internet of Everything, IoE), and high-reliability, low-latency communication (HRLLC) for mission-critical applications [6]. It also introduces new scenarios enabled by emerging capabilities, including integrated sensing and communication (ISAC), native AI integration and ubiquitous connectivity spanning terrestrial, aerial, space and underwater environments [7].
+P15: [MDPI_3.1_text] To support these scenarios, 6G sets key performance indicators (KPIs) that are significantly more ambitious than those of 5G. These include peak data rates on the order of 1 Tbps [8], user-experienced data rates of up to 10 Gbps [2], end-to-end (E2E) latency below 1 ms, and even in the range of 0.1 ms to 100 μs for specific cases [7],connection densities potentially reaching  devices per km² [8], extremely high reliability (success probability of 0.99999 to 0.9999999) [9], mobility support for speeds up to 1000 km/h [2], and substantial improvements in energy and spectral efficiency [7]. New capabilities such as centimeter-level or even sub-centimeter-level positioning accuracy [7] and integrated sensing [1] also form an integral part of the vision.
+P16: [MDPI_3.1_text] Realizing this vision and meeting such demanding KPIs critically depend on the development and integration of radically new enabling technologies and network architectures [6,10–12]. Technologies such as terahertz (THz) and visible light communication (VLC), reconfigurable intelligent surfaces (RIS), ultra-massive MIMO (UM-MIMO), non-terrestrial networks (NTN) and AI are considered fundamental pillars [1,12].
+P17: [MDPI_2.2_heading2] 1.2 The Critical Role of Distributed Computing and Edge AI
+P18: [MDPI_3.1_text] Among the most crucial enabling technologies for 6G are distributed computing, particularly in the form of Edge Computing and Multi-access Edge Computing (MEC),and Edge Artificial Intelligence (Edge AI) [6]. Edge Computing consists of bringing computational and storage capabilities closer to end users or data sources by situating them at the edge of the access network [4]. This contrasts with the traditional centralized cloud model and is essential for mitigating latency and reducing the load on transport networks [13].
+P19: [MDPI_3.1_text] Edge AI, in turn, refers to the execution of AI algorithms, both for training and inference, directly on edge nodes or even on end devices [14]. The convergence of distributed edge computing with AI is essential for realizing the 6G vision of "connected intelligence" [15]. This synergy not only enables intelligent and autonomous optimization of the 6G network itself but also supports a new generation of services requiring ultra-low latency, extensive local data processing and customized, context-aware AI capabilities. The deep integration of AI into the network architecture, often termed "AI-native" [5], fundamentally depends on distributed computing infrastructure at the edge.
+P20: [MDPI_3.1_text] This article aims to provide an expert and comprehensive analysis of existing proposals for integrating distributed computing and Edge AI as key elements for implementing 6G networks. It seeks to identify the synergies between these two technological domains, examine the inherent challenges of their joint deployment within the 6G context and explore future perspectives and directions for research and standardization.
+P21: [MDPI_5.1_figure_caption] Figure 1. Taxonomy of 6G Enabling Technologies and Distributed Computing Architectures. 
+P22: [MDPI_3.2_text_no_indent] Figure 1 provides a conceptual taxonomy of the key enabling technologies and distributed computing paradigms discussed throughout this work.
+P23: [MDPI_3.1_text] Section 2 examines the distributed computing paradigms relevant to 6G, tracing their evolution from cloud to edge and highlighting the benefits and challenges of Edge Computing. Section 3 delves into the concept of Edge AI, describing key techniques (such as FL, SL and Edge LAMs), their applications for optimizing the 6G network and enabling intelligent services, and the associated challenges. Section 4 analyses various architectural and orchestration proposals that aim to effectively integrate distributed computing and AI into 6G networks, including interactions with technologies such as Digital Twins and ISAC. Section 5 reviews the current state of standardization within major organizations (ITU-R, 3GPP, ETSI) and discusses open challenges and future research directions. Section 6 presents the main conclusions of the analysis, synthesizing the key findings and reinforcing the transformative role of distributed computing and Edge AI for the future of mobile communications.
+P24: [MDPI_2.2_heading2] 1.3 Contributions of This Work
+P25: [MDPI_3.1_text] This review article makes the following key contributions to the understanding and development of 6G networks:
+P26: [MDPI_3.1_text] Comprehensive Synthesis: It provides a structured integration of distributed computing paradigms (Cloud, Fog, Edge, MEC) and Edge AI techniques (Federated Learning, Split Learning, Edge LAMs) within the specific context of 6G requirements and use cases.
+P27: [MDPI_3.1_text] Architectural Analysis: The work systematically examines multiple architectural proposals, including evolutionary, revolutionary (TONA), satellite-terrestrial (SAGIN), and O-RAN-based approaches, identifying their design principles, strengths, and applicability to different 6G scenarios.
+P28: [MDPI_3.1_text] Critical Evaluation Framework: Unlike purely descriptive surveys, this study evaluates the practical implications of integrating distributed intelligence, discussing trade-offs in terms of latency reduction, bandwidth optimization, privacy enhancement, and the challenges of orchestration complexity, resource constraints, and interoperability.
+P29: [MDPI_3.1_text] Standardization Landscape: The article maps the current state of 6G standardization efforts (ITU-R IMT-2030, 3GPP Releases 19-21, ETSI MEC), providing researchers and industry practitioners with a clear reference point for ongoing and future activities.
+P30: [MDPI_3.1_text] Research Roadmap: Based on the analysis of existing proposals and persistent challenges, the work identifies critical open research directions, including AI-native architecture design, trustworthy distributed AI, holistic security, and sustainability, that will guide the next phase of 6G development.
+P31: [MDPI_3.1_text] These contributions collectively position distributed intelligence as a foundational design principle for 6G networks and provide actionable insights for both academic research and industrial implementation, as further elaborated in the Conclusions section.
+P32: [MDPI_4.1_table_caption] Table 1. Comparison of this survey with closely related reviews (2022–2025).
+P33: [MDPI_3.1_text] Legend: ✓ = comprehensive coverage; Partial = limited coverage; ✗ = not covered.
+P34: [MDPI_3.1_text] 
+P35: [MDPI_3.1_text] Novelty and Differentiation from Conventional Approaches
+P36: [MDPI_3.1_text] This work distinguishes itself from conventional 5G and early 6G literature in several critical dimensions:
+P37: [MDPI_3.1_text] Shift from Connectivity-Centric to Intelligence-Centric Architecture: Traditional mobile network reviews focus on radio access technologies (spectrum, MIMO, beamforming) and connectivity improvements (throughput, coverage). This work repositions the architectural discourse around distributed intelligence and edge computing as primary design drivers, reflecting 6G's fundamental departure from previous generations. While 5G introduced edge computing as an optional enhancement, 6G mandates it as a core architectural principle to meet sub-millisecond latency and support AI-native services.
+P38: [MDPI_3.1_text] Holistic Integration versus Component-Level Analysis: Unlike studies that examine AI, edge computing, or network architecture in isolation, this review provides an integrative framework showing how distributed computing paradigms (MEC, Fog, Edge) and Edge AI techniques (FL, SL, Edge LAMs) must be co-designed with network architecture, orchestration mechanisms, and enabling technologies (Digital Twins, ISAC, Blockchain). This systems-level perspective is essential for understanding 6G\'s complexity but is often absent in component-focused literature.
+P39: [MDPI_3.1_text] Critical Evaluation versus Descriptive Cataloging: Conventional surveys often catalog technologies and proposals without rigorous comparative analysis. This work explicitly evaluates trade-offs (complexity vs. performance, scalability limits, deployment feasibility, economic costs), identifies gaps between vision and implementation, and grounds the discussion in quantitative performance benchmarks and real-world testbed results. This critical stance provides actionable guidance for researchers and practitioners rather than merely documenting the state-of-the-art.
+P40: [MDPI_3.1_text] Standardization-Aware Perspective: By tracking ongoing efforts across ITU-R (IMT-2030), 3GPP (Releases 19-21), and ETSI MEC, this review bridges academic research and industry standardization, highlighting where consensus exists and where open questions remain. This dual focus is particularly valuable as 6G transitions from vision to concrete specification.
+P41: [MDPI_3.1_text] Forward-Looking Research Roadmap: Rather than concluding with generic recommendations, this work identifies specific, actionable research challenges---trustworthy distributed AI, AI-native architecture design, holistic security, sustainability---that are both technically precise and aligned with industry priorities. These directions emerge organically from the critical analysis rather than being imposed as afterthoughts.
+P42: [MDPI_3.1_text] In summary, the novelty lies not in proposing a new architecture or algorithm, but in providing a comprehensive, critical, and actionable synthesis that positions distributed intelligence as the foundational principle for 6G, backed by performance analysis, real-world validation, and clear identification of research frontiers.
+P43: [MDPI_2.2_heading2] 1.4 Methodology and Article Selection Criteria
+P44: [MDPI_3.1_text] This systematic review follows the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines [PRISMA 2020] to ensure a rigorous and transparent methodology for identifying, selecting, and analyzing relevant literature on distributed computing and Edge AI for 6G networks.
+P45: [MDPI_2.3_heading3] Article Selection Criteria:
+P46: [MDPI_3.1_text] The literature corpus was constructed through a comprehensive search of major scientific databases, including IEEE Xplore, Scopus, Web of Science, MDPI, and arXiv, as well as standardization documents from ITU-R, 3GPP, and ETSI. The search strategy employed the following inclusion criteria:
+P47: [MDPI_3.1_text] 1. Temporal Scope: Publications from 2020 to 2025, covering the period of active 6G research and standardization.
+P48: [MDPI_3.1_text] 2. Technical Relevance: Articles addressing distributed computing paradigms (Cloud, Fog, Edge, MEC), Edge AI techniques (Federated Learning, Split Learning, Edge Large AI Models), 6G architectural proposals, or related enabling technologies (Digital Twins, ISAC, Blockchain, Multi-Agent Reinforcement Learning).
+P49: [MDPI_3.1_text] 3. Scientific Merit: Peer-reviewed journal articles, conference papers from recognized venues (e.g., IEEE, ACM), white papers from standardization bodies, and high-quality preprints from established repositories (arXiv).
+P50: [MDPI_3.1_text] 4. Language: Publications in English.
+P51: [MDPI_3.1_text] Exclusion criteria included: purely theoretical AI work without network context, studies focused exclusively on previous generations (4G, 5G) without forward-looking 6G relevance, and non-technical opinion pieces lacking substantive architectural or algorithmic content.
+P52: [MDPI_2.3_heading3] Search Strategy
+P53: [MDPI_3.1_text] Keywords and Boolean operators were used to identify relevant works: (“6G” OR “sixth generation” OR “IMT-2030”) AND (“Edge AI” OR “Federated Learning” OR “Split Learning” OR “Edge Computing” OR “MEC” OR “distributed intelligence” OR “AI-native”) AND (“architecture” OR “framework” OR “orchestration” OR “optimization”).
+P54: [MDPI_2.3_heading3] Screening Process
+P55: [MDPI_3.1_text] Initial screening based on titles and abstracts yielded approximately 200 candidate papers. Full-text review and quality assessment reduced this to the final corpus of cited works, ensuring diversity across architectural proposals, AI techniques, use cases, and standardization activities. Priority was given to works providing concrete architectural frameworks, experimental validation, performance analysis, or authoritative standardization guidance.
+P56: [MDPI_2.3_heading3] Research Questions
+P57: [MDPI_3.1_text] This systematic review is structured around five core research questions (RQs) that guide the literature selection and analysis:
+P58: [MDPI_3.8_bullet] RQ1: What are the dominant distributed computing paradigms (Cloud, Fog, MEC/Edge) proposed for 6G networks, and how do their latency and bandwidth characteristics align with 6G performance requirements?
+P59: [MDPI_3.8_bullet] RQ2: Which Edge AI techniques (Federated Learning, Split Learning, Edge LAMs) have been proposed for resource-constrained 6G edge environments, and what are their comparative advantages and limitations in terms of communication overhead, privacy, and convergence under wireless channel impairments?
+P60: [MDPI_3.8_bullet] RQ3: What architectural frameworks (TONA, SAGIN, O-RAN-based, IBN) have been proposed to integrate distributed computing and Edge AI into 6G networks, and what are the key design trade-offs?
+P61: [MDPI_3.8_bullet] RQ4: What is the current state of standardization (ITU-R, 3GPP, ETSI, O-RAN Alliance) for AI-native and distributed computing capabilities in 6G, and what gaps remain between research proposals and adopted standards?
+P62: [MDPI_3.8_bullet] RQ5: What are the principal open research challenges and future directions for realizing AI-native 6G networks with distributed intelligence?
+P63: [MDPI_3.2_text_no_indent] Figure 2 presents the PRISMA flow diagram summarizing the systematic literature selection process.
+P64: [MDPI_3.1_text] This methodological rigor ensures that the review comprehensively covers the state-of-the-art while maintaining focus on the integration of distributed computing and Edge AI as foundational enablers of 6G networks.
+P65: [MDPI_3.8_bullet] 
+P66: [MDPI_3.8_bullet] 
+P67: [MDPI_3.8_bullet] 
+P68: [MDPI_3.8_bullet] 
+P69: [MDPI_3.8_bullet] 
+P70: [MDPI_3.8_bullet] 
+P71: [MDPI_5.1_figure_caption] Figure 2. PRISMA Flow Diagram. 
+P72: [MDPI_5.1_figure_caption] 
+P73: [MDPI_2.1_heading1] Distributed Computing Paradigms in the 6G Context
+P74: [MDPI_3.2_text_no_indent] The evolution towards sixth-generation (6G) mobile networks involves not only advances in radio technologies, but also a fundamental transformation in how computation, data processing and intelligence are distributed across the network. From a computational perspective, 6G can be understood as a large-scale, heterogeneous distributed computing system in which communication, computing and storage resources must be jointly orchestrated to meet extreme performance requirements. In this context, distributed computing, particularly edge-oriented paradigms, emerges as a core architectural shift required to support ultra-low latency, massive scalability and intelligent network operation. These paradigms redefine where computational tasks are executed, how resources are allocated and how system-level efficiency, responsiveness and reliability are achieved in next-generation mobile networks.
+P75: [MDPI_2.2_heading2] Historical Evolution: From Centralised Cloud to the Distributed Edge
+P76: [MDPI_3.2_text_no_indent] For the past several decades, the dominant paradigm has been Cloud Computing. According to the NIST definition, it is a model that enables ubiquitous, convenient and on-demand access to a shared pool of configurable computing resources (networks, servers, storage, applications and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction [15]. This centralized model has been fundamental for large-scale data processing and the deployment of massive applications [21].
+P77: [MDPI_3.1_text] However, the growing proliferation of connected devices (Internet of Things, IoT) and the emergence of applications with strict real-time requirements, such as augmented/virtual reality (AR/VR), autonomous driving and industrial automation, have highlighted inherent limitations of the centralized cloud model [4]. The physical distance between end devices and cloud data centers introduces significant latency, incompatible with the millisecond- or even microsecond-level requirements of many 6G applications [21]. Furthermore, transmitting the massive volumes of data generated at the edge, estimated to represent 75% of enterprise data by 2025 [22], to the cloud consumes substantial bandwidth and raises serious concerns regarding the privacy and security of sensitive information [4].
+P78: [MDPI_3.1_text] Fog Computing emerged in response to these limitations. This paradigm introduces an intermediate layer of distributed computing infrastructure positioned between end devices and the centralized cloud [13]. Fog nodes, although more resource-constrained than the cloud [23], are geographically closer to users, enabling the local processing of latency-sensitive tasks or smaller data volumes, thereby reducing dependence on the cloud [24]. The typical architecture of Fog Computing is often described as comprising three layers: the terminal/IoT layer, the Fog layer and the Cloud layer [24,25].
+P79: [MDPI_3.1_text] Edge Computing represents the logical extension of this decentralization trend, bringing computational and storage capabilities even closer to the end user, directly to the edge of the access network [4,13]. Within this broad concept, Multi-access Edge Computing (MEC) is a key initiative, particularly relevant for mobile networks.
+P80: [MDPI_3.1_text] This progression from centralized cloud to distributed edge is not merely another technological option but a necessary and inevitable response to the fundamental requirements of the 6G vision. Applications that will define 6G, such as immersive XR experiences [6], cooperative autonomous driving [26] and the Tactile Internet [1], impose ultra-low latency requirements ( ms) [8] and generate massive locally produced data streams [27]. The physics of signal propagation and the bandwidth limitations of transport networks make it infeasible to satisfy these requirements from distant centralized cloud infrastructures [21]. The need to process critical information in real time and to preserve the privacy of sensitive data (such as biometric data in XR or vehicular data) [21] further reinforces the imperative of bringing computation closer to the source. Therefore, the adoption of paradigms such as Fog Computing and, especially, Edge Computing becomes a sine qua non condition for enabling many of the most transformative 6G use cases.
+P81: [MDPI_2.2_heading2] Multi-access Edge Computing (MEC) as a Key Enabler in 6G
+P82: [MDPI_3.2_text_no_indent] The European Telecommunications Standards Institute (ETSI) defines MEC as a technology that provides application developers and content providers with cloud-computing capabilities and an IT service environment at the edge of the multi-access network (including mobile networks such as the RAN, as well as Wi-Fi and others) [28]. This environment is characterized by ultra-low latency, high bandwidth and real-time access to radio network information, which can be exploited by applications [28].
+P83: [MDPI_3.1_text] MEC, already a significant component in the evolution of 5G [1], is considered even more critical for 6G [8]. The MEC architecture is expected to undergo significant transformation in 6G, becoming more highly distributed, extending further towards the "Far Edge" (computing nodes located closer to the user, potentially within radio units or cellular sites) [29], and adopting principles of openness and disaggregation [30].
+P84: [MDPI_3.1_text] The deep integration of MEC into the 6G architecture is essential for supporting the most demanding use cases [31]. Examples include:
+P85: [MDPI_2.3_heading3] Connected and Autonomous Vehicles (V2X)
+P86: [MDPI_3.2_text_no_indent] MEC provides the low latency required for safety-critical V2V and V2I communications (collision avoidance, coordinated driving) and enables local processing of sensor data for environmental perception [4].
+P87: [MDPI_2.3_heading3] Extended Reality (XR) and the Metaverse
+P88: [MDPI_3.2_text_no_indent] Immersive experiences require intensive graphical rendering and extremely low-latency responses to user actions. MEC enables the offloading of part of this computation to the edge, improving Quality of Experience (QoE) and reducing the processing burden on end devices [13].
+P89: [MDPI_2.3_heading3] Industrial Automation and Robotics
+P90: [MDPI_3.2_text_no_indent] Real-time control of robots and cyber-physical systems (CPS) in Industry 4.0 demands microsecond-level latency and high reliability, both of which MEC can support [8].
+P91: [MDPI_2.3_heading3] Drones and UAVs
+P92: [MDPI_3.2_text_no_indent] Fleet management, autonomous navigation and onboard sensor-data processing can be enhanced through computational support provided by terrestrial or aerial MEC nodes [1].
+P93: [MDPI_2.3_heading3] Telemedicine
+P94: [MDPI_3.2_text_no_indent] Applications such as remote surgery or AI-assisted diagnosis require low latency and secure processing of sensitive medical data, making MEC an ideal enabler [8].
+P95: [MDPI_3.1_text] Moreover, the evolution towards Open-Source MEC (OS-MEC) is actively being explored [30]. Traditional MEC architectures may be rigid, as they depend on specialized hardware integrated with proprietary software. OS-MEC proposes decoupling MEC functions (software) from underlying resources (hardware) using technologies such as Network Function Virtualization (NFV) and Software-Defined Networking (SDN). This would allow dynamic reconfiguration of functions and resources to create customized MEC services tailored to specific 6G scenarios, promoting innovation and flexibility [30].
+P96: [MDPI_3.1_text] The performance of MEC in 6G is fundamentally conditioned by the wireless radio channel connecting user equipment to the MEC-hosting base station or distributed unit. Unlike fixed backhaul, the radio access link is subject to multipath fading (Rayleigh/Rician models), shadowing, Doppler shifts at high mobility (up to 1000 km/h for 6G [8]), and inter-cell interference. These channel impairments directly affect the transmission latency  in the E2E latency model: for a time-varying channel  with instantaneous SNR , the expected transmission latency becomes , which is strictly greater than the latency computed using the average SNR due to Jensen's inequality. Furthermore, handover events in high-mobility scenarios introduce additional latency spikes of 10–50 ms in LTE-A and sub-5 ms with 5G NR fast handover, which must be accounted for in MEC task-offloading schedulers. Channel-aware offloading algorithms that jointly optimise task placement and radio resource allocation under fading conditions are therefore essential for meeting 6G URLLC targets [32,33].
+P97: [MDPI_2.2_heading2] Fundamental Benefits of Edge Computing for 6G
+P98: [MDPI_3.2_text_no_indent] The widespread adoption of Edge Computing in 6G networks offers several essential advantages:
+P99: [MDPI_2.3_heading3] Drastic Reduction in Latency
+P100: [MDPI_3.2_text_no_indent] By processing data and executing applications closer to the user or the data source, the round-trip time to a centralised cloud is eliminated. This is absolutely critical for meeting the ultra-low latency requirements ( ms, and even  ms) of 6G scenarios such as HRLLC, the Tactile Internet, immersive XR, cloud gaming, remote surgery and autonomous driving [4].
+P101: [MDPI_3.1_text] Mathematical Latency Model:
+P102: [MDPI_3.1_text] The following E2E latency decomposition is a standard formulation widely used in edge and mobile cloud computing literature [4,32]; the specific numerical examples and adaptation for 6G use cases are original contributions of this work.
+P103: [MDPI_3.1_text] The end-to-end latency for task execution can be decomposed as:
+P104: [MDPI_3.9_equation] 	                (1)
+P105: [MDPI_3.1_text] where:
+P106: [MDPI_3.8_bullet] : transmission time for data size  at rate 
+P107: [MDPI_3.8_bullet] : propagation delay over distance  (speed of light  m/s)
+P108: [MDPI_3.8_bullet] : queuing delay at intermediate nodes
+P109: [MDPI_3.8_bullet] : computation time for  operations at frequency 
+P110: [MDPI_3.8_bullet] : backhaul network delay
+P111: [MDPI_3.1_text] Cloud vs. Edge Latency Comparison:
+P112: [MDPI_3.1_text] For Cloud Computing (data center at distance  km):
+P113: [MDPI_3.9_equation] 	               (2)
+P114: [MDPI_3.1_text] With typical values:
+P115: [MDPI_3.8_bullet] Propagation:  ms (round-trip)
+P116: [MDPI_3.8_bullet] Backhaul:  ms [4,32] 
+P117: [MDPI_3.8_bullet] Queuing:  ms [4,32]
+P118: [MDPI_3.8_bullet] Total:  ms
+P119: [MDPI_3.8_bullet] For Edge Computing (MEC server at distance  km):
+P120: [MDPI_3.8_bullet] 					(3)
+P121: [MDPI_3.8_bullet] With typical values:
+P122: [MDPI_3.8_bullet] Propagation:  ms (negligible)
+P123: [MDPI_3.8_bullet] No backhaul delay
+P124: [MDPI_3.8_bullet] Queuing:  ms (lower load)
+P125: [MDPI_3.8_bullet] Total:  ms
+P126: [MDPI_3.1_text] Latency Reduction Factor:
+P127: [MDPI_3.9_equation] 			(4)
+P128: [MDPI_3.1_text] 6G Ultra-Low Latency Achievement:
+P129: [MDPI_3.8_bullet] For HRLLC requiring  ms:
+P130: [MDPI_3.8_bullet] Wireless transmission (5G NR, mini-slot):  ms (5G NR mini-slot scheduling: one OFDM mini-slot with 2 symbols at 30 kHz SCS [1])
+P131: [MDPI_3.8_bullet] Propagation (< 1 km):  ms (from  with  km)
+P132: [MDPI_3.8_bullet] Edge computation (GPU/NPU):  ms [32,33]
+P133: [MDPI_3.8_bullet] Processing delay:  ms [32]
+P134: [MDPI_3.8_bullet] Total:  ms ✓ (meets requirement)
+P135: [MDPI_3.8_bullet] Cloud deployment would require  ms, failing the < 1 ms requirement by 20×.
+P136: [MDPI_5.1_figure_caption] Figure 3 — E2E Latency versus Processing Distance for Cloud, Fog, and MEC under 6G Traffic Classes. 
+P137: [MDPI_5.1_figure_caption] 
+P138: [MDPI_3.2_text_no_indent] Figure 3 illustrates E2E latency as a function of processing distance for the three computing paradigms under different 6G traffic classes.
+P139: [MDPI_2.3_heading3] Optimised Bandwidth Usage
+P140: [MDPI_3.2_text_no_indent] Local processing significantly reduces the amount of data that must be transmitted across backhaul networks and the network core [4]. This is vital in 6G, where an explosion in data volume is expected from billions of IoT devices, sensors and multimedia applications [27]. Alleviating backhaul congestion improves overall network performance.
+P141: [MDPI_3.1_text] Mathematical Bandwidth Optimization Model:
+P142: [MDPI_3.1_text] The following bandwidth reduction framework is adapted from standard edge offloading models in [4,32]; the specific parametrization and illustrative smart-city example are original to this work.
+P143: [MDPI_3.1_text] Consider a 6G network with  IoT devices generating raw data at rate  (bps per device):
+P144: [MDPI_3.1_text] Cloud-Only Scenario:
+P145: [MDPI_3.1_text] All raw data transmitted to cloud:
+P146: [MDPI_3.1_text] 
+P147: [MDPI_3.1_text] Edge Computing Scenario:
+P148: [MDPI_3.1_text] Data processed at edge, only aggregated results/alerts transmitted:
+P149: [MDPI_3.1_text] 
+P150: [MDPI_3.1_text] where  is the compression/aggregation ratio for device .
+P151: [MDPI_3.1_text] Bandwidth Reduction:
+P152: [MDPI_3.1_text] 
+P153: [MDPI_3.1_text] Concrete Example - Smart City Video Surveillance:
+P154: [MDPI_3.8_bullet]  cameras
+P155: [MDPI_3.8_bullet] Raw video rate:  Mbps (4K video at 30 fps)
+P156: [MDPI_3.8_bullet] Total raw data:  Mbps = 25 Gbps
+P157: [MDPI_3.8_bullet] With edge AI processing (object detection, anomaly detection):
+P158: [MDPI_3.8_bullet] Transmitted data: metadata + alerts only
+P159: [MDPI_3.8_bullet] Compression ratio:  (only events transmitted)
+P160: [MDPI_3.8_bullet] Aggregated data:  Mbps
+P161: [MDPI_3.1_text] Bandwidth Reduction:
+P162: [MDPI_3.9_equation] 					(8)
+P163: [MDPI_3.1_text] This saves 24.975 Gbps of backhaul bandwidth, reducing infrastructure costs and enabling scalability.
+P164: [MDPI_3.1_text] General Edge Bandwidth Model:
+P165: [MDPI_3.1_text] For heterogeneous traffic types (video, sensor data, control signals):
+P166: [MDPI_3.1_text] 
+P167: [MDPI_3.1_text] where:
+P168: [MDPI_3.8_bullet] : number of devices of type 
+P169: [MDPI_3.8_bullet] : raw data rate per device
+P170: [MDPI_3.8_bullet] : compression ratio after edge processing
+P171: [MDPI_3.8_bullet] : activity factor (fraction of time transmitting)
+P172: [MDPI_3.8_bullet] Typical compression ratios:
+P173: [MDPI_3.8_bullet] Video (with edge AI):  (– reduction) [4,16]
+P174: [MDPI_3.8_bullet] Sensor data (aggregated):  (90-95% reduction) [4,33]
+P175: [MDPI_3.8_bullet] Control signals:  (50-90% reduction) [4,33]
+P176: [MDPI_2.3_heading3] Enhanced Privacy and Security
+P177: [MDPI_3.1_text] Keeping sensitive data (personal, medical, industrial, vehicular) at the edge, without the need to transmit it to a potentially less trustworthy or more exposed central cloud, intrinsically enhances privacy [5]. Local processing reduces the attack surface associated with long-distance data transmission.
+P178: [MDPI_3.1_text] Mathematical Privacy Model:
+P179: [MDPI_3.1_text] The following information-theoretic privacy framework is based on the mutual-information formulation of Letaief et al. [17] and standard differential privacy theory; the healthcare data example is an original illustrative application.
+P180: [MDPI_3.1_text] Define privacy leakage as the mutual information between raw data  and transmitted information :
+P181: [MDPI_3.9_equation] 			(10)
+P182: [MDPI_3.1_text] where  is entropy and  is conditional entropy.
+P183: [MDPI_3.1_text] Cloud Scenario: Raw data transmitted :
+P184: [MDPI_3.1_text]  			(11)
+P185: [MDPI_3.1_text] (maximum leakage)
+P186: [MDPI_3.1_text] Edge Scenario: Only processed features  transmitted:
+P187: [MDPI_3.9_equation] 				(12)
+P188: [MDPI_3.1_text] The reduction in privacy leakage is:
+P189: [MDPI_3.9_equation] 				(13)
+P190: [MDPI_3.1_text] For effective edge processing,  should be large (high uncertainty about  given ).
+P191: [MDPI_3.1_text] Example - Healthcare Data:
+P192: [MDPI_3.8_bullet] Raw medical images:  bits (high entropy) (illustrative example: a 1 Mpixel greyscale image at 1 bit/pixel entropy yields ~ bits [17])
+P193: [MDPI_3.8_bullet] Edge-processed diagnosis:  bits (binary or categorical) ( bits for  disease classes [17])
+P194: [MDPI_3.8_bullet] Privacy improvement:  bits (derived from  as defined above)
+P195: [MDPI_2.3_heading3] Enablement of Context Awareness and Localisation
+P196: [MDPI_3.2_text_no_indent] Physical proximity allows edge applications and services to access and react to local information in real time, such as radio channel conditions, precise device location or events in the physical environment [4]. This is crucial for personalized and adaptive services.
+P197: [MDPI_3.1_text] Mathematical Context-Aware Service Model:
+P198: [MDPI_3.1_text] The context-aware decision function below is an original formulation introduced in this work to model the edge computing advantage in providing real-time, location-aware, and context-sensitive service optimization in 6G environments.
+P199: [MDPI_3.1_text] Context-aware decision function:
+P200: [MDPI_3.9_equation]   				(14)
+P201: [MDPI_3.1_text] where:
+P202: [MDPI_3.8_bullet] : action/service configuration
+P203: [MDPI_3.8_bullet] : local context (location, channel, nearby devices)
+P204: [MDPI_3.8_bullet] : global context (network state)
+P205: [MDPI_3.8_bullet] : utility function
+P206: [MDPI_3.1_text] Edge advantage: Access to  with latency  ms vs. cloud requiring  ms.
+P207: [MDPI_3.1_text] For time-critical contexts (e.g., vehicle collision avoidance), only edge can react within safety margins.
+P208: [MDPI_2.3_heading3] Greater Scalability and Reliability
+P209: [MDPI_3.2_text_no_indent] Distributed Edge Computing architectures can be inherently more scalable, allowing capacity to be added incrementally where needed. Moreover, they avoid the single points of failure typical of centralized systems, thereby improving overall system resilience [13].
+P210: [MDPI_3.1_text] Mathematical Reliability Model:
+P211: [MDPI_3.1_text] System reliability for  independent edge nodes each with reliability :
+P212: [MDPI_3.9_equation] 						(15)
+P213: [MDPI_3.1_text] For  nodes with :
+P214: [MDPI_3.1_text]  (extremely high)
+P215: [MDPI_3.1_text] Centralized cloud with single data center reliability :
+P216: [MDPI_3.9_equation] 
+P217: [MDPI_3.1_text] Even with high individual reliability, distributed edge achieves better overall system reliability through redundancy.
+P218: [MDPI_3.1_text] Scalability - Linear vs. Centralized:
+P219: [MDPI_3.8_bullet] Edge: Adding capacity scales linearly: 
+P220: [MDPI_3.8_bullet] Cloud: Centralized bottleneck limits scalability beyond infrastructure capacity
+P221: [MDPI_2.2_heading2] Inherent Challenges of Distributed Edge Computing
+P222: [MDPI_3.2_text_no_indent] Despite its advantages, the implementation of distributed edge computing for 6G presents significant challenges that must be addressed:
+P223: [MDPI_2.3_heading3] Resource Constraints
+P224: [MDPI_3.2_text_no_indent] Edge devices and nodes (ranging from sensors and smartphones to MEC servers) possess considerably lower computational (CPU, GPU, NPU), storage and energy capabilities than centralized cloud data centers [4]. These limitations hinder the execution of computationally intensive tasks, particularly complex AI algorithms such as large language models (LLMs) [13].
+P225: [MDPI_2.3_heading3] Complex Management and Orchestration
+P226: [MDPI_3.2_text_no_indent] Managing an ecosystem of heterogeneous, geographically distributed and dynamic computing resources is inherently complex [6]. It requires sophisticated solutions for resource discovery, task allocation (offloading), load balancing, application lifecycle management and Quality of Service (QoS) assurance [4].
+P227: [MDPI_2.3_heading3] Security and Privacy
+P228: [MDPI_3.2_text_no_indent] Although the edge enhances privacy by localizing data, the distributed and often open nature of edge infrastructures increases the attack surface [34]. Challenges include physical security of edge nodes, heterogeneity of operating systems and protocols, limited user interfaces on IoT devices, weak computational capabilities at peripheral devices for robust defenses, container security in MEC, vulnerabilities in SDN (centralized controller, switch saturation), complex access management in mobile and multi-domain environments, risks associated with open interfaces (such as in O-RAN) and multi-vendor interoperability issues [34]. Robust mechanisms for authentication, authorization, encryption, data protection, intrusion detection and trust management are essential [13].
+P229: [MDPI_2.3_heading3] Mobility and Intermittent Connectivity
+P230: [MDPI_3.2_text_no_indent] Ensuring service continuity and maintaining application state for mobile users and devices as they move across different access points or edge nodes is a major challenge [4]. This is particularly critical in V2X and UAV scenarios, where network topology changes rapidly [26]. Intermittent connectivity can also disrupt distributed tasks such as AI model training [35].
+P231: [MDPI_2.3_heading3] Interoperability and Standardization
+P232: [MDPI_3.2_text_no_indent] The diversity of hardware, software and protocols in the edge ecosystem can lead to interoperability issues unless clear and open standards are established [34]. The lack of standardization hinders the creation of a unified market and limits application portability [36].
+P233: [MDPI_3.1_text] The transition towards more open and disaggregated architectures, such as Open-Source MEC (OS-MEC) [30] or Open RAN (O-RAN)-based frameworks [34], while promising in terms of flexibility, innovation and reduced vendor lock-in, intensifies several of these challenges. Open interfaces, by definition, increase the surface exposed to potential attacks [34]. Multi-vendor component management introduces additional complexity in ensuring security and interoperability [34]. Functional decoupling requires more sophisticated orchestration mechanisms to compose and manage end-to-end services [30]. This dynamic highlight a fundamental tension: the pursuit of openness and flexibility at the 6G edge creates an even more urgent need for advanced and automated solutions for managing security, trust and orchestration, possibly through AI-driven approaches or distributed ledger technologies such as blockchain [13]. Table 2 summarizes the key characteristics of the computing paradigms discussed.
+P234: [MDPI_4.1_table_caption] Table 2. Comparison of Computing Paradigms: Cloud, Fog and Edge
+P235: [MDPI_3.1_text] Note: Evaluation scores (1-10 scale) reflect suitability for typical 6G use cases requiring ultra-low latency (<10ms), high privacy, and context awareness. Cloud scores lower despite computational advantages due to latency constraints. Edge scores highest despite deployment complexity due to alignment with 6G requirements.
+P236: [MDPI_2.1_heading1] Edge AI: Artificial Intelligence Integration at the 6G Network Edge
+P237: [MDPI_3.2_text_no_indent] The convergence of artificial intelligence with edge computing infrastructure is one of the most significant conceptual and technological pillars of 6G. Edge AI is not merely an application running on the edge network; it is an intrinsic capability that redefines both network operation and the services it can deliver as is illustrated in Figure 4.
+P238: [MDPI_5.1_figure_caption] Figure 4. Possible Edge AI Architecture in 6G
+P239: [MDPI_5.1_figure_caption] 
+P240: [MDPI_2.2_heading2] Concept and Relevance of Edge AI in 6G
+P241: [MDPI_3.2_text_no_indent] Edge AI refers to the deployment and execution of artificial intelligence algorithms, including both training and inference phases, directly on edge devices (such as smartphones, sensors or vehicles) or on infrastructure nodes located close to the data source (such as MEC servers) [17]. This approach represents a paradigm shift compared with traditional cloud-centered AI.
+P242: [MDPI_3.1_text] Its relevance to 6G is fundamental. The 6G vision of "connected intelligence" [15] or "AI-native networks" [5] implies that AI must permeate all layers and domains of the network [19]. Edge AI is the disruptive technology that enables this deep integration, fostering a synergy among communication, computing, sensing and intelligence [6]. Pervasive AI is considered a key candidate for managing the complexity of 6G networks, enabling dynamic resource allocation, adaptive traffic flow management and advanced signal processing in interference-rich environments [42].
+P243: [MDPI_3.1_text] The key advantages of Edge AI over cloud-centered AI are particularly significant in the 6G context [5]:
+P244: [MDPI_3.8_bullet] Lower Latency: Local execution eliminates communication delays with the cloud, which is crucial for real-time 6G applications.
+P245: [MDPI_3.8_bullet] Reduced Bandwidth Consumption: Large volumes of raw data do not need to be transmitted to the cloud, as they are processed locally.
+P246: [MDPI_3.8_bullet] Enhanced Privacy and Security: Sensitive data remain on the local device or edge node, reducing exposure and attack surface.
+P247: [MDPI_3.8_bullet] Context Awareness: AI models can exploit real-time, locally available information to make more adaptive and context-specific decisions.
+P248: [MDPI_3.8_bullet] Offline Operation: Intelligent services can function even without a continuous connection to the cloud.
+P249: [MDPI_2.2_heading2] Key Models and Techniques for Edge AI in 6G
+P250: [MDPI_3.2_text_no_indent] Given the resource constraints at the edge, not all AI models and techniques are directly applicable. Specific approaches have therefore been developed and adapted for Edge AI, with the most relevant for 6G being the following:
+P251: [MDPI_2.3_heading3] Federated Learning (FL)
+P252: [MDPI_3.2_text_no_indent] The following mathematical framework is derived from and extends the canonical FL formulation of McMahan et al. [43], with adaptations for the wireless 6G channel environment.
+P253: [MDPI_3.1_text] Federated Learning is a distributed learning framework in which multiple clients (edge devices) collaboratively train a global model coordinated by a central server, without sharing their private local data [44]. Only model updates (e.g., gradients or parameters) are exchanged [18].
+P254: [MDPI_3.1_text] Mathematical Framework: The FL optimization problem can be formally stated as minimizing the global objective function:
+P255: [Body Text] 
+P256: [MDPI_3.1_text] where  represents the global model parameters,  is the number of participating clients,  is the number of data samples at client ,  is the total number of samples, and  is the local loss function at client  computed over its private dataset . Each local loss is typically defined as:
+P257: [Body Text] 
+P258: [MDPI_3.1_text] where  is a sample-wise loss function (e.g., cross-entropy for classification) and  is the model's prediction.
+P259: [MDPI_3.1_text]  will be used for model parameters in the FedAvg algorithm to avoid notational conflict with beamforming vectors  introduced later.
+P260: [MDPI_3.1_text] Federated Averaging (FedAvg) Algorithm: The canonical FL algorithm, FedAvg, operates in iterative communication rounds . At each round:
+P261: [MDPI_3.8_bullet] Server broadcasts the global model  to a subset  of clients
+P262: [MDPI_3.8_bullet] Local training: Each selected client  performs  local epochs of SGD on its local data:
+P263: [MDPI_3.9_equation] 						(18)
+P264: [MDPI_3.1_text] where  is the local learning rate
+P265: [MDPI_3.8_bullet] Aggregation: The server aggregates the updated local models:
+P266: [MDPI_3.9_equation] 				(19)
+P267: [MDPI_3.1_text] where  denotes model parameters (to avoid conflict with beamforming vectors).
+P268: [MDPI_3.1_text] Convergence Analysis: Under convexity assumptions, FedAvg achieves a convergence rate of  for convex objectives and  for non-convex objectives, where  is the number of communication rounds. The convergence bound incorporates client drift due to heterogeneous data:
+P269: [MDPI_3.1_text] 
+P270: [MDPI_3.1_text] where:
+P271: [MDPI_3.8_bullet] : global loss function
+P272: [MDPI_3.8_bullet] : total communication rounds
+P273: [MDPI_3.8_bullet] : local epochs per round
+P274: [MDPI_3.8_bullet] : learning rate
+P275: [MDPI_3.8_bullet] : gradient variance capturing data heterogeneity
+P276: [MDPI_3.1_text] Under IID data distribution (), convergence reduces to , matching standard SGD rates [20].
+P277: [MDPI_3.1_text] Differential Privacy Integration: To provide formal privacy guarantees, FL can be enhanced with differential privacy mechanisms. A standard two-step approach first clips and then perturbs local gradients before aggregation:
+P278: [MDPI_3.9_equation] 					(21)
+P279: [MDPI_3.9_equation] 						(22)
+P280: [MDPI_3.1_text] where  is the local gradient,  is gradient clipping with sensitivity bound , and  is the noise multiplier controlling the privacy-utility trade-off. This provides -differential privacy, where the privacy budget  grows with composition across rounds according to:
+P281: [MDPI_3.1_text] 
+P282: [MDPI_3.1_text] under basic composition, or tighter bounds under advanced composition theorems. This quantifies the fundamental trade-off between privacy (lower ) and model accuracy.
+P283: [MDPI_3.1_text] Impact of Wireless Channel on FL Convergence
+P284: [MDPI_3.1_text] A critical dimension often overlooked in theoretical FL analyses is the effect of the wireless channel on gradient aggregation [45,46]. In practical 6G deployments, gradient updates are transmitted over time-varying fading channels, introducing three main impairments: i) gradient errors due to channel noise that corrupt the aggregated model ; ii) stale gradients caused by variable transmission delays under fading; and iii) partial participation due to deep fades preventing some clients from completing a round, exacerbating data heterogeneity effects.
+P285: [MDPI_3.1_text] Over-the-Air Computation (AirComp) exploits the superposition property of the wireless multiple-access channel: all clients transmit simultaneously, and the aggregation server receives the naturally summed signal [47,48]:
+P286: [MDPI_3.9_equation] 		      		(24)
+P287: [MDPI_3.1_text] where  represents aggregation noise (thermal noise plus channel estimation error). This reduces spectrum usage by a factor of  compared to orthogonal multiple access. Update-aware device scheduling can further improve convergence by prioritising clients with the most informative gradients [49]. The convergence bound for AirComp-FL incorporates an additional noise term:
+P288: [MDPI_3.9_equation] 	              (25)
+P289: [MDPI_3.1_text] where  is the aggregation noise variance, quantifying the fundamental trade-off between spectral efficiency and learning accuracy in wireless FL [47].
+P290: [MDPI_3.1_text] The aggregation noise variance  depends directly on the wireless channel conditions. Under a flat-fading multiple-access channel with  clients, each transmitting with power  over a channel with average gain  and noise power spectral density , the variance scales as:
+P291: [MDPI_3.9_equation] 	                          (26)
+P292: [MDPI_3.1_text] where  is the average SNR per client link. Under Rayleigh fading,  increases significantly at low SNR (e.g., cell-edge or NTN links with  dB) compared to dense-urban MEC links ( dB), directly slowing FL convergence. High-mobility Doppler spreading further degrades  and introduces inter-carrier interference, increasing  beyond the purely thermal noise floor. This coupling between wireless channel quality and learning convergence rate is a critical co-design consideration for 6G deployments [45,47,48,50].
+P293: [MDPI_3.1_text] Communication Complexity: The communication cost per round for client  is  where  is the model dimension (number of parameters). For large models (e.g.,  to  for deep neural networks), this becomes prohibitive in bandwidth-constrained 6G edge scenarios. Compression techniques (gradient sparsification, quantization) can reduce this to  where , at the cost of slower convergence.
+P294: [MDPI_3.1_text] Non-IID Data Impact: Statistical heterogeneity arises when  are drawn from different distributions . This causes client drift, where local models diverge from the global optimum. The convergence degradation can be bounded by the gradient dissimilarity:
+P295: [MDPI_3.1_text] 
+P296: [MDPI_3.1_text] This demonstrates that non-IID data directly slows convergence proportional to the variance of local gradients.
+P297: [MDPI_3.1_text] Benefits: Its main advantage is the preservation of local data privacy [13], formally guaranteed through differential privacy when properly configured. It also reduces the need to transmit large volumes of data to a central server (saving bandwidth proportional to  per client) and enables model training with distributed datasets that cannot be centralised for legal or privacy-related reasons [18]. It is considered ideal for the distributed and privacy-sensitive environment of 6G [51].
+P298: [MDPI_3.1_text] Challenges: FL faces several challenges, such as statistical heterogeneity (non-IID data across clients, quantified by gradient variance  above), system heterogeneity (differences in computing capacity, connectivity and availability, leading to stragglers), communication overhead (transmitting updates of large models can be costly, with complexity  over  rounds), scalability to large numbers of devices (aggregation complexity , and security issues (susceptibility to poisoning attacks or inference over shared updates). Efficient and secure aggregation is also a key difficulty [14].
+P299: [MDPI_3.1_text] The development of FL is not coincidental but a direct consequence of operating at the edge. The impossibility of centralizing massive and private datasets, together with bandwidth limitations [21], made traditional centralized approaches impractical. FL emerged as an architectural and algorithmic solution specifically designed to overcome these constraints imposed by the distributed and privacy-restricted edge environment [18].
+P300: [MDPI_2.3_heading3] Split Learning (SL)
+P301: [MDPI_3.2_text_no_indent] The following split learning formulation is based on Lin et al. [51], with extensions for split-point optimization under 6G resource constraints.
+P302: [MDPI_3.1_text] In Split Learning, a neural network model is divided into two (or more) parts [44]. An initial portion (typically smaller) runs on the client device, processing raw data and generating an intermediate representation (activations or "smash data"). This representation is transmitted to an edge server, which runs the remaining (typically larger and computationally intensive) part of the model to complete the forward inference and/or backward training pass [40].
+P303: [MDPI_3.1_text] Mathematical Model: Consider a deep neural network 
+P304: [MDPI_3.1_text] 
+P305: [MDPI_3.1_text]                      (28)
+P306: [MDPI_3.1_text] 
+P307: [MDPI_3.1_text] split at layer , where:
+P308: [MDPI_3.8_bullet]  represents layers  to  executed on the client with parameters 
+P309: [MDPI_3.8_bullet]  represents layers  to  executed on the server with parameters 
+P310: [MDPI_3.8_bullet]  is the intermediate activation ("smash data") transmitted to the server
+P311: [First Paragraph] Forward Pass:
+P312: [Compact] Client computes:
+P313: [Compact]  
+P314: [Compact] Client transmits:  to server
+P315: [Compact] Server computes:
+P316: [Compact]  
+P317: [Compact] Server computes loss: 
+P318: [First Paragraph] Backward Pass (Training):
+P319: [Compact] Server computes gradients:  and 
+P320: [Compact] Server transmits:  back to client
+P321: [Compact] Client computes:  via chain rule
+P322: [Compact] Both update their respective parameters: , 
+P323: [MDPI_3.1_text] Split Point Optimization Problem: The optimal split point  minimizes total latency subject to client resource constraints:
+P324: [Body Text] 
+P325: [MDPI_3.1_text] where:
+P326: [MDPI_3.9_equation] 	(32)
+P327: [MDPI_3.1_text] with:
+P328: [MDPI_3.8_bullet] : client computation time for layers 1 to 
+P329: [MDPI_3.8_bullet] : communication latency for activations  and back-propagated gradients 
+P330: [MDPI_3.8_bullet] : server computation time for layers  to 
+P331: [MDPI_3.1_text] subject to:
+P332: [MDPI_3.9_equation] 	                 (33)
+P333: [MDPI_3.1_text] where  and  are client computational and memory requirements. This optimisation is non-convex and depends on network architecture, device capabilities, and channel conditions.
+P334: [MDPI_3.1_text] Communication Complexity: Unlike FL where full model updates (dimension ) are transmitted, SL transmits intermediate activations and gradients of dimension . For a batch of size , the communication cost per iteration is:
+P335: [MDPI_3.9_equation] 					(34)
+P336: [MDPI_3.1_text] versus FL's:
+P337: [MDPI_3.9_equation] 			(35)
+P338: [MDPI_3.1_text] When  (early split) or , SL can significantly reduce communication.
+P339: [MDPI_3.1_text] Privacy Analysis: While raw data  remains on the client, the transmitted activation  may leak information. The privacy leakage is quantified by the mutual information between input and activation. Since  is a deterministic function of , the standard definition  gives  for deterministic encoders, so:
+P340: [MDPI_3.9_equation] 						(36)
+P341: [MDPI_3.1_text] By the data processing inequality applied to the Markov chain :
+P342: [MDPI_3.9_equation] 						(37)
+P343: [MDPI_3.1_text] The tighter the information bottleneck imposed by  (i.e., the more  compresses ), the lower the leakage [20]. For stochastic encoders that add noise , the leakage decreases further, with the mutual information bounded by  [20]. For deterministic networks,  is a deterministic function, and reconstruction attacks may recover  if  is invertible. Adding noise  provides -differential privacy:
+P344: [Body Text] 
+P345: [MDPI_3.1_text] at the cost of reduced model accuracy.
+P346: [MDPI_3.1_text] Convergence: For strongly convex loss functions with Lipschitz gradients, SL converges at rate:
+P347: [MDPI_3.9_equation] 				(39)
+P348: [MDPI_3.1_text] where  is the iteration number and  quantifies privacy-preserving noise. The bidirectional communication per sample introduces latency proportional to:
+P349: [MDPI_3.9_equation] 			(40)
+P350: [MDPI_3.1_text] requiring  iterations for convergence, yielding total training time .
+P351: [MDPI_3.1_text] Benefits: The main advantage of SL is the significant reduction in computational load on the client device compared with FL (client computes only  layers), since most computation is performed on the server [51]. This makes it more suitable for devices with very limited resources (e.g., IoT sensors with ). SL also offers privacy benefits, as raw data never leave the client device, and intermediate activations  are generally less informative than full gradients or raw data [40], though formal privacy guarantees require additional mechanisms. It aligns well with the 6G vision of leveraging dispersed resources [51].
+P352: [MDPI_3.1_text] Challenges: SL introduces additional latency due to the bidirectional communication required per sample or batch during training (activations to the server, gradients back to the client), with total latency  dependent on split point  [40]. Deciding where to split the model optimally is a complex problem requiring solution of the non-convex optimization above. Moreover, although SL enhances privacy compared with full centralization, exchanged activations and gradients may still leak information (bounded by mutual information ), requiring additional protection mechanisms such as noise injection [40].
+P353: [MDPI_3.1_text] As with FL, SL is a response to edge limitations. When FL becomes computationally infeasible for extremely resource-constrained devices, SL offers an alternative by offloading most computation to the server, addressing the client-side resource bottleneck directly [51].
+P354: [MDPI_5.1_figure_caption] Figure 5 — Comparison of Centralized Learning, Federated Learning, and Split Learning. 
+P355: [MDPI_5.1_figure_caption] 
+P356: [MDPI_3.1_text] A comparative summary table spanning all panels lists five metrics: Communication Overhead, Privacy Risk, Server Complexity, Training Latency, Bandwidth Requirements.
+P357: [MDPI_3.2_text_no_indent] Figure 5 contrasts the data flow, communication overhead, and privacy implications of centralized learning, FL, and SL.
+P358: [MDPI_2.3_heading3] Edge Large AI Models (Edge LAMs)
+P359: [MDPI_3.2_text_no_indent] The following frameworks for Edge LAM deployment, PEFT, and quantization are based on foundational works including Hu et al. [52] for LoRA and the Edge LAM survey [14], with novel formulations for collaborative inference and parameter caching.
+P360: [MDPI_3.1_text] Edge LAMs refer to the adaptation, deployment and execution of large pre-trained AI models (PFMs), such as GPT-type large language models or multimodal/vision models, within the 6G edge infrastructure [19].
+P361: [MDPI_3.1_text] Potential: These models offer unprecedented capabilities in generalization, knowledge transfer and handling complex, diverse tasks (cross-modal reasoning, few-/zero-shot learning) [19]. They have enormous potential to revolutionize 6G network management (intelligent orchestration, semantic air-interface optimization) and enable highly personalized and interactive services (conversational agents, advanced virtual assistants) [19].
+P362: [MDPI_3.1_text] Challenges: The main obstacle is the stark mismatch between the enormous requirements of LAMs (billions of parameters, terabytes of training data, massive computation) and the severely limited resources available at the edge (compute, memory, storage, energy, bandwidth) [19]. Traditional Edge AI approaches such as FL or SL may be insufficient or infeasible for full LAMs [14].
+P363: [MDPI_3.1_text] This tension is driving research into extreme optimization techniques, such as:
+P364: [MDPI_3.8_bullet] Decomposition and Distributed Deployment: Dividing the LAM into smaller modules and distributing them across devices, edge nodes and the cloud [14]. For a model with  layers and total parameters , the decomposition problem seeks a partition  that minimizes total latency:
+P365: [MDPI_3.9_equation] 
+P366: [MDPI_3.1_text] subject to resource constraints:
+P367: [Body Text] 
+P368: [MDPI_3.1_text] here  is the computation time for layer  on resource ,  is the communication time for transmitting activation  between resources, and  is the memory capacity at resource .
+P369: [MDPI_3.8_bullet] Efficient Fine-Tuning: Techniques such as Parameter-Efficient Fine-Tuning (PEFT), which update only a small fraction of a LAM's parameters [14], as well as distributed adaptations such as FedFT or Split FedFT [44].
+P370: [MDPI_3.1_text] PEFT Mathematical Framework: For a pre-trained model with parameters  (where  for large models), PEFT methods (e.g., LoRA, adapters, prompt tuning) introduce a low-rank adaptation:
+P371: [MDPI_3.9_equation] 							(43)
+P372: [MDPI_3.1_text] where  has significantly fewer trainable parameters. For Low-Rank Adaptation (LoRA):
+P373: [MDPI_3.9_equation] 	        (44)
+P374: [MDPI_3.1_text] where  is the original weight matrix,  is the low-rank dimension,  is initialised to zero and  with a Gaussian distribution so that  at the start of fine-tuning [52]. The parameter efficiency ratio is:
+P375: [MDPI_3.9_equation] 				(45)
+P376: [MDPI_3.1_text] For example, with  and , only  of parameters are fine-tuned, reducing memory requirements from  bytes (float32) to  bytes, enabling fine-tuning on resource-constrained edge nodes.
+P377: [MDPI_3.1_text] Federated PEFT: In distributed settings, each client $i$ trains local PEFT adapters  on its data, and the server aggregates:
+P378: [MDPI_3.9_equation] 						(46)
+P379: [MDPI_3.1_text] This reduces communication from  in standard FL to  in FedFT, achieving a compression ratio of .
+P380: [MDPI_3.8_bullet] Compression and Quantization: Reducing model size and computational precision to lower memory and compute requirements [40].
+P381: [MDPI_3.1_text] Quantization Mathematical Framework: Model quantization reduces numerical precision from floating-point (e.g., FP32, 32 bits) to lower bit-widths (e.g., INT8, 8 bits or even 4/2/1 bits). For weight , the quantized value is:
+P382: [MDPI_3.1_text] For -bit quantisation (e.g.,  for INT8), the quantised value of weight  is:
+P383: [MDPI_3.9_equation] 					(47)
+P384: [MDPI_3.1_text] where  denotes the number of quantization bits,  is the scale factor, and  is the zero-point offset. The quantization error for a parameter matrix  can be bounded by:
+P385: [MDPI_3.1_text] 
+P386: [MDPI_3.1_text] where  is the Frobenius norm. For INT8 quantization, , yielding:
+P387: [MDPI_3.1_text] 
+P388: [MDPI_3.1_text] Memory and Computation Reduction: Quantization from FP32 () to INT8 () reduces:
+P389: [MDPI_3.8_bullet] Memory:  reduction (from 4 bytes to 1 byte per parameter)
+P390: [MDPI_3.8_bullet] Energy:  reduction in energy per operation [19] (INT8 vs. FP32 energy ratio measured on NVIDIA hardware: ~27–35× [19])
+P391: [MDPI_3.8_bullet] Model size: For a model with  parameters, from  to 
+P392: [MDPI_3.1_text] Accuracy-Efficiency Trade-off: The accuracy degradation can be empirically modeled as:
+P393: [MDPI_3.9_equation] 		(50)
+P394: [MDPI_3.1_text] where  are model-dependent constants. Empirical studies show that for well-calibrated quantization, INT8 typically maintains  [19,44], while INT4 may incur .
+P395: [MDPI_3.1_text] Post-Training Quantization vs. Quantization-Aware Training:
+P396: [MDPI_3.8_bullet] PTQ: Direct quantization of pre-trained weights, fast but potentially higher error
+P397: [MDPI_3.8_bullet] QAT: Include quantization in training loop, minimizing: , better accuracy but requires retraining
+P398: [MDPI_3.1_text] Collaborative and Efficient Inference: Architectures in which multiple nodes collaborate to perform inference by sharing parameters or intermediate outputs [14], while also avoiding redundant computation in microservice-based deployments [14].
+P399: [MDPI_3.1_text] Collaborative Inference Model: Consider  edge nodes collaboratively performing inference for a model with  layers. Each node  hosts a subset of layers  with parameters . For input , the inference process is:
+P400: [MDPI_3.9_equation] 					(51)
+P401: [MDPI_3.1_text] where layer  is computed on node  if . The total inference latency is:
+P402: [MDPI_3.1_text] 
+P403: [MDPI_3.1_text] where  is the node hosting layer , and  is the indicator function. Minimizing this latency requires optimal layer-to-node assignment, which is NP-hard in general.
+P404: [MDPI_3.1_text] Parameter Sharing and Caching: To reduce redundant computation when serving multiple concurrent requests, edge nodes can cache activations. For a sequence of inputs  sharing common prefixes (e.g., prompt in LLMs), the cached activation approach computes shared prefix layers once:
+P405: [MDPI_3.9_equation] 				(53)
+P406: [MDPI_3.1_text] and reuses it for all requests, reducing computation from  to .
+P407: [MDPI_3.1_text] The emergence of Edge LAMs marks a critical inflection point. The ambition to harness the transformative power of large AI models directly conflicts with the practical constraints of edge environments. Addressing this tension requires fundamental innovations not only in AI model efficiency but also in the design of edge-computing and network architectures, potentially redefining both fields.
+P408: [MDPI_3.1_text] Power control optimization for AirComp under fading channels is essential to minimize aggregation distortion while meeting per-device transmit power constraints [53].
+P409: [MDPI_3.1_text] Other Relevant Techniques Include:
+P410: [MDPI_3.8_bullet] Tiny Machine Learning (TinyML): Approaches designed to execute machine-learning models on devices with extremely limited resources, such as microcontrollers [13].
+P411: [MDPI_3.8_bullet] Over-the-Air Computation (AirComp): A technique that exploits the superposition properties of the wireless channel to perform aggregations (such as those required in FL) directly over the air, thereby reducing latency and spectrum usage [44].
+P412: [MDPI_3.8_bullet] Split Inference: Similar to Split Learning (SL) but applied solely to the inference phase rather than training [54]. It is useful for accelerating the inference of complex models on resource-constrained devices.
+P413: [MDPI_2.3_heading3] AI Applications for 6G Network Optimization at the Edge
+P414: [MDPI_3.2_text_no_indent] The mathematical formulations in this section (spectrum/power allocation, MIMO beamforming, handover optimization, anomaly/intrusion detection) are re-statements of standard optimization problems from the wireless communications and network security literature [4,17,55–57]; the novelty of this work lies in framing them within a unified Edge AI context for 6G and in proposing deep reinforcement learning and deep learning approaches as solution methods.
+P415: [MDPI_3.1_text] Edge AI not only enables new end-user services but also serves as a powerful tool for optimizing the 6G network itself in an intelligent and adaptive manner:
+P416: [MDPI_3.1_text] Intelligent Resource Management: AI can address the complex joint resource-optimization problems in 6G (spectrum, power and channel allocation, user association, beamforming, network slicing), many of which are NP-hard [55]. ML/DL/RL algorithms can learn from network data and make real-time decisions to maximize efficiency (spectral and energy), capacity, fairness and QoS, while adapting to dynamic environmental conditions [4].
+P417: [MDPI_3.1_text] Mathematical Formulation - Spectrum and Power Allocation:
+P418: [MDPI_3.1_text] Consider a multi-cell 6G network with  base stations and  users. The joint spectrum and power allocation problem is:
+P419: [MDPI_3.1_text] 
+P420: [MDPI_3.1_text] subject to:
+P421: [Compact] Power constraint: 
+P422: [Compact] Bandwidth constraint: 
+P423: [Compact] QoS constraint:  where user is associated
+P424: [Compact] Association constraint:  (each user connects to one BS)
+P425: [MDPI_3.1_text] where:
+P426: [Compact] : transmit power allocated to user  by base station 
+P427: [Compact] : bandwidth allocated to user  by base station 
+P428: [Compact] : achievable rate for user  from BS 
+P429: [Compact] : user priority weight
+P430: [Compact] : binary association variable
+P431: [MDPI_3.1_text] Achievable Rate (Shannon Capacity):
+P432: [Body Text] 
+P433: [First Paragraph] where  is the channel gain (including path loss, shadowing, fading) and  is the noise power spectral density.
+P434: [Body Text] Complexity: This is a mixed-integer non-convex optimization problem, NP-hard even in simplified cases.
+P435: [Body Text] AI Solution - Deep Reinforcement Learning:
+P436: [Compact] State: 
+P437: [Compact] Action:  (discretized or continuous)
+P438: [Compact] Reward: 
+P439: [Compact] Policy network:  learned via PPO or SAC
+P440: [Compact] Training:  to  episodes in simulation
+P441: [MDPI_3.8_bullet] Inference:  operations, real-time capable (<1ms)
+P442: [MDPI_3.1_text] Network Slicing Optimization:
+P443: [Body Text] For  network slices with heterogeneous requirements:
+P444: [Body Text] 
+P445: [First Paragraph] subject to:
+P446: [Compact] Resource constraint: 
+P447: [Compact] Slice requirements: 
+P448: [Compact] Latency constraint: 
+P449: [Compact] Isolation: 
+P450: [MDPI_3.1_text] where  is the resource allocation for slice  at node , and  is the cost function.
+P451: [MDPI_3.1_text] AI Approach: Graph Neural Networks (GNNs) learn optimal slice-to-resource mapping by encoding network topology and slice dependencies.
+P452: [MDPI_3.8_bullet] Air-Interface Optimization: AI can significantly enhance physical-layer performance. Examples include accurate channel state information (CSI) prediction, intelligent beam management in massive MIMO systems, and the development of adaptive modulation and coding schemes [1]. An emerging area is semantic communication, where AI extracts and transmits only the relevant (semantic) information rather than raw bits, thereby improving efficiency and robustness [56]. Edge LAMs are also proposed for intelligent air-interface design and optimization [14].
+P453: [MDPI_3.1_text] Mathematical Formulation - Massive MIMO Beamforming:
+P454: [MDPI_3.1_text] For a massive MIMO system with  transmit antennas and  users:
+P455: [MDPI_3.1_text] 
+P456: [MDPI_3.1_text] subject to , where  is the beamforming vector for user ,  is the downlink channel vector, and  is the noise variance.
+P457: [MDPI_3.1_text] Throughout this article,  denotes neural-network model parameters, while  denotes beamforming/precoding vectors, to avoid notational ambiguity.
+P458: [MDPI_3.1_text] AI Solution - Deep Learning for CSI Prediction:
+P459: [MDPI_3.1_text] Channel prediction model learns the mapping :
+P460: [MDPI_3.9_equation] 						(58)
+P461: [MDPI_3.1_text] Common architectures: LSTM, GRU, or Transformer for temporal dynamics. Typical performance: prediction error < -20 dB SNR for  ms.
+P462: [MDPI_3.1_text] Adaptive Modulation and Coding (AMC):
+P463: [MDPI_3.1_text] Select modulation and coding scheme (MCS)  to maximize throughput while maintaining target BLER :
+P464: [MDPI_3.9_equation]           (59)
+P465: [MDPI_3.1_text] AI Approach: Deep Q-Network (DQN) learns optimal MCS selection:
+P466: [List Paragraph] State: 
+P467: [List Paragraph] Action:  (MCS index)
+P468: [List Paragraph] Reward: 
+P469: [MDPI_3.8_bullet] Intelligent Mobility and Handover Management: AI algorithms can predict user mobility patterns and optimize handover decisions between cells or edge nodes, minimizing service interruptions and ensuring seamless QoE [57].
+P470: [MDPI_3.1_text] Mathematical Formulation - Handover Optimization:
+P471: [MDPI_3.1_text] Given user trajectory prediction $\hat{x}_u(t+\Delta)$ for time horizon $\Delta$, optimize handover policy to minimize:
+P472: [MDPI_3.1_text] 
+P473: [MDPI_3.1_text] 
+P474: [MDPI_3.1_text] subject to:
+P475: [Compact] Handover trigger: Execute when predicted SINR 
+P476: [Compact] Target selection: 
+P477: [MDPI_3.1_text] AI Solution - LSTM for Mobility Prediction:
+P478: [MDPI_3.9_equation] 	      (61)
+P479: [MDPI_3.1_text] Prediction accuracy: Mean absolute error (MAE)  meters for  seconds with well-trained models [57]. 
+P480: [MDPI_3.8_bullet] Efficient Operation and Maintenance (O&M): AI enables advanced Self-Organizing Network (SON) capabilities, including proactive fault detection, predictive maintenance based on data analytics, self-configuration and self-optimization of network parameters, and autonomous fault recovery [57]. This reduces the need for human intervention and lowers operational costs.
+P481: [MDPI_3.1_text] Mathematical Formulation - Anomaly Detection:
+P482: [MDPI_3.1_text] Learn normal network behavior distribution  from historical data. Detect anomalies when:
+P483: [Body Text] 
+P484: [MDPI_3.1_text] AI Approach - Autoencoder for Anomaly Detection:
+P485: [MDPI_3.1_text] Train autoencoder to reconstruct normal patterns:
+P486: [First Paragraph] 
+P487: [Body Text] 
+P488: [MDPI_3.1_text] Reconstruction error for anomalous inputs will be high: .
+P489: [MDPI_3.1_text] Predictive Maintenance:
+P490: [MDPI_3.1_text] Predict time-to-failure  for network components:
+P491: [MDPI_3.9_equation] 	(64)
+P492: [MDPI_3.1_text] Using survival analysis models (Cox proportional hazards) or deep learning (RNNs).
+P493: [MDPI_3.8_bullet] AI-Enhanced Security: Edge AI can strengthen 6G network security through intelligent real-time intrusion and anomaly detection, behavioral analysis for threat identification and automated response mechanisms [58]. It can also be used to reinforce physical-layer security (PLS) approaches [54].
+P494: [MDPI_3.1_text] Mathematical Formulation - Intrusion Detection:
+P495: [MDPI_3.1_text] Binary classification problem for network traffic:
+P496: [MDPI_3.9_equation] 		(65)
+P497: [MDPI_3.1_text] Performance Metrics:
+P498: [Compact] True Positive Rate:  (detection rate)
+P499: [Compact] False Positive Rate:  (false alarm rate)
+P500: [Compact] Target: TPR , FPR 
+P501: [MDPI_3.1_text] AI Approach: Deep learning models (CNN, LSTM, Transformer) trained on labeled network traffic datasets (e.g., NSL-KDD, CICIDS) achieve state-of-the-art performance with F1-scores  [59].
+P502: [MDPI_2.3_heading3] Benefits of Edge AI for 6G Services
+P503: [MDPI_3.2_text_no_indent] The integration of AI at the edge enables a new generation of services and significantly enhances the user experience:
+P504: [MDPI_3.8_bullet] Enablement of Real-Time Intelligent Services: Edge AI is essential for applications requiring low latency and on-site intelligent decision-making. This includes autonomous driving (environment perception, man oeuvre planning) [13], collaborative industrial robotics [8], truly interactive and personalized XR and metaverse experiences [13], advanced virtual assistants and context-aware personalized services [14].
+P505: [MDPI_3.8_bullet] Improved Efficiency (Energy, Spectrum): Intelligent optimization of network resources (radio and computing) and reduced data traffic towards the cloud contribute to greater energy and spectral efficiency, both of which are critical for the sustainability of 6G [7].
+P506: [MDPI_3.8_bullet] Enhanced Quality of Experience (QoE): By reducing latency, increasing reliability and enabling personalized services, Edge AI directly improves the quality of experience for end users [5].
+P507: [MDPI_3.8_bullet] New Network Capabilities: 6G may provide Artificial Intelligence as a Service (AIaaS) directly from the network [5]. Furthermore, synergy with integrated sensing opens the door to Integrated Sensing Edge Intelligence (ISEA), where the network not only communicates and computes but also intelligently perceives the environment [44].
+P508: [MDPI_2.3_heading3] Challenges of Edge AI in the 6G Environment
+P509: [MDPI_3.2_text_no_indent] Despite its enormous potential, the effective deployment of Edge AI in 6G faces several major challenges:
+P510: [MDPI_3.8_bullet] Computational Requirements vs. Limited Resources: This remains the primary challenge. AI models, particularly advanced ones such as LAMs, require substantial computational resources (measured in FLOPs), memory and energy, often exceeding the capabilities of edge devices and servers [19]. A holistic optimization strategy is needed across data (cleaning, compression, augmentation), models (compression, quantization, pruning, efficient architectures such as NAS) and systems (specialized hardware such as NPUs/TPUs, efficient resource allocation) [14].
+P511: [MDPI_3.8_bullet] Data and Model Privacy and Security: Although techniques such as FL and SL aim to preserve privacy, they are not immune to sophisticated attacks. There is a risk of inferring sensitive information from model updates (gradients) or intermediate activations [51]. Models may also be vulnerable to poisoning attacks (manipulated training data) or adversarial attacks (inputs crafted to deceive the model during inference) [54]. Ensuring privacy and security in distributed AI environments requires integrating advanced cryptographic techniques such as Differential Privacy (DP), Homomorphic Encryption (HE) or Secure Multiparty Computation (SMC) [60], together with robust access control and auditing mechanisms [13].
+P512: [MDPI_3.8_bullet] Communication Overhead: Distributed training (FL/SL) and collaborative inference involve frequent exchanges of information (parameters, gradients, activations) between nodes, which can impose significant overhead on the wireless network, consuming bandwidth and energy [14]. Efficient model/update-compression techniques and optimized communication strategies (e.g., AirComp) are required [44].
+P513: [MDPI_3.8_bullet] Robustness and Generalization: AI models must operate reliably in the 6G wireless environment, which is inherently dynamic, noisy and error-prone [14]. They must be robust to channel variations, mobility and interference. Moreover, especially for LAMs, they must generalize well across different tasks, scenarios and domains with minimal re-adaptation [57].
+P514: [MDPI_3.8_bullet] Data Collection and Quality: AI critically depends on the availability of large volumes of high-quality training data ("Garbage in, Garbage out" [22]). Collecting, labelling and managing such data in a distributed and heterogeneous environment like the 6G edge poses both logistical and cost challenges [19]. Incomplete, noisy or biased data can lead to unreliable or unfair models [60]. The use of synthetic data generated by Digital Twins is a promising avenue to mitigate this issue [19].
+P515: [MDPI_3.8_bullet] Ethics, Transparency and Explainability: As AI becomes responsible for increasingly critical decisions in 6G networks and services, ethical concerns intensify. These include potential algorithmic biases, lack of transparency in decision-making (the "black-box" problem) and the need for explainability, particularly in sensitive applications [38].
+P516: [MDPI_3.1_text] Managing AI in 6G will likely require a hierarchy and coexistence of different types of models. While large foundational models (PFMs/LLMs) may reside in more capable nodes (edge servers or regional clouds) to perform complex tasks such as orchestration, semantic understanding or planning [19], smaller, specialized and efficient models (task-oriented AI, TinyML) will be deployed on end devices or highly resource-constrained edge nodes for specific, low-latency tasks [19]. The intelligent orchestration of this hierarchical and heterogeneous collaboration across the Cloud-Edge-Device continuum will be a key challenge, but also an opportunity to leverage the strengths of each approach [19]. Table 3 summarizes and compares the key Edge AI techniques discussed.
+P517: [MDPI_4.1_table_caption] Table 3. Summary of Key Edge AI Techniques for 6G
+P518: [MDPI_5.1_figure_caption] Figure 6 illustrates the accuracy–communication trade-off for FL under gradient compression and 6G channel conditions.
+P519: [MDPI_5.1_figure_caption] Figure 6. FL Accuracy–Communication Trade-Off under Gradient Compression and 6G Channel Conditions. 
+P520: [MDPI_5.1_figure_caption] 
+P521: [MDPI_2.1_heading1] Architectural and Orchestration Proposals for 6G with Distributed AI
+P522: [MDPI_3.1_text] Realising the 6G vision, with its emphasis on ubiquitous intelligence and distributed computing, requires a significant evolution, and in some cases a reinvention, of the network architecture. Current proposals explore how to structure and manage these complex networks in order to integrate edge computing and artificial intelligence as native capabilities, proposed intelligent distributed architecture and orchestration is shown in Figure 7.
+P523: [MDPI_5.1_figure_caption] Figure 7. Proposed intelligent distributed architecture and orchestration
+P524: [MDPI_3.1_text] 
+P525: [MDPI_2.2_heading2] Evolution of Network Architecture Towards 6G
+P526: [MDPI_3.1_text] The 6G architecture will not simply be an extrapolation of 5G; rather, it will incorporate new design principles and foundational capabilities:
+P527: [MDPI_2.3_heading3] Design Principles 
+P528: [MDPI_3.1_text] The aim is to develop an architecture that is modular, supports the agile introduction of new functionalities, is simple and sustainable in the long term, intrinsically trustworthy, cloud-native, facilitates a seamless migration from 5G and, above all, enables innovation [41].
+P529: [MDPI_2.3_heading3] Multidimensional Integration
+P530: [MDPI_3.1_text] A defining characteristic of 6G will be the seamless integration of different communication domains: terrestrial networks; non-terrestrial networks (NTN),including satellites (LEO, MEO, GEO), high-altitude platforms (HAPS) and unmanned aerial vehicles (UAVs); and even aerial and underwater communication systems [8]. The objective is to achieve truly global and ubiquitous coverage.
+P531: [MDPI_2.3_heading3] Horizontalization and Disaggregation
+P532: [MDPI_3.1_text] The trend towards separating software from hardware, initiated in 5G, will deepen in 6G. Increased adoption of virtualisation (NFV), software-defined networking (SDN), service-based architectures (SBA), cloud-native principles and open interfaces (such as those promoted by O-RAN) is expected across all network domains (RAN, Core, Transport) [1]. This aims to enhance flexibility, efficiency, automation and the overall capacity for innovation.
+P533: [MDPI_2.3_heading3] AI-Native Design and Distributed Computing
+P534: [MDPI_3.1_text] The 6G architecture must be designed from the outset to natively support artificial intelligence and distributed computing [1]. This not only involves enabling AI to optimise the network, but also allowing the network itself to operate as a platform for executing and orchestrating distributed AI functions and edge-computing services. Integration with sensing (ISAC) is also an emerging architectural requirement [6].
+P535: [MDPI_2.2_heading2] Proposed Reference Architectures
+P536: [MDPI_3.1_text] Given the early stage of 6G development, several architectural proposals have been put forward, each reflecting different approaches and priorities:
+P537: [MDPI_2.3_heading3] Evolutionary Vision
+P538: [MDPI_3.1_text]  This proposal advocates a single-step migration from 5G Standalone (SA) to 6G SA, evolving the 5G Core (5GC) based on the Service-Based Architecture (SBA) rather than creating an entirely new core [41]. In the RAN domain, it supports native lower-layer split (LLS) functionality to optimise performance and enable intent-based automation through Service Management and Orchestration (SMO) functions [41]. This approach prioritises the reuse of existing investments and a smoother transition path.
+P539: [MDPI_2.3_heading3] Task-Oriented Native AI Architecture (TONA)
+P540: [MDPI_3.1_text] This is a more revolutionary proposal, suggesting a fundamental shift from the traditional communication “session” management paradigm to an AI “task”-centric paradigm [5]. TONA explicitly manages multidimensional resources, communication, computing, data and AI models, and employs a task-based control plane to orchestrate multi-node collaborations and guarantee customised AI Quality of Service (QoAIS). It promises significant advantages in latency, efficiency and privacy for AI services integrated within the network [5].
+P541: [Body Text] Mathematical Task Model: In TONA, each AI task  is formally characterized as a tuple:
+P542: [Body Text] 
+P543: [First Paragraph] where:
+P544: [Compact] : data requirements (input/output data sizes in bits)
+P545: [Compact] : computational requirement (FLOPs)
+P546: [Compact] : maximum tolerable end-to-end latency
+P547: [Compact] : storage requirement for model and intermediate data (bytes)
+P548: [Compact] : required reliability (success probability)
+P549: [Compact] : AI model specification  (parameters, architecture, operations)
+P550: [Compact] : set of collaborative nodes for task execution
+P551: [First Paragraph] Quality of AI Service (QoAIS) Metrics: TONA introduces QoAIS as a multi-dimensional performance vector:
+P552: [Body Text] 
+P553: [First Paragraph] where:
+P554: [Compact] : actual end-to-end latency achieved
+P555: [Compact] : accuracy/performance of AI inference (e.g., F1-score, mAP)
+P556: [Compact] : energy efficiency (joules per inference)
+P557: [Compact] : privacy preservation level (e.g., differential privacy )
+P558: [Compact] : throughput (tasks per second)
+P559: [First Paragraph] Task-Based Resource Allocation: The TONA control plane solves the following multi-objective optimization:
+P560: [Body Text] 
+P561: [First Paragraph] subject to task-specific constraints:
+P562: [Body Text] 
+P563: [First Paragraph] and resource constraints across collaborative nodes:
+P564: [Body Text] 
+P565: [First Paragraph] where:
+P566: [Compact]  are task priority weights
+P567: [Compact]  is a utility function mapping QoAIS to user satisfaction
+P568: [Compact]  represents resources allocated by node  to task 
+P569: [Compact]  is the total resource capacity at node 
+P570: [First Paragraph] Multi-Node Collaboration Model: For tasks requiring distributed execution across nodes , TONA orchestrates:
+P571: [List Paragraph] Model Partitioning: Partition AI model  into sub-models  assigned to nodes in 
+P572: [List Paragraph] Data Flow Graph: Define directed acyclic graph (DAG)  where:
+P573: [Compact] Nodes  represent computation stages
+P574: [Compact] Edges  represent data dependencies and communication
+P575: [List Paragraph] Latency Decomposition:
+P576: [Body Text] 
+P577: [First Paragraph] where:
+P578: [Compact]  is computation time at node executing stage 
+P579: [Compact]  is communication time between stages
+P580: [Compact] Critical Path Analysis: Identify critical path  in DAG to minimize latency:
+P581: [Compact] 
+P582: [First Paragraph] Task-Centric Control Plane: TONA’s control plane operates through a hierarchical framework:
+P583: [List Paragraph] Task Admission Control: For incoming task , decide admission based on:
+P584: [Body Text] 
+P585: [List Paragraph] Resource Orchestration: Solve the resource allocation optimization using:
+P586: [Compact] Online Optimization: Lyapunov optimization for dynamic task arrivals
+P587: [Compact] Graph Neural Networks: Learn optimal node selection  from network graph
+P588: [Compact] Deep Q-Networks (DQN): State , action , reward 
+P589: [List Paragraph] Inter-Node Coordination: Synchronize collaborative nodes via:
+P590: [Body Text] 
+P591: [Normal] subject to precedence constraints from DAG 
+P592: [First Paragraph] Privacy-Preserving Task Execution: TONA incorporates privacy constraints via:
+P593: [Body Text] 
+P594: [First Paragraph] where  quantifies privacy leakage at node . For differential privacy:
+P595: [Body Text] 
+P596: [First Paragraph] for neighboring datasets  and mechanism .
+P597: [MDPI_2.3_heading3] Integrated Satellite–Terrestrial Architectures (SAGIN):
+P598: [MDPI_3.1_text]   Reference architectures have been proposed for integrating 6G terrestrial and non-terrestrial networks (NTN), evolving from non-virtualised schemes to fully virtualised architectures with a unified management and orchestration (MANO) system across both segments [61]. These architectures are crucial for enabling global coverage and supporting use cases in remote or high-mobility environments (maritime, aerial).
+P599: [MDPI_2.3_heading3] O-RAN-Based Architectures with AI
+P600: [MDPI_3.1_text] These architectures leverage the open and disaggregated design of O-RAN, particularly the RAN Intelligent Controller (RIC) in its Near-Real-Time and Non-Real-Time variants, to introduce data-driven intelligence and optimisation within the access network [62]. Recent proposals explore the use of intelligent agents, including LLM-based agents, implemented as xApps or rApps on top of the RIC to perform automated and intuitive orchestration of Edge AI services and network adaptation [62].
+P601: [MDPI_2.3_heading3] Other Specific Proposals
+P602: [MDPI_3.1_text] Additional approaches focus on particular dimensions, such as data-oriented architectures (e.g., Data Plane for Data as a Service, DaaS) to facilitate data management and processing for distributed AI [14]; architectures designed for the seamless integration of sensing and Edge AI (ISEA) [63]; or architectures optimised to support the unique demands of the Metaverse at the edge [32].
+P603: [MDPI_3.1_text] This diversity of architectural proposals reflects an active exploration phase across both industry and academia. While some approaches prioritise continuity and pragmatic evolution from 5G, others advocate more radical shifts to integrate intelligence and distribution natively from the outset. This early lack of consensus, although fostering innovation, also introduces the risk of fragmentation or the recurrence of complexities observed in 5G, such as multiple competing architectural options (NSA vs. SA) [41]. It is likely that the standardisation process will seek convergence, although the final direction has yet to be defined.
+P604: [MDPI_2.2_heading2] Comparative Analysis and Prioritization of Architectural Approaches
+P605: [MDPI_3.1_text] The diverse architectural proposals for 6G present distinct advantages and limitations depending on deployment scenarios and operator priorities. A critical comparative analysis reveals:
+P606: [MDPI_3.2_text_no_indent] Evolutionary versus Revolutionary Approaches: Evolutionary architectures (building incrementally on 5G foundations) offer lower migration risk, compatibility with existing infrastructure, and gradual CAPEX/OPEX scaling. They are well-suited for operators with substantial 5G investments seeking smooth upgrade paths. However, they may not fully exploit 6G's potential for distributed intelligence and AI-native services, potentially yielding suboptimal performance in latency-critical use cases (sub-1ms URLLC). Revolutionary approaches (e.g., TONA) promise optimal performance through clean-slate AI-native design, task-oriented resource allocation, and end-to-end optimization. They are best suited for greenfield deployments, specialized private networks (industrial, enterprise), or scenarios where performance maximization justifies migration costs. The primary barrier is deployment complexity and the need for comprehensive ecosystem support.
+Recommendation: Hybrid strategies—evolutionary core with revolutionary enhancements at the edge—offer pragmatic balance, allowing operators to leverage existing investments while selectively deploying advanced capabilities where value is highest.
+P607: [MDPI_3.2_text_no_indent] O-RAN versus Integrated Vendor Solutions: O-RAN-based architectures enable multi-vendor ecosystems, flexibility in functional splits, and AI-driven RAN optimization through RIC. They reduce vendor lock-in and potentially lower costs through commoditization. Early deployments show promising results in energy efficiency and spectral utilization. Integrated vendor solutions offer superior performance optimization (co-designed hardware and software), simplified operations, and mature support ecosystems. They are currently more reliable for mission-critical deployments.
+Recommendation: O-RAN is strategically important for long-term openness and innovation, but near-term deployments for critical services may favor integrated solutions. Parallel development of both approaches is advisable, with O-RAN gaining maturity through non-critical use cases before mission-critical adoption.
+P608: [MDPI_3.2_text_no_indent] SAGIN versus Terrestrial-Only: Satellite-terrestrial integration (SAGIN) addresses coverage gaps in remote, rural, maritime, and aerial scenarios where terrestrial infrastructure is economically infeasible. It supports global connectivity and resilience. However, SAGIN introduces complexity in handover, routing, and latency management (LEO satellite latency ~25-50ms). Terrestrial-only architectures achieve lower latency and higher bandwidth in urban and suburban areas but cannot provide universal coverage.
+Recommendation: SAGIN is essential for truly global 6G but should be deployed strategically for underserved areas and specific use cases (IoT, maritime, aviation) rather than as a universal replacement for terrestrial infrastructure.
+P609: [MDPI_3.2_text_no_indent] Centralized versus Distributed Intelligence:
+Fully centralized AI (cloud-based) offers computational advantages, easier model updates, and superior performance for complex tasks but fails to meet latency and privacy requirements for many 6G use cases. Fully distributed AI (on-device, edge-only) maximizes privacy and minimizes latency but faces resource constraints, model staleness, and coordination challenges. Hybrid approaches (hierarchical AI with edge, fog, and cloud tiers) provide optimal trade-offs, dynamically placing intelligence based on task requirements, resource availability, and network conditions.
+Recommendation: Hybrid, adaptive AI placement is the most pragmatic approach, with intelligent orchestration determining optimal execution location based on real-time context.
+P610: [MDPI_3.2_text_no_indent] Use Case Prioritization: For ultra-low latency applications (V2X, industrial robotics, XR): Prioritize dense edge deployment, revolutionary AI-native architectures, and local intelligence. For massive IoT (smart cities, agriculture): Favor energy-efficient edge processing, hierarchical FL, and scalable MEC with sparse deployment. For high-bandwidth applications (holographic communications, cloud gaming): Combine edge caching, predictive content delivery, and hybrid edge-cloud processing. For privacy-sensitive services (healthcare, finance): Mandate on-device or edge AI with FL/SL, regulatory-compliant data handling, and zero-knowledge proofs.
+P611: [MDPI_3.2_text_no_indent] This comparative framework enables context-specific architectural decisions rather than one-size-fits-all prescriptions, aligning technical capabilities with business objectives and regulatory constraints.
+P612: [MDPI_2.2_heading2] Critical Analysis of Architectural Trade-offs
+P613: [MDPI_3.1_text] The diverse architectural proposals for 6G networks present fundamental trade-offs that must be carefully evaluated based on deployment context, use case requirements, and economic constraints.
+P614: [MDPI_3.1_text] Complexity versus Performance: Fully distributed, AI-native architectures (e.g., TONA) promise optimal performance through intelligent resource allocation and context-aware services. However, they introduce significant orchestration complexity, requiring sophisticated coordination mechanisms across heterogeneous edge nodes, dynamic workload migration, and real-time resource optimization. In contrast, evolutionary approaches building on existing 5G infrastructure offer simpler migration paths but may not fully exploit the potential of distributed intelligence. The choice depends on whether operators prioritize performance maximization (justifying higher complexity) or operational simplicity (accepting performance suboptimality).
+P615: [MDPI_3.1_text] Scalability Limits: Edge AI techniques face inherent scalability challenges. Federated Learning, while privacy-preserving, suffers from communication overhead that grows with the number of participating devices, limiting practical deployments to hundreds or thousands of clients rather than millions. Split Learning reduces per-device computation but increases sequential processing time and network round-trips. Centralized cloud training scales efficiently but sacrifices privacy and increases latency. Hybrid approaches (hierarchical FL with edge aggregation) offer a middle ground but add architectural complexity.
+P616: [MDPI_3.1_text] Deployment Feasibility: O-RAN-based architectures promise flexibility and vendor-neutral interoperability, enabling dynamic function splits and AI-driven optimization. However, real-world deployments face challenges including hardware heterogeneity, integration with legacy infrastructure, and the maturity of O-RAN standards. Early pilots demonstrate feasibility but also reveal performance gaps compared to integrated vendor solutions, suggesting a gradual transition rather than immediate wholesale adoption.
+P617: [MDPI_3.1_text] Economic Cost: Dense edge infrastructure deployment (required for sub-5ms latency) can increase CAPEX by 200-400% compared to traditional centralized architectures, as edge servers must be deployed at base station sites, aggregation points, and enterprise premises. Operational expenditure (OPEX) also increases due to distributed maintenance, energy consumption, and the need for skilled personnel at multiple locations. Economic viability depends on revenue opportunities from latency-sensitive services (AR/VR, autonomous vehicles, industrial automation) that can justify the infrastructure investment.
+P618: [MDPI_3.1_text] Privacy versus Performance: On-device and edge AI maximize privacy by keeping data local, but constrained edge resources limit model complexity and accuracy. Cloud-based AI achieves superior performance through access to massive compute and data but requires data centralization. This trade-off is particularly critical in healthcare and financial services, where regulatory constraints may mandate edge processing despite potential accuracy reductions of 5-10% compared to cloud-based alternatives.
+P619: [MDPI_3.1_text] Sustainability Considerations: While edge processing can reduce network energy consumption by minimizing data transmission, the proliferation of edge servers increases total infrastructure energy use. Life-cycle analysis suggests that edge deployment is energy-efficient only when utilization rates exceed 40-50%; below this threshold, centralized cloud processing is more sustainable. This highlights the importance of intelligent workload placement and resource consolidation strategies.
+P620: [MDPI_3.1_text] These trade-offs underscore the need for context-specific architectural decisions rather than one-size-fits-all solutions. Hybrid architectures that dynamically balance edge and cloud resources based on application requirements, network conditions, and economic constraints represent a pragmatic path forward for 6G deployment. 
+P621: [MDPI_3.1_text] Beyond single-agent reinforcement learning, Multi-Agent Reinforcement Learning (MARL) has emerged as a particularly promising approach for managing the inherent complexity and distributed nature of 6G networks. Unlike traditional RL, where a single agent learns to optimize a specific objective, MARL involves multiple autonomous agents that learn collaboratively or competitively to achieve system-wide goals while operating in a shared environment.
+Mathematical Framework for MARL in 6G:
+P622: [MDPI_3.1_text] MARL for 6G networks is formalized as a Stochastic Game (also called Markov Game), extending the single-agent MDP framework:
+P623: [Body Text] 
+P624: [First Paragraph] where:
+P625: [Compact] : set of  agents (e.g., edge nodes, base stations)
+P626: [Compact] : global state space of the 6G network
+P627: [Compact] : action space of agent 
+P628: [Compact] : joint action space
+P629: [Compact] : state transition probability
+P630: [Compact] : reward function for agent 
+P631: [Compact] : discount factor
+P632: [First Paragraph] State Space for 6G Networks: The global state  at time  captures:
+P633: [Body Text] 
+P634: [First Paragraph] where:
+P635: [Compact] 
+P636: [Compact]  (arrival rates at nodes)
+P637: [Compact] 
+P638: [Compact]  (available bandwidth, compute, storage at each node )
+P639: [First Paragraph] Each agent  typically observes a local/partial observation .
+P640: [Body Text] Action Space for 6G Edge Agents: For an edge node agent , the action space includes:
+P641: [Body Text] 
+P642: [First Paragraph] where:
+P643: [Compact] : resource allocation decisions (compute, storage per task)
+P644: [Compact] : handover/migration decisions for connected UEs
+P645: [Compact] : transmission power level
+P646: [Compact] : resource block allocation
+P647: [First Paragraph] Reward Functions: Agents can have individual or shared rewards. For cooperative MARL (common in 6G):
+P648: [Body Text] 
+P649: [First Paragraph] where  is the joint action, and:
+P650: [Compact] : average end-to-end latency across all tasks
+P651: [Compact] : total network energy consumption
+P652: [Compact] : task drop rate
+P653: [First Paragraph] For competitive scenarios (e.g., spectrum sharing between operators), agents may have conflicting rewards.
+P654: [Body Text] Policy and Value Functions: Each agent  learns a policy  mapping observations to action distributions. The joint policy is .
+P655: [Body Text] The state-value function for agent  under joint policy :
+P656: [Body Text] 
+P657: [First Paragraph] The state-action value (Q-function):
+P658: [Body Text] 
+P659: [First Paragraph] Nash Equilibrium and Solution Concepts: In cooperative MARL, agents seek to maximize the sum of rewards:
+P660: [Body Text] 
+P661: [First Paragraph] In general-sum games, we seek Nash Equilibrium:  is a Nash equilibrium if for each agent :
+P662: [Body Text] 
+P663: [First Paragraph] where  denotes the policies of all agents except .
+P664: [Body Text] Learning Algorithms:
+P665: [Compact] Independent Q-Learning (IQL): Each agent learns independently treating others as part of the environment. Update rule:
+P666: [Compact] 
+P667: [First Paragraph] Converges in stationary environments but may fail due to non-stationarity in multi-agent settings.
+P668: [Compact] Centralized Training with Decentralized Execution (CTDE): Agents learn with access to global information during training but execute using only local observations. Example: QMIX algorithm learns joint action-value function:
+P669: [Compact] 
+P670: [First Paragraph] where  is a monotonic mixing network ensuring:
+P671: [Body Text] 
+P672: [First Paragraph] This guarantees that individual greedy actions lead to globally optimal joint actions.
+P673: [Compact] Multi-Agent Actor-Critic (MAAC): Each agent  has:
+P674: [Compact] Actor: 
+P675: [Compact] Critic:  (may use global state  during training)
+P676: [First Paragraph] Policy gradient update:
+P677: [Body Text] 
+P678: [First Paragraph] Convergence and Complexity:
+P679: [List Paragraph] Convergence: MARL convergence depends on the game structure:
+P680: [Compact] Fully cooperative: Can achieve near-optimal joint policy with CTDE methods
+P681: [Compact] General-sum: Convergence to -Nash equilibrium in polynomial time under certain conditions
+P682: [Compact] Sample complexity:  for -optimal policy
+P683: [List Paragraph] Computational complexity per step:
+P684: [Compact] IQL:  (parallelizable)
+P685: [Compact] CTDE (QMIX):  during training,  during execution
+P686: [Compact] MAAC:  for neural network forward/backward passes
+P687: [First Paragraph] In 6G networks, MARL is especially relevant for scenarios requiring coordinated decision-making across distributed edge nodes, base stations, and user equipment. For example, multiple edge servers can act as cooperative agents learning to jointly optimize resource allocation, load balancing, and service migration to minimize overall latency and energy consumption while adapting to dynamic traffic patterns and user mobility.
+P688: [MDPI_2.3_heading3] Intelligent Orchestration of Services and Resources:
+P689: [MDPI_3.1_text] Regardless of the specific architecture adopted, the inherent complexity of 6G networks, with their distributed, heterogeneous, virtualised and highly dynamic nature, makes intelligent orchestration an absolutely indispensable component [64]. Manual or static rule-based management is infeasible [38]. Orchestration acts as the “central nervous system” of the network, enabling coherent, adaptive and efficient operation. Key aspects of intelligent orchestration in 6G include:
+P690: [MDPI_2.3_heading3] Joint Communication, Computing and Storage Management (JCC)
+P691: [MDPI_3.1_text] It is essential to optimise communication resources (bandwidth, spectrum), computing resources (CPU, GPU, NPU at edge nodes) and storage along the entire network continuum, from devices to the cloud, via the edge [1]. This is particularly critical in integrated networks such as SAGIN [65]. Since these joint-optimisation problems are often complex (NP-hard), advanced heuristics or, increasingly, AI-based approaches (RL, DL) are required to obtain efficient real-time solutions [55].
+P692: [Body Text] Mathematical Formulation of the JCC Problem: The Joint Communication, Computing and Storage (JCC) optimization problem can be formulated as a multi-objective optimization over the network continuum. Consider a 6G network with  user equipment (UE) devices,  edge nodes, and  cloud servers. Each service request  is characterized by:
+P693: [Body Text] 
+P694: [First Paragraph] where:
+P695: [Compact] : data size (in bits)
+P696: [Compact] : computational requirement (in FLOPs)
+P697: [Compact] : storage requirement (in bytes)
+P698: [Compact] : maximum tolerable latency
+P699: [Compact] : minimum required reliability
+P700: [First Paragraph] Decision Variables:
+P701: [Compact] : binary placement variable (task  assigned to node )
+P702: [Compact] : bandwidth allocated for task  at node  (Hz)
+P703: [Compact] : computing frequency allocated for task  at node  (GHz)
+P704: [Compact] : storage allocated for task  at node  (bytes)
+P705: [Compact] : transmission power for task  at node  (Watts)
+P706: [First Paragraph] Objective Function: Minimize the weighted sum of end-to-end latency, energy consumption, and cost:
+P707: [Body Text] 
+P708: [First Paragraph] where  are weighting factors reflecting operator priorities, and:
+P709: [Body Text] End-to-End Latency Model:
+P710: [Body Text] 
+P711: [First Paragraph] where:
+P712: [Compact] Queueing latency:  (M/M/1 queue model at node )
+P713: [Compact] Transmission latency:  (Shannon capacity)
+P714: [Compact] Computation latency: 
+P715: [Compact] Backhaul latency:  (propagation delay,  is speed of light)
+P716: [First Paragraph] Energy Consumption Model:
+P717: [Body Text] 
+P718: [First Paragraph] where  is the effective capacitance coefficient of the processing chip (typically  for modern processors).
+P719: [Body Text] Cost Model:
+P720: [Body Text] 
+P721: [First Paragraph] where  are unit costs for bandwidth, compute, and storage respectively.
+P722: [Body Text] Constraints:
+P723: [Normal] Placement Constraint (each task assigned to exactly one node):
+P724: [Body Text] 
+P725: [Normal] Bandwidth Constraint (total allocated bandwidth cannot exceed available):
+P726: [Body Text] 
+P727: [Normal] Computing Constraint (total computing frequency cannot exceed capacity):
+P728: [Body Text] 
+P729: [Normal] Storage Constraint (total storage cannot exceed capacity):
+P730: [Body Text] 
+P731: [Normal] Latency Constraint (end-to-end latency must meet requirement):
+P732: [Body Text] 
+P733: [Normal] Reliability Constraint (service reliability must be guaranteed):
+P734: [Body Text] 
+P735: [First Paragraph] where  is the reliability combining block error rate and node availability.
+P736: [First Paragraph] Power Constraint (transmission power bounded):
+P737: [Compact] 
+P738: [First Paragraph] Complexity Analysis: 
+P739: [First Paragraph] Theorem: The JCC optimization problem is NP-hard.
+P740: [Body Text] Proof Sketch: The problem can be reduced from the multiple knapsack problem (MKP), which is known to be NP-hard. Consider the special case where:
+P741: [Compact] All tasks have identical computation requirements 
+P742: [Compact] Latency constraints are relaxed
+P743: [Compact] Only computing resources are constrained
+P744: [First Paragraph] This reduces to: assign  tasks to  edge nodes to minimize total energy, subject to  for each node . This is precisely the MKP with task values and weights. Since MKP is NP-hard, the general JCC problem (which includes additional constraints and objectives) is also NP-hard.
+P745: [Body Text] Solution Approaches: Given the NP-hardness, exact solutions via integer linear programming (ILP) are intractable for large-scale networks. Practical approaches include:
+P746: [Normal] Heuristic Algorithms:
+P747: [Compact] Greedy placement based on latency proximity
+P748: [Compact] Genetic algorithms for joint optimization
+P749: [Compact] Complexity:  per iteration
+P750: [Normal] Convex Relaxation: Relax binary variables  and solve using convex optimization (e.g., ADMM, primal-dual methods), then round to integer solution. Approximation ratio typically within 5-10% of optimal.
+P751: [Normal] Deep Reinforcement Learning (DRL):
+P752: [Compact] State space:  (resource availability and pending tasks)
+P753: [Compact] Action space:  (placement and allocation)
+P754: [Compact] Reward: 
+P755: [Compact] Policy:  learned via PPO, A3C, or SAC
+P756: [Compact] Training complexity: 
+P757: [Compact] Inference complexity:  (real-time feasible)
+P758: [Normal] Graph Neural Networks (GNNs): Model the network topology as a graph  with nodes representing UEs, edge nodes, and cloud servers, and edges representing connectivity. GNN learns node embeddings capturing resource states and task requirements, enabling efficient joint optimization:
+P759: [Compact] Node features: 
+P760: [Compact] Message passing: 
+P761: [Compact] Task-node matching via attention: 
+P762: [Compact] Complexity: 
+P763: [First Paragraph] Multi-Timescale Optimization: JCC optimization operates across multiple timescales:
+P764: [Compact] Milliseconds: Dynamic resource allocation for incoming tasks (DRL/GNN).
+P765: [Compact] Seconds: Load balancing and task migration.
+P766: [Compact] Minutes/Hours: Capacity planning and infrastructure adjustment.
+P767: [First Paragraph] This hierarchical decomposition reduces computational complexity while maintaining near-optimal performance.
+P768: [MDPI_2.3_heading3] Intent-Based Networking (IBN)
+P769: [MDPI_3.1_text] IBN represents a higher level of abstraction in network management [66]. Instead of configuring low-level parameters, users or applications declare high-level goals or requirements as “intentions” (e.g., “ensure < 5 ms latency for VR traffic”, “deploy object-detection service at the edge near camera X”) [62]. The intelligent orchestration system (NMS/Orchestrator) is responsible for interpreting the intention, translating it into specific network and resource configurations, activating those configurations and continuously ensuring intention fulfilment [41]. IBN architectures for 6G are being actively explored [67], including the use of LLMs to interpret natural-language intents and automate the entire intent lifecycle [62]. 
+P770: [MDPI_2.3_heading3] Orchestration of AI Functions at the Edge
+P771: [MDPI_3.1_text] Beyond network-resource orchestration, 6G requires the specific orchestration of AI functions and models deployed at the edge [19]. Tasks include selecting the appropriate AI model for a given purpose, deciding where to place it (which edge node or device), deploying it (e.g., as a container), allocating the necessary computing resources, monitoring its performance and managing its lifecycle (updates, retraining). Intelligent-agent-based frameworks (potentially LLM-driven) are being proposed to automate these complex decisions, considering factors such as resource availability, QoS requirements and latency constraints [19].
+P772: [MDPI_2.3_heading3] Multi-domain and Multi-agent Federation and Collaboration
+P773: [MDPI_3.1_text] Orchestration in 6G must operate across multiple administrative domains (e.g., different operators in roaming or network-sharing scenarios) and technological domains (e.g., coordination between edge and cloud, or between RAN and Core) [30]. This requires federation mechanisms that enable controlled and secure sharing of resources and information. Moreover, in architectures with multiple distributed AI agents, orchestration must also facilitate effective collaboration among them [19].
+P774: [MDPI_2.2_heading2] Integration with Key Enabling Technologies
+P775: [MDPI_3.1_text] The architecture and orchestration of 6G do not exist in isolation; rather, they must be synergistically integrated with other key technologies to achieve their full potential:
+P776: [MDPI_3.2_text_no_indent] Digital Twins (DT)
+P777: [MDPI_3.1_text] A Digital Twin is a dynamic and real-time virtual representation of a physical object, process or system [31]. In 6G, DTs may be created for the network itself, its components or the environment in which it operates.
+P778: [MDPI_3.8_bullet] Roles: DTs enable scenario simulations (“what-if” analyses), testing of configurations or optimizations before deploying them in the real network, real-time monitoring and behavioral prediction of the network [6], and the generation of realistic synthetic data for training AI models, overcoming limitations of real data [19]. They can also support industrial, logistics or smart-city applications [31], and enhance security via threat modelling [58]. Architectures combining DT with blockchain and FL have been proposed to achieve secure and efficient edge networks [68].
+P779: [MDPI_3.8_bullet] Implementation: DTs require distributed IoT-Edge-Cloud platforms to collect data from the physical world and maintain synchronization with the virtual replica [31].
+P780: [MDPI_2.3_heading3] Integrated Sensing and Communication (ISAC)
+P781: [MDPI_3.1_text] ISAC leverages existing communication signals and infrastructure to perform environmental sensing tasks such as object detection, distance/velocity/angle estimation, localisation and mapping [1].
+P782: [MDPI_3.8_bullet] Synergy with Edge AI: ISAC generates substantial sensing data that can be processed by Edge AI algorithms to extract useful information and support intelligent decision-making. In turn, Edge AI can optimize ISAC processes themselves. This synergy leads to the paradigm of Integrated Sensing and Edge AI (ISEA) [6], in which communication, edge computing, sensing and AI are jointly designed and optimized for a given task.
+P783: [MDPI_3.8_bullet] Challenges: The main difficulty lies in achieving true integration at the hardware, algorithmic and signal-design levels, rather than mere coexistence [6].
+P784: [MDPI_2.3_heading3] Blockchain 
+P785: [MDPI_3.1_text] Distributed ledger technology can play a crucial role in 6G by addressing security, privacy and trust issues in distributed and multi-stakeholder environments [69]. Blockchain is proposed for secure and decentralised identity and access management, secure sharing of spectrum and resources, data and transaction traceability and auditing, and establishing trust in distributed AI systems such as FL or in interactions with DTs [38].
+P786: [MDPI_3.1_text] The integration of these technologies creates synergistic feedback loops that enhance the overall intelligence and efficiency of the 6G system. ISAC functions as the network’s “sensory system”, capturing data from the physical world [6]. Edge AI acts as the distributed “brain”, analysing these and other data to understand the environment, optimise the network and make decisions [63]. The Digital Twin provides a “virtual space for testing and prediction”, fuelled by ISAC data and used by Edge AI to simulate scenarios, validate strategies and anticipate behaviours before acting in the real world [31]. This continuous cycle of Sense (ISAC) → Analyse/Decide (Edge AI) → Simulate/Validate (DT) → Act (Network/Control) enables far more robust, adaptive and intelligent cyber-physical systems, in which each component reinforces the capabilities of the others. Table 4 compares several of the key architectural proposals discussed.
+P787: [MDPI_4.1_table_caption] Table 4. Comparative Analysis of Architectural and Orchestration Proposals for 6G with Distributed AI
+P788: [MDPI_2.2_heading2] Concrete Mapping to Functional Splits and Control Loops
+P789: [MDPI_3.1_text] To transition from conceptual frameworks to practical deployment, concrete mapping to functional splits, control loops, and deployment constraints is essential:
+P790: [List Paragraph] 
+P791: [List Paragraph] 
+P792: [List Paragraph] 
+P793: [List Paragraph] 
+P794: [MDPI_3.2_text_no_indent] Functional Split Options (Building on 3GPP and O-RAN): The distribution of network functions between centralized units (CU), distributed units (DU), and radio units (RU) directly impacts where AI and edge computing capabilities can be deployed.
+P795: [MDPI_3.2_text_no_indent] Split Option 2 (RLC-MAC split): Edge AI functions deployed at DU level enable real-time MAC scheduling optimization, interference management, and QoS enforcement with sub-10ms control loops. Suitable for latency-critical applications within a cell cluster.
+P796: [MDPI_3.2_text_no_indent] Split Option 7.2 (High-Low PHY split): Enables centralized baseband processing for multiple cells while allowing edge-based beam management and channel estimation using ML. Balances centralization benefits with edge responsiveness.
+P797: [MDPI_3.2_text_no_indent] Split Option 8 (RU-DU split): Maximizes centralization, limiting edge AI to RU-level operations (e.g., digital beamforming, fronthaul compression). Less suitable for ultra-low latency use cases but simplifies coordination and resource pooling.
+P798: [MDPI_3.2_text_no_indent] Recommendation: Dynamic functional split selection based on use case requirements, with Split 2 for latency-critical services, Split 7.2 for balanced deployments, and Split 8 for capacity-oriented scenarios.
+P799: [MDPI_3.2_text_no_indent] Control Loop Hierarchies: Effective orchestration requires multiple control loops operating at different timescales:
+P800: [MDPI_3.2_text_no_indent] Real-time Control Loop (sub-millisecond to milliseconds): Local edge AI for radio resource allocation, beam steering, power control. Implemented at DU or near-RT RIC (O-RAN). Decision latency must be <1ms.
+P801: [MDPI_3.2_text_no_indent] Near-real-time Control Loop (10ms to 1s): MEC-based service orchestration, traffic prediction, mobility management, edge cache optimization. Implemented at near-RT RIC or MEC orchestrator. Decision latency 10-100ms.
+P802: [MDPI_3.2_text_no_indent] Non-real-time Control Loop (seconds to minutes): Policy management, network slicing reconfiguration, federated learning aggregation, multi-domain coordination. Implemented at non-RT RIC or central orchestrator. Decision latency 1-10 seconds.
+P803: [MDPI_3.2_text_no_indent] Long-term Planning (minutes to hours): Capacity planning, energy optimization, proactive resource scaling based on predicted demand. Implemented at OSS/BSS or cloud management layer.
+P804: [MDPI_3.2_text_no_indent] Mapping AI Functions to Control Loops: Real-time: DRL-based schedulers, fast interference mitigation, beam prediction.
+P805: [MDPI_3.2_text_no_indent] Near-real-time: Traffic forecasting, service migration decisions, anomaly detection.
+P806: [MDPI_3.2_text_no_indent] Non-real-time: FL model aggregation, policy learning, multi-agent coordination.
+P807: [MDPI_3.2_text_no_indent] Long-term: Demand forecasting, infrastructure planning, energy sustainability optimization.
+P808: [MDPI_3.2_text_no_indent] Deployment Constraints and Realistic Limitations:
+P809: [MDPI_3.2_text_no_indent] Edge Server Placement: Constrained by backhaul availability, power infrastructure, physical space at base station sites. Not all cell sites can host full MEC servers; stratified deployment (dense edge at hotspots, sparse edge in rural areas) is necessary.
+P810: [MDPI_3.2_text_no_indent] Compute Resource Heterogeneity: Edge nodes vary from high-capacity MEC servers (50-100 CPU cores, GPU acceleration) to constrained IoT gateways (2-4 cores, no GPU). AI models must adapt to available resources through model compression, quantization, or offloading.
+P811: [MDPI_3.2_text_no_indent] Latency Budgets: End-to-end latency comprises multiple components: radio access (~1-5ms), edge processing (~1-10ms), backhaul (~1-20ms depending on distance), application processing (~1-50ms depending on complexity). Achieving sub-1ms URLLC requires all components to be co-optimized and co-located.
+P812: [MDPI_3.2_text_no_indent] Energy Constraints: Edge deployments must respect power budgets (typically 500W-2kW per site for MEC servers). AI inference must be energy-efficient; heavy DL models may exceed power envelopes, necessitating model simplification or selective offloading.
+P813: [MDPI_3.2_text_no_indent] Interoperability: Multi-vendor environments require standardized interfaces (O-RAN open fronthaul, E2 interface, MEC platform APIs). Proprietary optimizations may not translate across vendors, limiting portability.
+P814: [MDPI_3.2_text_no_indent] This concrete mapping bridges the gap between architectural vision and engineering reality, enabling practical implementation of distributed intelligence in 6G networks.
+P815: [MDPI_2.1_heading1] Standardization and Future Perspectives
+P816: [MDPI_3.1_text] Figure 8 presents the consolidated 6G standardization roadmap across ITU-R, 3GPP, ETSI, and O-RAN Alliance.
+P817: [MDPI_3.1_text] The successful development and deployment of 6G, with its deep integration of distributed computing and Edge AI, depend heavily on global standardization efforts and the resolution of substantial research challenges.
+P818: [MDPI_5.1_figure_caption] 
+P819: [MDPI_5.1_figure_caption] 
+P820: [MDPI_5.1_figure_caption] 
+P821: [MDPI_5.1_figure_caption] Figure 8. 6G standardization Roadmap (2020–2030). 
+P822: [MDPI_5.1_figure_caption] 
+P823: [MDPI_2.2_heading2] Status of Standardisation
+P824: [MDPI_3.2_text_no_indent] Several international organizations are actively working on defining 6G:
+P825: [MDPI_2.3_heading3] ITU-R (IMT-2030)
+P826: [MDPI_3.2_text_no_indent] The ITU establishes the global vision and requirements for future generations of IMT.
+P827: [MDPI_3.8_bullet] Process: Following the established processes for IMT-2000, IMT-Advanced and IMT-2020, work on IMT-2030 (6G) began with the definition of the vision and overarching framework, culminating in Recommendation ITU-R M.2160 ("IMT-2030 Framework"), approved in November 2023 [7]. The next phase (2024–2027) will focus on defining detailed technical requirements and evaluation criteria for candidate Radio Interface Technologies (RITs). RIT submissions will be accepted between 2027 and early 2029, with final specifications expected around 2030 [7].
+P828: [MDPI_3.8_bullet] Vision and Capabilities: The IMT-2030 framework identifies key use scenarios, including enhanced versions of those in 5G (immersive communication, massive communication, HRLLC) and new scenarios such as ISAC, AI integration and ubiquitous connectivity [6]. It defines 15 target capabilities, with significant improvements over 5G in data rate, latency, density and more, while introducing new capabilities such as centimeter-level positioning, integrated sensing and, crucially, AI-related capabilities [6].
+P829: [MDPI_3.1_text] These AI-related capabilities explicitly include support for distributed data processing, distributed learning (such as FL), execution of AI models and inference within the network [7]. Sustainability is also identified as a key pillar [7].
+P830: [MDPI_3.8_bullet] Spectrum: ITU-R recognizes the need for additional spectrum across a wide range of bands, from sub-1 GHz (for broad coverage) to millimeter-wave bands and, potentially, frequencies above 92 GHz or even into the THz range (to support extreme data rates and applications such as ISAC) [2]. Spectrum harmonization is crucial [70].
+P831: [MDPI_2.3_heading3] 3GPP (Releases 19, 20 and 21)
+P832: [MDPI_3.2_text_no_indent] 3GPP is the main organization responsible for developing technical specifications for mobile networks and will play a central role in defining the technical foundations of 6G.
+P833: [MDPI_3.8_bullet] Timeline: Formal work on 6G within 3GPP began in Release 19 (main work through ~Q3 2025) with studies on use cases and service requirements (led by SA1, resulting in TR 22.870) [71]. Release 20 (expected Q3 2025 to ~Q1 2027) will host the major technical studies in the RAN working groups, investigating candidate technologies and defining detailed technical requirements for the 6G radio interface [6]. Normative work (specification development) for the first version of 6G will take place in Release 21, with the goal of completion by late 2028 or early 2029 to align with the IMT-2030 submission schedule [6]. It is important to note that Releases 19 and 20 will also continue advancing 5G-Advanced in parallel with 6G studies [71].
+P834: [MDPI_3.8_bullet] Focus on AI/ML: 3GPP has been working on AI/ML since earlier releases (e.g., Release 18, which studied AI/ML for the air interface) [72]. In Release 19, this work continues through the specification of use cases such as CSI prediction, beam management and positioning [72]. The general 3GPP approach is not to standardize AI algorithms or models themselves, given their rapid rate of evolution [73]. Instead, the goal is to standardize the infrastructure and interfaces required to support and manage AI/ML in the network. This includes mechanisms for operator-controlled data collection, model transfer and lifecycle management (activation, deactivation, performance monitoring), as well as the necessary air-interface extensions [58]. AI/ML is expected to be an integral part of 6G specifications from the outset (Release 21) [73], with potential to support online learning and greater flexibility in implementing specific functionalities [73]. Functions such as NWDAF (Network Data Analytics Function), introduced in 5G, are seen as foundational components for AI-driven analytics and automation in 6G [58].
+P835: [MDPI_3.1_text] Particularly relevant for the techniques discussed in Section 3 is the 3GPP Study Item on *AI/ML for NR Air Interface* (Release 18, TR 38.843), which addresses AI/ML-based enhancements for three specific use cases: (i) beam management, where AI-based methods can predict optimal beams from historical channel measurements, reducing beam-sweeping overhead by up to ; (ii) CSI feedback compression, where encoder–decoder neural architectures (e.g., CsiNet) can reduce uplink CSI feedback by 3x to 32x at comparable reconstruction accuracy; and (iii) positioning accuracy improvement, targeting sub-1 m accuracy using AI-enhanced signal processing. Release 19 (RAN1/RAN2 work items, ongoing 2025) extends this work to AI/ML-based link adaptation and channel estimation in high-mobility scenarios (Doppler up to 500 km/h), directly enabling the handover and mobility management use cases presented in Section 3. These 3GPP activities represent the critical bridge between the academic proposals reviewed in this survey and commercially implementable 6G features [72,73].
+P836: [MDPI_2.3_heading3] ETSI MEC
+P837: [MDPI_3.2_text_no_indent] The ETSI ISG MEC continues to develop standards for multi-access edge computing.
+P838: [MDPI_3.8_bullet] Evolution: Recent phases (Phase 3 and 4) focus on improving security, enabling federation across different MEC platforms (critical for roaming and multi-operator scenarios), supporting network slicing at both MEC and application levels, and aligning with the needs of vertical industries (e.g., V2X through 5GAA) [28].
+P839: [MDPI_3.1_text] There is ongoing alignment with 3GPP, particularly with SA6's work on edge-application architectures (EDGEAPP) [28].
+P840: [MDPI_3.8_bullet] Relevance for 6G: The work of ETSI MEC is fundamental in providing a standardized environment that enables the deployment of edge-native applications in 6G [28]. However, some perspectives highlight that the current MEC architecture may need to evolve towards more open and flexible approaches (such as OS-MEC) to fully meet the dynamism and personalization requirements of 6G [30].
+P841: [MDPI_3.1_text] There is an inherent tension in the standardization process. On the one hand, early definition of a framework and requirements (as IMT-2030 does) is essential to guide research and investment [74]. On the other hand, there is a risk of standardizing specific technologies or architectures before they are fully mature or before their implications are fully understood, which could limit future innovation or lead to suboptimal solutions [41]. The experience with multiple initial 5G deployment options (NSA/SA) suggests caution [41]. The phased approach adopted by ITU-R and 3GPP (*Vision → Requirements → Technical Study → Normative Specification*) [7] seeks to balance this tension by allowing research to inform standardization, although the challenge of making key decisions at the right moment persists.
+P842: [MDPI_3.1_text] A notable aspect is the strategic decision by standardization bodies, particularly 3GPP, to focus on enabling the infrastructure for AI (data collection, model management, interfaces) rather than standardizing AI models themselves [58]. This recognizes the extremely dynamic nature of AI research and aims to create a standardized yet open ecosystem in which different vendors can innovate and compete with their own AI solutions on top of a common, interoperable foundation.
+P843: [MDPI_3.1_text] In other words, standardization defines how to integrate and manage AI, not which AI should be used.
+P844: [MDPI_2.2_heading2] Real-world Testbeds and Early Deployments
+P845: [MDPI_3.2_text_no_indent] While much of the 6G discourse remains visionary, several real-world testbeds, pilot deployments, and experimental platforms are already providing empirical validation of distributed AI and edge computing concepts:
+P846: [MDPI_2.3_heading3] MEC in Industrial Scenarios
+P847: [MDPI_3.1_text] The 5G-ACIA (5G Alliance for Connected Industries and Automation) has deployed MEC-based testbeds in manufacturing environments, demonstrating sub-10 ms latency for industrial robot control and predictive maintenance using edge AI. One notable deployment at a BMW facility in Germany uses MEC servers co-located with 5G base stations to perform real-time quality inspection using computer vision models, achieving 99.7% defect detection accuracy with 8 ms inference latency [4].
+P848: [MDPI_2.3_heading3] V2X Edge AI Pilots
+P849: [MDPI_3.1_text] The 5GAA (5G Automotive Association) coordinated cross-border V2X trials in Europe, deploying edge AI for cooperative perception and collision avoidance [75]. Vehicles share sensor data processed by roadside MEC units to create a collective environmental model, enabling "see-through" capabilities beyond individual vehicle sensor range. Results show that edge-based cooperative perception increases object detection range by 3–5× compared to individual vehicle sensors while maintaining sub-20 ms end-to-end latency.
+P850: [MDPI_2.3_heading3] Open-Source MEC Platforms
+P851: [MDPI_3.1_text] Projects such as OpenNESS (Open Network Edge Services Software) and Akraino Edge Stack provide open-source MEC platforms being tested in academic and industry labs worldwide. These platforms enable experimentation with edge AI workloads, service orchestration, and multi-access connectivity across diverse use cases including smart cities, healthcare, and content delivery networks.
+P852: [MDPI_2.3_heading3] Satellite-Terrestrial Integration
+P853: [MDPI_3.1_text]  The European Space Agency's 5G/6G ARTES program has funded testbeds integrating satellite and terrestrial networks with edge AI for coverage in remote areas. A Norwegian Arctic deployment uses LEO satellite backhaul combined with terrestrial MEC for environmental monitoring, demonstrating the feasibility of SAGIN architectures in extreme environments.
+P854: [MDPI_2.3_heading3] Federated Learning in Healthcare
+P855: [MDPI_3.1_text] Several hospital networks in the United States and Europe are piloting federated learning for medical image analysis (radiology, pathology) while preserving patient privacy. These deployments use edge servers at hospital sites to train models locally on sensitive data, with only model updates aggregated centrally. Early results show diagnostic accuracy within 1–2% of centralized training while maintaining HIPAA/GDPR compliance.
+P856: [MDPI_2.3_heading3] O-RAN Trials
+P857: [MDPI_3.1_text] Rakuten Mobile (the world's first fully cloud-native O-RAN commercial network, deployed in Japan starting 2020 [76]) and DISH Network in the United States have deployed commercial O-RAN networks with AI-based RAN Intelligent Controllers (RIC) for traffic prediction, load balancing, and energy optimization. Performance data indicates 15–20% improvement in spectral efficiency and 10–15% reduction in energy consumption compared to traditional RAN architectures, though integration complexity and vendor ecosystem maturity remain challenges [77].
+P858: [MDPI_3.1_text] These real-world deployments provide invaluable insights into practical challenges— including hardware constraints, integration complexity, and operational considerations — that are often underestimated in purely theoretical proposals. They also validate the technical feasibility and performance benefits of distributed intelligence, bridging the gap between vision and implementation for future 6G networks.
+P859: [MDPI_2.2_heading2] Open Challenges and Future Research Directions
+P860: [MDPI_3.2_text_no_indent] Despite progress in defining the 6G vision and initial standardization, numerous areas require intensive research to make 6G with distributed AI a practical reality:
+P861: [MDPI_2.3_heading3] Efficient and Scalable Edge Resource Optimization
+P862: [MDPI_3.2_text_no_indent] Developing algorithms capable of jointly managing heterogeneous resources (communication, computing, storage, energy) in large-scale, dynamic and resource-constrained edge environments in real time [55]. This includes optimization specifically tailored for the deployment and execution of Edge LAMs [14].
+P863: [MDPI_2.3_heading3] Trustworthy Distributed AI
+P864: [MDPI_3.2_text_no_indent] Enhancing the robustness, efficiency, fairness and, critically, the privacy and security of distributed learning paradigms such as FL and SL [51]. Research is needed in areas such as asynchronous FL, handling non-IID data, label-privacy preservation in SL and effective integration of DP, HE, SMC and ZKP in 6G edge environments [51]. Developing frameworks resilient to poisoning and adversarial attacks, specifically tailored to distributed AI, is also essential [54].
+P865: [MDPI_2.3_heading3] AI-Native Architectures
+P866: [MDPI_3.2_text_no_indent] Defining and validating 6G network architectures that integrate AI as a foundational component rather than an overlay [5]. This includes exploring task-oriented architectures (TONA), intelligent-agent-based designs (PFM/LLM) and architectures supporting intent-based end-to-end orchestration [39].
+P867: [MDPI_2.3_heading3] Holistic Integration and Co-design
+P868: [MDPI_3.2_text_no_indent] Advancing the synergistic integration of communication, computing, sensing and AI [63]. Co-design approaches are needed to jointly optimize, for example, data/model compression, task partitioning and communication protocols in scenarios such as Semantic Edge Computing (SEC) or Semantic Communications (SemCom) [40,78–82].
+P869: [MDPI_2.3_heading3] Holistic Security and Privacy
+P870: [MDPI_3.2_text_no_indent] Addressing end-to-end security across all layers: physical layer security (PLS [54]), network-level security (distributed infrastructure, open interfaces [34]), application-layer protection and, increasingly, the security of distributed AI systems themselves (data privacy, model integrity) [44].
+P871: [MDPI_2.3_heading3] Sustainability and Energy Efficiency
+P872: [MDPI_3.2_text_no_indent] Investigating and developing techniques to minimize the energy consumption of both the 6G network infrastructure and distributed AI processes (training and inference), which can be highly demanding [58].
+P873: [MDPI_2.3_heading3] standardization and Ecosystem Development
+P874: [MDPI_3.2_text_no_indent] Achieving global consensus on key technical standards for 6G is essential to avoid market fragmentation [74]. Encouraging open software- and hardware-based ecosystems can accelerate innovation and adoption [58].
+P875: [MDPI_3.1_text] It is essential to recognize that these open challenges are not isolated problems. There is deep interdependence among them. For example, resource optimization [55] depends on trustworthy AI algorithms to make decisions [57], yet trustworthy AI (such as FL/SL) itself requires efficient resource management (communication and computing) to operate effectively [51]. Both, in turn, rely on AI-native architectures that can support them adequately [5]. Security must protect both the network infrastructure and the components of distributed AI [34]. Sustainability is a cross-cutting constraint influencing architectural choices, AI algorithm design and resource-management strategies [7]. Thus, advancing towards 6G requires a systemic and multidisciplinary approach that addresses these challenges in a coordinated and holistic manner. Table 5 summarizes the current state of standardization across key organizations.
+P876: [MDPI_4.1_table_caption] Table 5. Summary of Ongoing 6G standardization Efforts Across Key Organizations
+P877: [MDPI_2.1_heading1] Conclusions
+P878: [MDPI_3.2_text_no_indent] This article set out to provide a comprehensive synthesis of distributed computing and Edge AI as foundational enablers of 6G networks, as outlined in the Contributions subsection of the Introduction. The analysis confirms that these technologies are not merely incremental enhancements but represent a fundamental architectural shift necessary to meet 6G's ambitious performance and capability targets.
+P879: [MDPI_3.1_text] The transition towards 6G networks marks a defining inflection point in the evolution of mobile communications, driven by the vision of a hyperconnected and intelligently integrated world. This article has examined how distributed computing and edge artificial intelligence (Edge AI) emerge as fundamental and mutually interdependent technologies for realizing this vision.
+P880: [MDPI_2.2_heading2] Recapitulation of Key Proposals
+P881: [MDPI_3.2_text_no_indent] The analysis has highlighted the unavoidable need to migrate from centralized computing paradigms to distributed architectures, with Multi-access Edge Computing (MEC) acting as a key enabler for bringing computing and storage capabilities closer to the end user. This proximity is essential for meeting the stringent latency, bandwidth and privacy requirements demanded by the most transformative 6G applications.
+P882: [MDPI_3.1_text] In parallel, Edge AI consolidates itself as the intelligence engine of these distributed networks. Techniques such as Federated Learning (FL) and Split Learning (SL) have emerged as direct responses to the resource constraints and privacy concerns at the edge, enabling collaborative training of AI models.
+P883: [MDPI_3.1_text] The rise of Large AI Models (LAMs) at the edge represents a significant challenge but also an unprecedented opportunity, driving research on extreme optimization and distributed inference architectures. Edge AI not only enables intelligent services for end users but is also crucial for autonomous optimization and efficient management of the inherent complexity of 6G networks.
+P884: [MDPI_3.1_text] The diversity of architectural proposals — evolutionary approaches such as Ericsson's, revolutionary ones such as TONA, open architectures such as O-RAN-based designs, and integrated approaches such as SAGIN and ISEA — reflects the intense exploratory phase in which the field currently finds itself. Nevertheless, all converge on the need for intelligent and automated orchestration, with approaches such as Intent-Based Networking (IBN) emerging as promising solutions to abstract and manage the complex joint optimization of communication, computing and storage resources in this distributed environment.
+P885: [MDPI_2.2_heading2] Transformative Potential
+P886: [MDPI_3.2_text_no_indent] The synergy between distributed computing and Edge AI has the potential to unlock truly revolutionary capabilities. By integrating intelligence natively into the network infrastructure, 6G can move beyond mere data transmission to become a platform for ubiquitous intelligence. This will enable genuinely immersive experiences (XR, the metaverse, holographic communication), advanced automation (Industry 4.0, cooperative autonomous driving), personalized and context-aware services and new capabilities such as integrated sensing and the provision of Artificial Intelligence as a Service (AIaaS) directly from the network. The expected benefits include dramatic improvements in performance (latency, capacity), efficiency (energy and spectrum) and user experience quality.
+P887: [MDPI_2.2_heading2] Need for Continued Research and Standardisation
+P888: [MDPI_3.2_text_no_indent] Despite the enthusiasm and significant progress achieved, the full realization of the 6G vision with distributed AI faces formidable challenges. Resource limitations at the edge, ensuring security and privacy in complex distributed systems, managing communication overhead, guaranteeing robustness and reliability of AI models, securing data quality and availability and addressing ethical and sustainability considerations all demand ongoing research and innovative solutions.
+P889: [MDPI_3.1_text] The path to 6G requires a concerted and collaborative global effort. standardization within organizations such as ITU-R and 3GPP is essential to ensure interoperability and to create a unified global market; however, it must balance the need for early direction with the flexibility to incorporate emerging research advances. Fostering open ecosystems and multidisciplinary research will be key to overcoming the remaining challenges and harnessing the full transformative potential offered by distributed computing and Edge AI for the next generation of mobile networks.
+P890: [MDPI_2.2_heading2] Open Research Challenges and Future Directions
+P891: [MDPI_3.2_text_no_indent] Based on the analysis presented, the following five research challenges are identified as critical priorities for realizing AI-native 6G:
+P892: [MDPI_3.1_text] 1. Wireless-Channel-Aware Federated Learning. The convergence behavior of FL algorithms (FedAvg, FedProx, SCAFFOLD) under realistic 6G channel conditions — including Rayleigh/Rician fading, Doppler spreading at high mobility, and packet loss — remains insufficiently characterized. The integration of AirComp with privacy-preserving mechanisms (DP, secure aggregation) is an open problem that requires joint optimization of the noise multiplier  and the channel power allocation. Rigorous experimental validation on O-RAN testbeds (e.g., Colosseum, POWDER) with realistic mobility patterns is needed.
+P893: [MDPI_3.1_text] 2. Edge LAM Lifecycle Management. The deployment of large AI models (LLMs, foundation models) at edge nodes raises unresolved questions about model freshness: how frequently must edge LAMs be fine-tuned to remain relevant under distribution shift? PEFT/LoRA-based update pipelines must be co-designed with the wireless communication layer to minimize fine-tuning round-trip latency while preserving model quality. The trade-off between model staleness and update communication cost is an open optimization problem with no current closed-form solution.
+P894: [MDPI_3.1_text] 3. Trustworthy Distributed AI in Multi-Operator Environments. As 6G networks involve multiple operators sharing RAN and edge infrastructure (O-RAN disaggregation, network slicing), ensuring trust in AI model updates across administrative domains is critical. Byzantine-resilient FL aggregation algorithms (e.g., Krum, Coordinate-wise Median) must be validated at 6G scale ( clients) while maintaining near-RT control loop latency  ms. Lightweight alternatives to Blockchain for cross-domain attestation remain an active research gap.
+P895: [MDPI_3.1_text] 4. Energy-Efficient AI-Native RAN. Current estimates suggest that 6G AI-native features may increase base-station energy consumption by 20–40% compared to 5G NR, primarily due to continuous AI inference at the near-RT RIC and O-DU. Green AI techniques (sparse inference, neural architecture search for energy-constrained platforms, solar-powered edge nodes) must be co-designed with the O-RAN functional split selection to meet the 6G sustainability KPI (energy efficiency improvement of  over 5G [7]).
+P896: [MDPI_3.1_text] 5. Semantic and Goal-Oriented Communication with Edge AI. The paradigm of semantic communication — transmitting task-relevant meaning rather than raw bits — requires a fundamental rethinking of the PHY/MAC stack and edge AI co-design. Open questions include: how to define and measure semantic relevance for heterogeneous tasks, how to train jointly communication and inference models under distribution shift, and how to standardize semantic representations across vendors and network generations. This direction aligns with 3GPP Release 19 work items on AI/ML for the air interface and is a key differentiator of 6G from all previous generations.
+P897: [MDPI_6.2_back_matter] 
+P898: [MDPI_6.2_back_matter] Author Contributions: Conceptualization, E.A.H. and H.F.B.-O.; methodology, N.C.R.-I.; software, H.F.B.-O.; validation, E.A.H., H.F.B.-O. and N.C.R.-I.; formal analysis, E.A.H.; investigation, E.A.H. and H.F.B.-O.; resources, N.C.R.-I.; data curation, N.C.R.-I.; writing—original draft preparation, E.A.H.; writing—review and editing, H.F.B.-O. and N.C.R.-I.; visualization, H.F.B.-O.; supervision, E.A.H. and N.C.R.-I.; project administration, E.A.H.; funding acquisition, H.F.B.-O. and N.C.R.-I. All authors have read and agreed to the published version of the manuscript.
+P899: [MDPI_6.2_back_matter] Funding: This research received no external funding, and the APC was funded by University of Quindío [100016837].
+P900: [MDPI_3.1_text] Data Availability Statement: Not applicable. This study is based on publicly available and cited literature; no new data or supplementary materials were generated or deposited.
+P901: [MDPI_6.2_back_matter] Acknowledgments: The authors would like to acknowledge the support of the Telecommunications Research Group (GITUQ) for its contribution to the development and technical discussion of this study.
+P902: [MDPI_6.2_back_matter] Conflicts of Interest: The authors declare no conflict of interest.
+P903: [MDPI_2.1_heading1] Abbreviations
+P904: [MDPI_3.2_text_no_indent] The following abbreviations are used in this manuscript:
+P905: [MDPI_2.1_heading1] References
+P906: [Bibliography] 1. Pennanen, H.; Hänninen, T.; Tervo, O.; Tölli, A.; Latva-aho, M. 6G: The Intelligent Network of Everything—A Comprehensive Vision, Survey, and Tutorial. IEEE Access 2024. https://doi.org/10.1109/ACCESS.2024.3521579.
+P907: [Bibliography] 2. Chen, S.; Liang, Y.-C.; Sun, S.; Kang, S.; Cheng, W.; Peng, M. Vision, Requirements, and Technology Trends of 6G Wireless Networks. arXiv 2020, arXiv:2002.04929.
+P908: [Bibliography] 3. Gui, G.; Liu, M.; Tang, F.; Kato, N.; Adachi, F. 6G: Opening New Horizons for Integration of Comfort, Security, and Intelligence. IEEE Wirel. Commun. 2020, 27, 126–132. https://doi.org/10.1109/MWC.001.1900516.
+P909: [Bibliography] 4. Al-Ansi, A.; Al-Ansi, A.M.; Muthanna, A.; Elgendy, I.A.; Koucheryavy, A. Survey on Intelligence Edge Computing in 6G: Characteristics, Challenges, Potential Use Cases, and Market Drivers. Future Internet 2021, 13. https://doi.org/10.3390/fi13050118.
+P910: [Bibliography] 5. Yang, Y.; Wu, J.; Chen, T.; Peng, C.; Wang, J.; Deng, J.; Tao, X.; Liu, G.; Li, W.; Yang, L.; et al. Task-Oriented 6G Native-AI Network Architecture. IEEE Netw. 2024, 38, 219–227. https://doi.org/10.1109/MNET.2023.3321464.
+P911: [Bibliography] 6. Liu, R.; Zhang, L.; Li, R.Y.-N.; Di Renzo, M. The ITU Vision and Framework for 6G: Scenarios, Capabilities and Enablers. arXiv 2023, arXiv:2305.13887.
+P912: [Bibliography] 7. ITU-R. IMT towards 2030 and beyond (IMT-2030). Available online: https://www.itu.int/en/ITU-R/study-groups/rsg5/rwp5d/imt-2030/pages/default.aspx (accessed on 8 April 2026).
+P913: [Bibliography] 8. Li, P.; Fan, J.; Wu, J. Exploring the Key Technologies and Applications of 6G Wireless Communication Network. iScience 2025, 28, 112281. https://doi.org/10.1016/j.isci.2025.112281.
+P914: [Bibliography] 9. Shamsabadi, A.A.; Yadav, A.; Gadallah, Y.; Yanikomeroglu, H. Exploring the 6G Potentials: Immersive, Hyper-Reliable, and Low-Latency Communication. arXiv 2024, arXiv:2407.11051.
+P915: [Bibliography] 10. Viswanathan, H.; Mogensen, P.E. Communications in the 6G Era. IEEE Access 2020, 8, 57063–57074. https://doi.org/10.1109/ACCESS.2020.2981745.
+P916: [Bibliography] 11. Saad, W.; Bennis, M.; Chen, M. A Vision of 6G Wireless Systems: Applications, Trends, Technologies, and Open Research Problems. IEEE Netw. 2020, 34, 134–142. https://doi.org/10.1109/MNET.001.1900287.
+P917: [Bibliography] 12. Chaccour, C.; Soorki, M.N.; Saad, W.; Bennis, M.; Popovski, P.; Debbah, M. Seven Defining Features of Terahertz Wireless Systems: A Fellowship of Communication and Sensing. IEEE Commun. Surv. Tutor. 2022, 24, 967–993. https://doi.org/10.1109/COMST.2022.3143454.
+P918: [Bibliography] 13. Zhou, Z.; Chen, X.; Li, E.; Zeng, L.; Luo, K.; Zhang, J. Edge Intelligence: Paving the Last Mile of Artificial Intelligence with Edge Computing. Proc. IEEE 2019, 107, 1738–1762. https://doi.org/10.1109/JPROC.2019.2918951.
+P919: [Bibliography] 14. Yan, X.; Wang, J.; Zhang, X.; Zhang, Y. Data Plane Design for AI-Native 6G Networks; Huawei, 2025.
+P920: [Bibliography] 15. Wang, Y.; Zhao, J. Mobile Edge Computing, Metaverse, 6G Wireless Communications, Artificial Intelligence, and Blockchain: Survey and Their Convergence. arXiv 2022, arXiv:2209.14147.
+P921: [Bibliography] 16. Wang, X.; Han, Y.; Leung, V.C.M.; Niyato, D.; Yan, X.; Chen, X. Convergence of Edge Computing and Deep Learning: A Comprehensive Survey. IEEE Commun. Surv. Tutor. 2020, 22, 869–904. https://doi.org/10.1109/COMST.2020.2970550.
+P922: [Bibliography] 17. Letaief, K.B.; Shi, Y.; Lu, J.; Lu, J. Edge Artificial Intelligence for 6G: Vision, Enabling Technologies, and Applications. IEEE J. Sel. Areas Commun. 2022, 40, 5–36. https://doi.org/10.1109/JSAC.2021.3126076.
+P923: [Bibliography] 18. Abreha, H.G.; Hayajneh, M.; Serhani, M.A. Federated Learning in Edge Computing: A Systematic Survey. Sensors 2022, 22, 450. https://doi.org/10.3390/s22020450.
+P924: [Bibliography] 
+P925: [Bibliography] 19. Chen, X.; Guo, Z.; Wang, X.; Yang, H.H.; Feng, C.; Han, S.; Wang, X.; Quek, T.Q.S. Toward 6G Native-AI Network: Foundation Model Based Cloud-Edge-End Collaboration Framework. arXiv 2023, arXiv:2310.17471.
+P926: [Bibliography] 20. Kairouz, P.; McMahan, H.B.; Avent, B.; Bellet, A.; Bennis, M.; Bhagoji, A.N.; Bonawitz, K.; Charles, Z.; Cormode, G.; Cummings, R.; et al. Advances and Open Problems in Federated Learning. Found. Trends Mach. Learn. 2021, 14, 1–210. https://doi.org/10.1561/2200000083.
+P927: [Bibliography] 21. Angel, N.A.; Ravindran, D.; Vincent, P.M.D.R.; Srinivasan, K.; Hu, Y.C. Recent Advances in Evolving Computing Paradigms: Cloud, Edge, and Fog Technologies. Sensors 2022, 22. https://doi.org/10.3390/s22010196.
+P928: [Bibliography] 22. Wang, X.; Jia, W. Optimizing Edge AI: A Comprehensive Survey on Data, Model, and System Strategies. arXiv 2025, arXiv:2501.03265.
+P929: [Bibliography] 23. Alimi, I.A.; Patel, R.K.; Zaouga, A.; Muga, N.J.; Xin, Q.; Pinto, A.N.; Monteiro, P.P. Trends in Cloud Computing Paradigms: Fundamental Issues, Recent Advances, and Research Directions toward 6G Fog Networks. In Moving Broadband Mobile Communications Forward—Intelligent Technologies for 5G and Beyond; Haidine, A., Ed.; IntechOpen: London, UK, 2021.
+P930: [Bibliography] 24. Gill, S.S. A Manifesto for Modern Fog and Edge Computing: Vision, New Paradigms, Opportunities, and Future Directions. In Operationalizing Multi-Cloud Environments: Technologies, Tools and Use Cases; Nagarajan, R., Raj, P., Thirunavukarasu, R., Eds.; Springer: Cham, Switzerland, 2022; pp. 237–253. https://doi.org/10.1007/978-3-030-74402-1_13.
+P931: [Bibliography] 25. Pham, Q.-V.; Fang, F.; Ha, V.N.; Piran, M.J.; Le, M.; Le, L.B.; Hwang, W.-J.; Ding, Z. A Survey of Multi-Access Edge Computing in 5G and Beyond: Fundamentals, Technology Integration, and State-of-the-Art. arXiv 2020, arXiv:1906.08452.
+P932: [Bibliography] 26. Biswas, A.; Wang, H.C. Autonomous Vehicles Enabled by the Integration of IoT, Edge Intelligence, 5G, and Blockchain. Sensors 2023, 23. https://doi.org/10.3390/s23041963.
+P933: [Bibliography] 27. Wang, C.X.; You, X.; Gao, X.; Zhu, X.; Li, Z.; Zhang, C.; Wang, H.; Huang, Y.; Chen, Y.; Haas, H.; et al. On the Road to 6G: Visions, Requirements, Key Technologies, and Testbeds. IEEE Commun. Surv. Tutor. 2023, 25, 905–974. https://doi.org/10.1109/COMST.2023.3249835.
+P934: [Bibliography] 28. ETSI. Multi-Access Edge Computing (MEC). Available online: https://www.etsi.org/technologies/multi-access-edge-computing (accessed on 8 April 2026).
+P935: [Bibliography] 29. Ishtiaq, M.; Saeed, N.; Khan, M.A. Edge Computing in the Internet of Things: A 6G Perspective. IT Prof. 2024, 26, 62–70. https://doi.org/10.1109/MITP.2024.3366778.
+P936: [Bibliography] 30. Zhao, L.; Zhou, G.; Zheng, G.; Chih-Lin, I.; You, X.; Hanzo, L. Open-Source Multi-Access Edge Computing for 6G: Opportunities and Challenges. IEEE Access 2021, 9, 158426–158439. https://doi.org/10.1109/ACCESS.2021.3130418.
+P937: [Bibliography] 31. Crespo-Aguado, M.; Lozano, R.; Hernandez-Gobertti, F.; Molner, N.; Gomez-Barquero, D. Flexible Hyper-Distributed IoT–Edge–Cloud Platform for Real-Time Digital Twin Applications on 6G-Intended Testbeds for Logistics and Industry. Future Internet 2024, 16. https://doi.org/10.3390/fi16110431.
+P938: [Bibliography] 32. Chang, L.; Zhang, Z.; Li, P.; Xi, S.; Guo, W.; Shen, Y.; Xiong, Z.; Kang, J.; Niyato, D.; Qiao, X.; et al. 6G-Enabled Edge AI for Metaverse: Challenges, Methods, and Future Research Directions. J. Commun. Inf. Netw. 2022, 7. https://doi.org/10.23919/JCIN.2022.9815195.
+P939: [Bibliography] 33. Shi, W.; Cao, J.; Zhang, Q.; Li, Y.; Xu, L. Edge Computing: Vision and Challenges. IEEE Internet Things J. 2016, 3, 637–646. https://doi.org/10.1109/JIOT.2016.2579198.
+P940: [Bibliography] 34. Rifa-Pous, H.; Garcia-Font, V.; Nunez-Gomez, C.; Salas, J. Security, Trust and Privacy Challenges in AI-Driven 6G Networks. 2024. https://doi.org/10.5121/csit.2024.141408.
+P941: [Bibliography] 35. Lovén, L.; Leppänen, T.; Peltonen, E.; Partala, J. EdgeAI: A Vision for Distributed, Edge-Native Artificial Intelligence in Future 6G Networks. Available online: http://5gtn.fi (accessed on 8 April 2026).
+P942: [Bibliography] 36. Gkonis, P.K.; Giannopoulos, A.; Nomikos, N.; Trakadas, P.; Sarakis, L.; Masip-Bruin, X. A Survey on Architectural Approaches for 6G Networks: Implementation Challenges, Current Trends, and Future Directions. Preprints 2025. https://doi.org/10.20944/preprints202502.2175.v1.
+P943: [Bibliography] 37. Löwenstein, U. IMT-2030 (6G). 2024.
+P944: [Bibliography] 38. Sanjalawe, Y.; Fraihat, S.; Al-E’mari, S.; Abualhaj, M.; Makhadmeh, S.; Alzubi, E. A Review of 6G and AI Convergence: Enhancing Communication Networks with Artificial Intelligence. IEEE Open J. Commun. Soc. 2025. https://doi.org/10.1109/OJCOMS.2025.3553302.
+P945: [Bibliography] 39. Talwar, S.; Himayat, N.; Nikopour, H.; Xue, F.; Wu, G.; Ilderem, V. 6G: Connectivity in the Era of Distributed Intelligence. arXiv 2021, arXiv:2110.07052.
+P946: [Bibliography] 40. Zhang, M.; Abdi, M.; Dasari, V.R.; Restuccia, F. Semantic Edge Computing and Semantic Communications in 6G Networks: A Unifying Survey and Research Challenges. arXiv 2024, arXiv:2411.18199.
+P947: [Bibliography] 41. Ericsson. 6G Network Architecture: A Proposal for Early Alignment; Ericsson: Stockholm, Sweden, 2023. Available online: https://www.ngmn.org/publications/network-architecture-evolution-towards-6g.html (accessed on 8 April 2026).
+P948: [Bibliography] 42. Watson, C.; Woods, K.; Shyy, D.J. 6G and Artificial Intelligence and Machine Learning; MITRE Corporation: McLean, VA, USA, 2021. Available online: https://www.mitre.org/sites/default/files/2021-11/pr-21-0214-6g-and-artificial-intelligence-and-machine-learning.pdf (accessed on 8 April 2026).
+P949: [Bibliography] 43. McMahan, B.; Moore, E.; Ramage, D.; Hampson, S.; Arcas, B.A. Communication-Efficient Learning of Deep Networks from Decentralized Data. In Proceedings of the 20th International Conference on Artificial Intelligence and Statistics (AISTATS), 2017; pp. 1273–1282. Available online: https://proceedings.mlr.press/v54/mcmahan17a.html (accessed on 8 April 2026).
+P950: [Bibliography] 44. Zhu, F.; Wang, X.; Li, X.; Zhang, M.; Chen, Y.; Huang, C.; Yang, Z.; Chen, X.; Zhang, Z.; Jin, R.; et al. Wireless Large AI Model: Shaping the AI-Native Future of 6G and Beyond. arXiv 2025, arXiv:2504.14653.
+P951: [Bibliography] 45. Chen, M.; Poor, H.V.; Saad, W.; Cui, S. Convergence Time Optimization for Federated Learning over Wireless Networks. IEEE Trans. Wirel. Commun. 2021, 20, 2457–2471. https://doi.org/10.1109/TWC.2020.3042530.
+P952: [Bibliography] 46. Soni, M. Energy-Efficient Deep Learning Architectures for IoT Devices. Int. J. Adv. Res. Multidiscip. Trends 2025, 2, 865–882. Available online: https://www.ijarmt.com/index.php/j/article/view/309 (accessed on 8 April 2026).
+P953: [Bibliography] 47. Mohammadi Amiri, M.; Gündüz, D. Machine Learning at the Wireless Edge: Distributed Stochastic Gradient Descent over the Air. IEEE Trans. Signal Process. 2020, 68, 2155–2169. https://doi.org/10.1109/TSP.2020.2981904.
+P954: [Bibliography] 48. Sifaou, H.; Li, G.Y. Robust Federated Learning via Over-the-Air Computation. In Proceedings of the 2022 IEEE 32nd International Workshop on Machine Learning for Signal Processing (MLSP), 2022; pp. 1–6. https://doi.org/10.1109/MLSP55214.2022.9943401.
+P955: [Bibliography] 49. Amiri, M.M.; Gündüz, D.; Kulkarni, S.R.; Poor, H.V. Convergence of Update-Aware Device Scheduling for Federated Learning at the Wireless Edge. IEEE Trans. Wirel. Commun. 2021, 20, 3643–3658. https://doi.org/10.1109/TWC.2021.3052681.
+P956: [Bibliography] 50. Azimi-Abarghouyi, S.M.; Tassiulas, L. Over-the-Air Federated Learning via Weighted Aggregation. IEEE Trans. Wirel. Commun. 2024, 23, 18240–18253. https://doi.org/10.1109/TWC.2024.3463754.
+P957: [Bibliography] 51. Lin, Z.; Qu, G.; Chen, X.; Huang, K. Split Learning in 6G Edge Networks. arXiv 2023, arXiv:2306.12194. https://doi.org/10.48550/arXiv.2306.12194.
+P958: [Bibliography] 52. Hu, E.J.; Shen, Y.; Wallis, P.; Allen-Zhu, Z.; Li, Y.; Wang, S.; Wang, L.; Chen, W. LoRA: Low-Rank Adaptation of Large Language Models. 2021. Available online: https://openreview.net/forum?id=nZeVKeeFYf9 (accessed on 8 April 2026).
+P959: [Bibliography] 53. Cao, X.; Zhu, G.; Xu, J.; Huang, K. Optimized Power Control for Over-the-Air Computation in Fading Channels. IEEE Trans. Wirel. Commun. 2020, 19, 7498–7513. https://doi.org/10.1109/TWC.2020.3012287.
+P960: [Bibliography] 54. Chou, H.; Solanki, S.; Ha, V.N.; Chen, L.; Ma, S.L.; Al-Hraishawi, H.; Eappen, G.; Chatzinotas, S. Edge AI-Enabled Physical Layer Security for 6G NTN: Potential Threats and Future Opportunities. arXiv 2023, arXiv:2401.01005.
+P961: [Bibliography] 55. Alhashimi, H.F.; Hindia, M.N.; Dimyati, K.; Hanafi, E.B.; Alden, F.Z.; Qamar, F.; Nguyen, Q.N. Survey on AI-Enabled Resource Management for 6G Heterogeneous Networks: Recent Research, Challenges, and Future Trends. Comput. Mater. Continua 2025, 83, 3585–3622. https://doi.org/10.32604/CMC.2025.062867.
+P962: [Bibliography] 56. Cui, Q.; You, X.; Wei, N.; Nan, G.; Zhang, X.; Zhang, J.; Lyu, X.; Ai, M.; Tao, X.; Feng, Z.; et al. Overview of AI and Communication for 6G Network: Fundamentals, Challenges, and Future Research Opportunities. Sci. China Inf. Sci. 2025, 68, 1–61. https://doi.org/10.1007/s11432-024-4337-1.
+P963: [Bibliography] 57. Yang, H.; Alphones, A.; Xiong, Z.; Niyato, D.; Zhao, J.; Wu, K. Artificial Intelligence-Enabled Intelligent 6G Networks. IEEE Netw. 2020, 34, 272–280. https://doi.org/10.1109/MNET.011.2000195.
+P964: [Bibliography] 58. Nokia. Unlocking the Full Potential of AI-Native 6G through Standards; Nokia, 2025. Available online: https://www.nokia.com/6g/unlocking-the-full-potential-of-ai-native-6g-through-standards/ (accessed on 8 April 2026).
+P965: [Bibliography] 59. Mao, Q.; Hu, F.; Hao, Q. Deep Learning for Intelligent Wireless Networks: A Comprehensive Survey. IEEE Commun. Surv. Tutor. 2018, 20, 2595–2621. https://doi.org/10.1109/COMST.2018.2846401.
+P966: [Bibliography] 60. Wang, Z.; Shi, Y.; Zhou, Y.; Zhu, J.; Letaief, K.B. Edge Large AI Models: Revolutionizing 6G Networks. arXiv 2025, arXiv:2505.00321.
+P967: [Bibliography] 61. Dalai, D.; Babu, S.; M, B.S. Satellite-6G Network Integration Roadmap on Reference Architectures. TechRxiv 2023. https://doi.org/10.36227/techrxiv.20624685.v1.
+P968: [Bibliography] 62. Tang, Y.; Srinivasan, U.C.; Scott, B.J.; Umealor, O.; Kevogo, D.; Guo, W. End-to-End Edge AI Service Provisioning Framework in 6G O-RAN. arXiv 2025, arXiv:2503.11933.
+P969: [Bibliography] 63. Liu, Z.; Chen, X.; Wu, H.; Wang, Z.; Chen, X.; Niyato, D.; Huang, K. Integrated Sensing and Edge AI: Realizing Intelligent Perception in 6G. arXiv 2025, arXiv:2501.06726.
+P970: [Bibliography] 64. IEEE. AI-Enabled Network Orchestration: Design Challenges and Opportunities for 6G Networks. In Proceedings of the IEEE Wireless Communications and Networking Conference (WCNC), 2023. Available online: https://wcnc2023.ieee-wcnc.org/workshop/ws-01-ai-enabled-network-orchestration-design-challenges-and-opportunities-6g-networks (accessed on 8 April 2026).
+P971: [Bibliography] 65. Chen, Q.; Guo, Z.; Meng, W.; Han, S.; Li, C.; Quek, T.Q.S. A Survey on Resource Management in Joint Communication and Computing-Embedded SAGIN. IEEE Commun. Surv. Tutor. 2024. https://doi.org/10.1109/COMST.2024.3421523.
+P972: [Bibliography] 66. Mekrache, A.; Ksentini, A.; Verikoukis, C. Intent-Based Management of Next-Generation Networks: An LLM-Centric Approach. 2025.
+P973: [Bibliography] 67. Boutouchent, A.; Mekrache, A.; Ksentini, A.; Adhane, G.; Fonseca, J.P.C.D.; McNamara, J.; Ramantas, K.; Palena, M.; Iordache, M.; Cigno, R.L.; et al. 6G-INTENSE: Intent-Driven Native Artificial Intelligence Architecture Supporting Network-Compute Abstraction and Sensing at the Deep Edge. IEEE Veh. Technol. Mag. 2025. https://doi.org/10.1109/MVT.2024.3525001.
+P974: [Bibliography] 68. Lu, Y.; Huang, X.; Zhang, K.; Maharjan, S.; Zhang, Y. Low-Latency Federated Learning and Blockchain for Edge Association in Digital Twin Empowered 6G Networks. IEEE Trans. Ind. Inform. 2021, 17, 5098–5107. https://doi.org/10.1109/TII.2020.3017668.
+P975: [Bibliography] 69. Dang, S.; Amin, O.; Shihada, B.; Alouini, M.S. What Should 6G Be? Nat. Electron. 2020, 3, 20–29. https://doi.org/10.1038/s41928-019-0355-6.
+P976: [Bibliography] 70. Loewenstein, U. ITU-R Status Update on WRC and IMT-2030; one6G Association, 2025.
+P977: [Bibliography] 71. Larsson, D.C.; Grövlen, A.; Parkvall, S.; Liberg, O. 6G Standardization Timeline and Principles; Ericsson, 2024.
+P978: [Bibliography] 72. Chen, W. RAN Rel-19 Status and a Look Beyond 2025. Available online: https://www.3gpp.org/technologies/ran-rel-19 (accessed on 8 April 2026).
+P979: [Bibliography] 73. 3GPP. Overview of AI/ML Related Work in 3GPP. 2025. Available online: https://www.3gpp.org/news-events/3gpp-news/ai-ml-2025 (accessed on 8 April 2026).
+P980: [Bibliography] 74. ITU-R. Recommendation ITU-R M.2160-0: Framework and Overall Objectives of the Future Development of IMT for 2030 and Beyond; International Telecommunication Union: Geneva, Switzerland, 2023.
+P981: [Bibliography] 75. 5G Automotive Association (5GAA). 5GAA Roadmap: Cross-Industry Cooperation in the Automotive and Wireless Industry; 5GAA, 2019. Available online: https://5gaa.org (accessed on 8 April 2026).
+P982: [Bibliography] 76. Rakuten Mobile. Rakuten Mobile Network White Paper: World’s First Fully Virtualized Cloud-Native Mobile Network; Rakuten Mobile: Tokyo, Japan, 2020. Available online: https://rakuten.today/blog/rakuten-mobile-network-white-paper.html (accessed on 8 April 2026).
+P983: [Bibliography] 77. O-RAN Alliance. O-RAN Working Group 1: Use Cases and Overall Architecture; O-RAN Alliance, 2023.
+P984: [Bibliography] 78. Xie, H.; Qin, Z.; Li, G.Y.; Juang, B.-H. Deep Learning Enabled Semantic Communication Systems. IEEE Trans. Signal Process. 2021, 69, 2663–2675. https://doi.org/10.1109/TSP.2021.3071210.
+P985: [Bibliography] 79. Xu, W.; Yang, Z.; Ng, D.W.K.; Levorato, M.; Eldar, Y.C.; Debbah, M. Edge Learning for B5G Networks with Distributed Signal Processing: Semantic Communication, Edge Computing, and Wireless Sensing. IEEE J. Sel. Top. Signal Process. 2023, 17, 9–39. https://doi.org/10.1109/JSTSP.2023.3239189.
+P986: [Bibliography] 80. Lan, Q.; Wen, D.; Zhang, Z.; Zeng, Q.; Chen, X.; Popovski, P.; Huang, K. What Is Semantic Communication? A View on Conveying Meaning in the Era of Machine Intelligence. J. Commun. Inf. Netw. 2021, 6, 336–371. https://doi.org/10.23919/JCIN.2021.9663101.
+P987: [Bibliography] 81. Li, T.; Sahu, A.K.; Talwalkar, A.; Smith, V. Federated Learning: Challenges, Methods, and Future Directions. IEEE Signal Process. Mag. 2020, 37, 50–60. https://doi.org/10.1109/MSP.2020.2975749.
+P988: [Bibliography] 82. Liang, F.; Yu, W.; Liu, X.; Griffith, D.; Golmie, N. Toward Edge-Based Deep Learning in Industrial Internet of Things. IEEE Internet Things J. 2020, 7, 4329–4341. https://doi.org/10.1109/JIOT.2019.2963635.
+P989: [Bibliography] 83. Letaief, K.B.; Chen, W.; Shi, Y.; Zhang, J.; Zhang, Y.-J.A. The Roadmap to 6G: AI-Empowered Wireless Networks. IEEE Commun. Mag. 2019, 57, 84–90. https://doi.org/10.1109/MCOM.2019.1900271.
+P990: [Normal] 
+P991: [MDPI_6.3_notes] Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to people or property resulting from any ideas, methods, instructions or products referred to in the content.
+P992: [Normal] 
+P993: [MDPI_2.1_heading1] 
+P994: [Bibliography] 
+P995: [MDPI_8.1_references] 
