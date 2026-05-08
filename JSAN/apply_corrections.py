@@ -1,7 +1,41 @@
 #!/usr/bin/env python3
 """
-Apply all reviewer corrections to jsan-4242687.docx
-Produces: jsan-4242687-corrected.docx
+Apply all reviewer corrections to jsan-4242687.docx.
+
+Usage:
+    python3 apply_corrections.py
+
+Dependencies:
+    pip install python-docx
+
+Input:
+    JSAN/jsan-4242687.docx  — original manuscript (must exist at INPUT_FILE path below)
+
+Output:
+    JSAN/jsan-4242687-corrected.docx  — revised manuscript with all corrections applied
+
+Corrections applied (21 total across 3 reviewers):
+    R1.1 — LAM vs LLM distinction paragraph
+    R1.2 — Formula origin markers
+    R1.3 — Deployment status paragraphs (MEC, FL, O-RAN)
+    R1.4 — New references [84,85] added and cited
+    R1.5 — British → American spelling throughout
+    R2.1 — Latency model sensitivity analysis
+    R2.2 — Channel-aware FL optimization discussion
+    R2.3 — FL scalability under heterogeneity
+    R2.4 — Orchestration overhead comparative framework
+    R2.5 — Edge-adapted LLM practical viability paragraph
+    R2.6 — Attack surfaces discussion (poisoning, inference, TEE)
+    R2.7 — Standardization timeline gap analysis
+    R2.8 — Experimental validation testbeds section
+    R3.1 — Abstract revised (purpose/methodology/quantitative results)
+    R3.2 — First-use definitions for IBN, SAGIN, CSI, QoE
+    R3.3 — Grammar/typos proofread (new paragraphs use standard academic English)
+    R3.4 — Objective statement refined
+    R3.5 — Methodology section expanded with selection details
+    R3.6 — Performance conditions stated in abstract and conclusions
+    R3.7 — FL and SL 6G contribution paragraphs
+    R3.8 — Duplicate abbreviation definitions removed
 """
 
 import re
