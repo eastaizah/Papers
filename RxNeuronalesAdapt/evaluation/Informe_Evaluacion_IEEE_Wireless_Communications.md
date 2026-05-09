@@ -480,7 +480,7 @@ Estos valores son consistentes internamente:
 **10.2.3 Latencias de 0.73 ms (Jetson) y 0.58 ms (FPGA)**
 
 Estos valores derivan del modelo Roofline: $T_{infer} = FLOPs_{model} / Performance_{hw}$. Para el modelo comprimido (~170 kFLOPs) en Jetson (275 TOPS INT8):
-$$T_{Jetson} = \frac{170 \times 10^3 \text{ FLOPs}}{275 \times 10^{12} \text{ FLOPS}} \approx 0.62 \text{ ns}$$
+$$T_{Jetson} = \frac{170 \times 10^3 \text{ FLOPs}}{275 \times 10^{12} \text{ FLOP/s}} \approx 0.62 \text{ ns}$$
 
 Esto difiere dramáticamente de los 0.73 ms reportados. La discrepancia se debe a que la latencia real incluye: latencia de inicio/fin de kernel GPU, transferencias DMA, overhead de scheduler, y que los 170 kFLOPs son una cota inferior de las operaciones reales (sin contar activaciones, normalización, etc.). El modelo Roofline con los parámetros del artículo debería producir valores de sub-microsegundo, no sub-milisegundo. Los 0.73 ms parecen incluir overhead de sistema y gestión de memoria que no se especifican explícitamente en el paper. **Esta discrepancia debe aclararse o el cálculo de FLOPs del modelo debe revisarse.**
 
