@@ -53,9 +53,11 @@ np.random.seed(SEED)
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ── Parameters ─────────────────────────────────────────────────────────────────
-N_DIM     = 64      # source vector dimension
-N_LATENT  = 16      # latent (channel input) dimension → 4× absolute compression (64-D → 16-D);
-                   #   8× relative to 128-D full feature space (article §IV claim)
+N_DIM     = 64      # source vector dimension (64-D intermediate representation)
+# Compression metrics: 4× absolute compression (64-D source → 16-D latent); equivalently,
+# 8× compression relative to the 128-D full feature dimension reported in article §IV-C.
+# Both refer to different reference points and are not additive — see article §II-C for clarification.
+N_LATENT  = 16      # latent (channel input) dimension
 N_SAMPLES = 3_000   # training samples
 N_EPOCHS  = 300     # training epochs
 LR        = 0.005   # learning rate
