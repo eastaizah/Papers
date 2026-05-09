@@ -54,8 +54,8 @@ OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ── Parameters ─────────────────────────────────────────────────────────────────
 N_DIM     = 64      # source vector dimension
-N_LATENT  = 16      # latent (channel input) dimension → 8× absolute compression (128-D → 16-D);
-                   #   4× effective bandwidth reduction relative to 64-D baseline (BW ratio = 0.25)
+N_LATENT  = 16      # latent (channel input) dimension → 4× absolute compression (64-D → 16-D);
+                   #   8× relative to 128-D full feature space (article §IV claim)
 N_SAMPLES = 3_000   # training samples
 N_EPOCHS  = 300     # training epochs
 LR        = 0.005   # learning rate
@@ -230,8 +230,8 @@ def plot(nmse_jscc, nmse_trad, losses):
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
     fig.suptitle('JSCC VAE Autoencoder vs Traditional Separation\n'
                  'Source dimension 64 → Channel dimension 16 '
-                 '(8× absolute compression, 128-D → 16-D; '
-                 '4× effective BW reduction vs 64-D baseline, BW=0.25)',
+                 '(4× absolute compression, 64-D → 16-D; '
+                 '8× relative to 128-D full feature space; BW=0.25)',
                  fontsize=11, fontweight='bold')
 
     # Panel 1: NMSE vs SNR
