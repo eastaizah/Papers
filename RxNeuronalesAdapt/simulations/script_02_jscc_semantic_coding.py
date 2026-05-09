@@ -31,6 +31,15 @@ HOW TO VERIFY
 --------------
     python script_02_jscc_semantic_coding.py
 → Prints PASS/FAIL; saves fig2_jscc_semantic_coding.png
+
+IMPORTANT DISCLAIMER
+--------------------
+This script produces ANALYTICAL SIMULATION results based on
+parameterized channel models and performance approximations. The 'neural receiver'
+is modeled analytically (channel estimation noise model) and does NOT implement
+a trained deep neural network with backpropagation. Latency values are Roofline
+model estimates. All results should be validated with actual trained neural network
+implementations and hardware profiling before publication of performance claims.
 """
 
 import numpy as np
@@ -44,8 +53,11 @@ np.random.seed(SEED)
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ── Parameters ─────────────────────────────────────────────────────────────────
-N_DIM     = 64      # source vector dimension
-N_LATENT  = 16      # latent (channel input) dimension → 4× compression (BW ratio = 0.25)
+N_DIM     = 64      # source vector dimension (64-D intermediate representation)
+# Compression metrics: 4× absolute compression (64-D source → 16-D latent); equivalently,
+# 8× compression relative to the 128-D full feature dimension reported in article §IV-C.
+# Both refer to different reference points and are not additive — see article §II-C for clarification.
+N_LATENT  = 16      # latent (channel input) dimension
 N_SAMPLES = 3_000   # training samples
 N_EPOCHS  = 300     # training epochs
 LR        = 0.005   # learning rate
@@ -219,7 +231,9 @@ def evaluate(p, X_test):
 def plot(nmse_jscc, nmse_trad, losses):
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
     fig.suptitle('JSCC VAE Autoencoder vs Traditional Separation\n'
-                 'Source dimension 64 → Channel dimension 16 (4× compression, BW=0.25)',
+                 'Source dimension 64 → Channel dimension 16 '
+                 '(4× absolute compression, 64-D → 16-D; '
+                 '8× relative to 128-D full feature space; BW=0.25)',
                  fontsize=11, fontweight='bold')
 
     # Panel 1: NMSE vs SNR

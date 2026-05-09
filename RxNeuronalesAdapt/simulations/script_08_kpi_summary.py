@@ -26,6 +26,15 @@ HOW TO VERIFY
 -------------
     python script_08_kpi_summary.py
 → Prints ASCII KPI table + PASS/FAIL for 8 checks; saves fig8_kpi_summary.png
+
+IMPORTANT DISCLAIMER
+--------------------
+This script produces ANALYTICAL SIMULATION results based on
+parameterized channel models and performance approximations. The 'neural receiver'
+is modeled analytically (channel estimation noise model) and does NOT implement
+a trained deep neural network with backpropagation. Latency values are Roofline
+model estimates. All results should be validated with actual trained neural network
+implementations and hardware profiling before publication of performance claims.
 """
 
 import numpy as np
