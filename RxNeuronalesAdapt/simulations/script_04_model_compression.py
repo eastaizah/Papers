@@ -23,6 +23,15 @@ HOW TO VERIFY
 --------------
     python script_04_model_compression.py
 → Prints PASS/FAIL for each check; saves fig4_model_compression.png
+
+IMPORTANT DISCLAIMER
+--------------------
+This script produces ANALYTICAL SIMULATION results based on
+parameterized channel models and performance approximations. The 'neural receiver'
+is modeled analytically (channel estimation noise model) and does NOT implement
+a trained deep neural network with backpropagation. Latency values are Roofline
+model estimates. All results should be validated with actual trained neural network
+implementations and hardware profiling before publication of performance claims.
 """
 
 import numpy as np
