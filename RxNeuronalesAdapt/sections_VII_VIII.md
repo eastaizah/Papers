@@ -70,7 +70,7 @@ Cuantitativamente, el receptor neuronal propuesto supera al MMSE en 2.1 dB de SN
 
 *† BER de DeepJSCC medida en tasa de distorsión PSNR equivalente para transmisión de imágenes, no directamente comparable.*
 *‡ MMSE generaliza analíticamente bajo modelo gaussiano; degrada con violaciones del modelo.*
-*§ El frontend de señal 3GPP NR es compatible; el módulo de inferencia neuronal requiere API de extensión proprietaria.*
+*§ El frontend de señal 3GPP NR es compatible; el módulo de inferencia neuronal requiere API de extensión propietaria.*
 
 ---
 
