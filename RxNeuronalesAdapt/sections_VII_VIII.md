@@ -182,7 +182,7 @@ Los canales THz (0.1–10 THz) presentan características físicas radicalmente 
 
 Los sistemas ISAC de 6G, que simultáneamente comunican información y sensan el entorno físico usando las mismas señales y hardware, requieren receptores capaces de extraer simultáneamente información de comunicación (símbolos QAM) e información de sensado (distancia, velocidad y perfil RCS de objetivos radar) de la señal recibida [271]. El receptor neuronal propuesto puede extenderse al dominio ISAC incorporando cabezas de salida adicionales para estimación de parámetros de sensado, compartiendo la representación interna aprendida por el módulo de baja complejidad con módulos especializados de ranging y Doppler estimation. El entrenamiento multi-tarea requiere ponderación cuidadosa de las pérdidas de comunicación y sensado para evitar interferencia negativa entre tareas.
 
-### 8) Integración Satelite-Terrestre (NTN) con Receptores Neuronales
+### 8) Integración Satélite-Terrestre (NTN) con Receptores Neuronales
 
 Las redes no-terrestres (NTN), incluyendo constelaciones LEO de gran escala (SpaceX Starlink, OneWeb, Amazon Kuiper) e integración con redes 6G terrestres, imponen desafíos únicos a los receptores neuronales: retardos de propagación de 20–600 ms (incompatibles con HARQ síncrono estándar), efecto Doppler de alto orden ($f_D$ > 100 kHz para LEO a 550 km), y variabilidad geométrica extrema del canal (ángulo de elevación del satélite varía continuamente de 10° a 90°) [272]. El meta-aprendizaje MAML propuesto en la Sección IV demuestra potencial para adaptación rápida a diferentes geometrías de enlace satélite-tierra, habilitando receptores neuronales NTN capaces de adaptarse a la geometría orbital cambiante con <50 símbolos pilot de adaptación.
 

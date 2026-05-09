@@ -391,6 +391,6 @@ La Fig. 8 presenta el panel de 8 subfiguras con los KPIs del sistema, incluyendo
 
 [R18] X. Ma, Z. Gao, F. Gao, and M. Di Renzo, "Model-driven deep learning based channel estimation and feedback for millimeter-wave massive hybrid MIMO systems," *IEEE J. Sel. Areas Commun.*, vol. 39, no. 8, pp. 2388–2406, Aug. 2021. DOI: 10.1109/JSAC.2020.3041388.
 
-[R19] A. Pratik, B. D. Rao, and M. Wax, "RE-MIMO: Recurrent estimation of MIMO channels," *IEEE Trans. Signal Process.*, vol. 69, pp. 2rec MIMO channels 944–2959, 2021. DOI: 10.1109/TSP.2021.3068626.
+[R19] A. Pratik, B. D. Rao, and M. Wax, "RE-MIMO: Recurrent estimation of MIMO channels," *IEEE Trans. Signal Process.*, vol. 69, pp. 2944–2959, 2021. DOI: 10.1109/TSP.2021.3068626.
 
 [R20] F. A. Aoudia and J. Hoydis, "End-to-end learning of communications systems without a channel model," in *Proc. Asilomar Conf. Signals, Systems, Computers*, 2018, pp. 298–303. DOI: 10.1109/ACSSC.2018.8645416.
