@@ -826,6 +826,10 @@ class ProposedLSTM(nn.Module):
 
         _xavier_init(self)
 
+    # 5-min granularity constants (288 steps/day, 2016 steps/week)
+    _STEPS_PER_DAY: int = 288
+    _STEPS_PER_WEEK: int = 288 * 7
+
     # -----------------------------------------------------------------
     def _add_time_features(self, x: torch.Tensor) -> torch.Tensor:
         """Append cyclic time encodings based on relative sequence position.
@@ -834,7 +838,7 @@ class ProposedLSTM(nn.Module):
         """
         B, T, _ = x.shape
         pos = torch.arange(T, device=x.device, dtype=x.dtype)
-        steps_per_day, steps_per_week = 288, 288 * 7
+        steps_per_day, steps_per_week = self._STEPS_PER_DAY, self._STEPS_PER_WEEK
         sin_h = torch.sin(2 * math.pi * pos / steps_per_day)
         cos_h = torch.cos(2 * math.pi * pos / steps_per_day)
         sin_d = torch.sin(2 * math.pi * pos / steps_per_week)

@@ -128,8 +128,9 @@ STAT_ML_MODELS = {"ARIMA", "SARIMA", "SVR", "RandomForest"}
 
 # NOTE: XGBoostBaseline is implemented in models.py but excluded from benchmarks
 # to avoid requiring an additional 'xgboost' dependency.  To enable it, install
-# xgboost, add it to requirements.txt, and include "XGBoost" in STAT_ML_MODELS
-# with a corresponding entry in STAT_ML_EVALUATORS.
+# xgboost (see environment.yml for version), add it to requirements.txt, and
+# include "XGBoost" in STAT_ML_MODELS with a corresponding entry in
+# STAT_ML_EVALUATORS.
 
 
 # ═════════════════════════════════════════════════════════════════
