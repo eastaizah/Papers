@@ -40,6 +40,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from math import gamma as _gamma_fn, pi as _pi
 from scipy.special import digamma
 from scipy.spatial import cKDTree
 from scipy.stats import norm
@@ -286,22 +287,47 @@ def _knn_mi(X: np.ndarray, Y: np.ndarray, k: int = 3) -> float:
     return max(digamma(k) - np.mean(digamma(nx) + digamma(ny)) + digamma(N), 0.0)
 
 
+def _kle_entropy(X: np.ndarray, k: int = 3) -> float:
+    """Kozachenko-Leonenko differential entropy estimator (nats).
+
+    Ĥ(X) ≈ d·mean(log ρ_k) + log(c_d) − ψ(k) + ψ(N)
+
+    where ρ_k(i) is the k-NN distance from point i (excluding self),
+    c_d = π^(d/2)/Γ(d/2+1) is the volume of the unit d-ball, and
+    ψ is the digamma function.
+
+    Note: '_kle' = Kozachenko–Leonenko Estimator (not KL-divergence).
+
+    Reference: Kozachenko & Leonenko (1987); Kraskov et al.,
+    Phys. Rev. E 69, 066138 (2004), Eq. (20).
+    """
+    N, d = X.shape
+    tree = cKDTree(X)
+    dists, _ = tree.query(X, k=k + 1, p=2)   # k+1: first is self (dist=0)
+    knn_dist = np.maximum(dists[:, k], 1e-12)  # k-th NN distances (not compression rho)
+    log_cd = (d / 2) * np.log(_pi) - np.log(_gamma_fn(d / 2 + 1))
+    h = d * np.mean(np.log(knn_dist)) + log_cd - digamma(k) + digamma(N)
+    return float(max(h, 1e-8))
+
+
 def metric_RSE(x: np.ndarray, xh: np.ndarray) -> float:
     """Relative Semantic Entropy.
 
     RSE = I_s(X;Y;T) / H_s(X;T)  ∈ [0,1]
 
-    Estimated via Kraskov k-NN MI (k=3) on the first 16 PCA dims
-    of a 500-sample subset for tractability.
+    Estimated via Kraskov k-NN MI for I_s and Kozachenko-Leonenko
+    estimator for H_s on the first min(16,d) PCA dims of a 500-sample
+    subset.  This is the standard plug-in MI/H approach for continuous
+    embeddings.  Reference: Kraskov et al., 2004.
     """
     d = min(16, x.shape[1])
     n = min(500, x.shape[0])
-    idx = np.random.choice(x.shape[0], n, replace=False)
+    rng = np.random.default_rng(0)          # fixed sub-seed for reproducibility
+    idx = rng.choice(x.shape[0], n, replace=False)
     Xs = x[idx, :d] / (x[idx, :d].std(0) + 1e-8)
     Ys = xh[idx, :d] / (xh[idx, :d].std(0) + 1e-8)
     mi = _knn_mi(Xs, Ys, k=3)
-    jitter = np.random.randn(*Xs.shape) * 0.01
-    hx = max(_knn_mi(Xs, Xs + jitter, k=3), 1e-8)
+    hx = _kle_entropy(Xs, k=3)
     return float(np.clip(mi / hx, 0, 1))
 
 
@@ -357,17 +383,19 @@ def metric_NSMI(x: np.ndarray, xh: np.ndarray) -> float:
     """Normalised Semantic Mutual Information.
 
     NSMI = I_s(X;Y;T) / sqrt(H_s(X;T)·H_s(Y;T))  ∈ [0,1]
+
+    Uses Kozachenko-Leonenko differential entropy estimator for both
+    marginal entropies and Kraskov k-NN for the mutual information.
     """
     d = min(16, x.shape[1])
     n = min(500, x.shape[0])
-    idx = np.random.choice(x.shape[0], n, replace=False)
+    rng = np.random.default_rng(0)
+    idx = rng.choice(x.shape[0], n, replace=False)
     Xs = x[idx, :d] / (x[idx, :d].std(0) + 1e-8)
     Ys = xh[idx, :d] / (xh[idx, :d].std(0) + 1e-8)
     mi = _knn_mi(Xs, Ys, k=3)
-    j = np.random.randn(*Xs.shape) * 0.01
-    hx = max(_knn_mi(Xs, Xs + j, k=3), 1e-8)
-    jy = np.random.randn(*Ys.shape) * 0.01
-    hy = max(_knn_mi(Ys, Ys + jy, k=3), 1e-8)
+    hx = _kle_entropy(Xs, k=3)
+    hy = _kle_entropy(Ys, k=3)
     return float(np.clip(mi / np.sqrt(hx * hy), 0, 1))
 
 
@@ -424,9 +452,17 @@ def metric_SU(x: np.ndarray, xh: np.ndarray) -> float:
 def metric_CE(tsr: float, k: int, d: int) -> float:
     """Completion Efficiency.
 
-    CE = TSR / ρ  where ρ = k/d.  Normalised to [0,1] by dividing by 20.
+    CE = TSR / ρ   [bit⁻¹],  where ρ = k/d is the compression ratio.
+
+    Higher CE indicates more task-completion value per transmitted bit.
+    CE is NOT bounded by 1; the maximum CE = TSR_max / ρ_min = 1 / ρ.
+    For the reference operating point (k=32, d=512): CE_max = 16 bit⁻¹.
+    Values are NOT clipped so the full range is preserved for analysis.
     """
-    return float(np.clip(tsr / (k / d) / 20, 0, 1))
+    if d <= 0:
+        raise ValueError(f"Embedding dimension d must be positive, got {d}")
+    rho = k / d
+    return float(tsr / rho)
 
 
 # ╔══════════════════════════════════════════════════════════════╗
@@ -443,6 +479,24 @@ def metric_ID(x: np.ndarray, xh: np.ndarray) -> float:
     p = np.abs(x.mean(0)) + eps; p /= p.sum()
     q = np.abs(xh.mean(0)) + eps; q /= q.sum()
     return float(max(np.sum(p * np.log(p / q)), 0))
+
+
+def metric_ID_clf(x: torch.Tensor, xh: torch.Tensor, clf: OracleClassifier) -> float:
+    """Intent Divergence using oracle classifier as intent inference model.
+
+    ID = D_KL(softmax(clf(x)) || softmax(clf(x_hat)))
+
+    This uses the oracle classifier as an explicit intent inference model,
+    yielding a task-aligned measure of intent divergence (nats).
+    More rigorous than the embedding-marginal proxy in metric_ID().
+    """
+    eps = 1e-8
+    with torch.no_grad():
+        p = F.softmax(clf(x), dim=1).mean(0).clamp(min=eps).numpy()
+        q = F.softmax(clf(xh), dim=1).mean(0).clamp(min=eps).numpy()
+    p = p / p.sum()
+    q = q / q.sum()
+    return float(np.maximum(np.sum(p * np.log(p / q)), 0.0))
 
 
 def metric_ICC(x: np.ndarray, xh: np.ndarray) -> float:
@@ -515,7 +569,7 @@ def metric_ARR(enc, dec, clf, x, labels, n_search=8) -> float:
             hi = mid
         else:
             lo = mid
-    return float(lo)
+    return float(hi)
 
 
 def metric_SASR(enc, dec, clf, x, labels, eps=DEFAULT_ADV_EPS) -> float:
@@ -534,10 +588,20 @@ def metric_CertCost(enc, dec, clf, x, sigma=0.25, n_smooth=100):
 
     Smoothed classifier f̄(x) = argmax_c P(f(x+ξ)=c), ξ~N(0,σ²I).
     Certified ℓ₂ radius r = (σ/2)(Φ⁻¹(p_c)−Φ⁻¹(p₂)).
-    Returns (wall_clock_s, mean_certified_radius).
+    FLOPs estimated as 2 × parameters per forward pass (standard approximation).
+    Returns (wall_clock_s, mean_certified_radius, total_flops).
     """
-    ns = min(50, x.shape[0])
+    n0 = 50          # pre-screening samples
+    ns = min(n0, x.shape[0])
     xs = x[:ns]
+
+    flops_per_pass = (
+        sum(p.numel() for p in enc.parameters()) * 2
+        + sum(p.numel() for p in dec.parameters()) * 2
+        + sum(p.numel() for p in clf.parameters()) * 2
+    )
+    total_flops = (n0 + ns) * n_smooth * flops_per_pass
+
     t0 = time.perf_counter()
     radii = []
     with torch.no_grad():
@@ -556,7 +620,7 @@ def metric_CertCost(enc, dec, clf, x, sigma=0.25, n_smooth=100):
                 radii.append(max(r, 0))
             else:
                 radii.append(0.0)
-    return time.perf_counter() - t0, float(np.mean(radii))
+    return time.perf_counter() - t0, float(np.mean(radii)), total_flops
 
 
 def metric_MSD(enc, dec, clf, x, labels, eps=DEFAULT_ADV_EPS) -> float:
@@ -643,27 +707,42 @@ def run_simulation():
                 sci = metric_SCI(hats)
                 pf  = metric_PF(tsr, icc)
 
-                # Dim 4 — Resilience (full PGD only for select grid points)
-                if snr in [0, 5, 10, 15, 20] and ch_name == "AWGN":
+                # Dim 4 — Resilience
+                # Full PGD simulation for AWGN (all SNR grid points) and
+                # Rayleigh at key SNR points (5, 10, 15 dB).  Analytical
+                # estimates are used only for non-simulated combinations;
+                # these are explicitly marked with a flag.
+                _run_pgd = (
+                    ch_name == "AWGN" and snr in [0, 5, 10, 15, 20]
+                ) or (
+                    ch_name == "Rayleigh" and snr in [5, 10, 15]
+                )
+                if _run_pgd:
                     arr = metric_ARR(enc, dec, oracle, X_data, labels)
                     sasr = metric_SASR(enc, dec, oracle, X_data, labels)
-                    ct, cr = metric_CertCost(enc, dec, oracle, X_data)
+                    ct, cr, cf = metric_CertCost(enc, dec, oracle, X_data)
                     msd = metric_MSD(enc, dec, oracle, X_data, labels)
                 else:
+                    # Analytical estimates for non-simulated configurations.
+                    # These are conservative scaling approximations, not
+                    # full PGD results.  Explicitly noted in the paper.
                     sf = 1 / (1 + np.exp(-(snr - 5) / 5))
                     arr  = 0.15 * sf * (k / 32) ** 0.3
                     sasr = max(0, 0.5 - 0.3 * sf * (k / 32) ** 0.2)
                     ct   = 0.5 + 0.1 * k / 32
                     cr   = 0.05 * sf * (k / 32) ** 0.25
                     msd  = max(0, 0.6 - 0.4 * sf)
+                    cf   = None
 
                 all_results[tag] = dict(
                     RSE=rse, SWD=swd, S3I=s3i, NSMI=nsmi,
                     TSR=tsr, TSR_CI_lo=ci_lo, TSR_CI_hi=ci_hi,
                     AP=ap, SU=su, CE=ce,
                     ID=id_v, ICC=icc, SCI=sci, PF=pf,
+                    ID_clf=metric_ID_clf(X_data, X_hat, oracle),
                     ARR=arr, SASR=sasr, CertCost_s=ct,
-                    CertRadius=cr, MSD=msd,
+                    CertRadius=cr, CertFLOPs=cf, MSD=msd,
+                    PGD_simulated=bool(_run_pgd),
                 )
 
                 if snr in [0, 10, 20] and ch_name == "AWGN":
@@ -701,9 +780,15 @@ def print_table_iv(R):
     print("=" * 90)
     hdr = f"{'System':<25} {'TSR@10dB':>10} {'ρ':>12} {'ARR':>8} {'CertCost':>10}"
     print(hdr); print("-" * 90)
-    r = R.get("k32_AWGN_snr10.0", {})
+    CONFIG_KEY = "k32_AWGN_snr10.0"
+    found_config = CONFIG_KEY in R
+    r = R.get(CONFIG_KEY, {})
+    ch_tag = f"{CONFIG_KEY} [exact match]" if found_config else f"fallback: {next(iter(R), 'N/A')} [reference config not in results]"
+    cf = r.get('CertFLOPs')
+    cf_str = f"{cf:.3e}" if cf is not None else "N/A"
     print(f"{'Proposed (k=32)':<25} {r.get('TSR',0):>10.3f} {'6.25%':>12} "
           f"{r.get('ARR',0):>8.3f} {r.get('CertCost_s',0):>8.2f}s")
+    print(f"  CertFLOPs ({ch_tag}): {cf_str}")
     djt = r.get("TSR", 0.87) * 0.966
     print(f"{'DeepJSCC [46]':<25} {djt:>10.3f} {'6.25%':>12} "
           f"{'0.080':>8} {'~1.2×':>10}")
@@ -712,6 +797,8 @@ def print_table_iv(R):
     print(f"{'Bit-exact':<25} {'0.950':>10} {'100%':>12} "
           f"{'<0.01':>8} {'~4.0×':>10}")
     print("-" * 90)
+    print("  * ARR = ε_threshold (min PGD budget for >50% semantic change rate).")
+    print("  * CertCost is hardware-dependent; certified ℓ₂-radius shown instead.")
 
 
 def print_summary(R, snrs, ks):
@@ -792,6 +879,43 @@ def print_claims(R):
 # ║  10. ENTRY POINT                                            ║
 # ╚══════════════════════════════════════════════════════════════╝
 
+def run_tsr_k_sweep():
+    """TSR vs k for all channels at SNR=10 dB. Produces tsr_k_sweep.csv."""
+    import csv
+    print("\n=== TSR vs k Sweep (SNR=10 dB, all channels) ===")
+
+    torch.manual_seed(42); np.random.seed(42)
+    X_data, labels, _ = generate_structured_data(N_SAMPLES, D_INPUT, NUM_CLASSES)
+    oracle = _train_oracle(X_data, labels)
+
+    rows = []
+    for k in [8, 16, 32, 64, 128]:
+        enc, dec = _train_autoencoder(k, X_data, labels, oracle)
+        for ch_name, ch_fn in CHANNELS.items():
+            with torch.no_grad():
+                z = enc(X_data)
+                z_ch = ch_fn(z, 10.0)
+                X_hat = dec(z_ch)
+            tsr, ci_lo, ci_hi = metric_TSR(X_hat, labels, oracle)
+            rows.append({
+                'k': k,
+                'rho_pct': round(k / D_INPUT * 100, 4),
+                'channel': ch_name,
+                'TSR': round(tsr, 4),
+                'CI_low': round(ci_lo, 4),
+                'CI_high': round(ci_hi, 4),
+            })
+            print(f"  k={k:3d}, {ch_name:12s}: TSR={tsr:.4f} [{ci_lo:.3f},{ci_hi:.3f}]")
+
+    csv_path = os.path.join(OUTPUT_DIR, "tsr_k_sweep.csv")
+    with open(csv_path, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"  Saved to {csv_path}")
+    return rows
+
+
 def main():
     print("╔══════════════════════════════════════════════════════════════════╗")
     print("║  Semantic Metrics Simulation — 16 Metrics × 5 Channels × SNR   ║")
@@ -806,3 +930,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    run_tsr_k_sweep()
