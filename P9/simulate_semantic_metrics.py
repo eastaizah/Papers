@@ -287,7 +287,7 @@ def _knn_mi(X: np.ndarray, Y: np.ndarray, k: int = 3) -> float:
     return max(digamma(k) - np.mean(digamma(nx) + digamma(ny)) + digamma(N), 0.0)
 
 
-def _kl_entropy(X: np.ndarray, k: int = 3) -> float:
+def _kle_entropy(X: np.ndarray, k: int = 3) -> float:
     """Kozachenko-Leonenko differential entropy estimator (nats).
 
     Ĥ(X) ≈ d·mean(log ρ_k) + log(c_d) − ψ(k) + ψ(N)
@@ -296,15 +296,17 @@ def _kl_entropy(X: np.ndarray, k: int = 3) -> float:
     c_d = π^(d/2)/Γ(d/2+1) is the volume of the unit d-ball, and
     ψ is the digamma function.
 
+    Note: '_kle' = Kozachenko–Leonenko Estimator (not KL-divergence).
+
     Reference: Kozachenko & Leonenko (1987); Kraskov et al.,
     Phys. Rev. E 69, 066138 (2004), Eq. (20).
     """
     N, d = X.shape
     tree = cKDTree(X)
     dists, _ = tree.query(X, k=k + 1, p=2)   # k+1: first is self (dist=0)
-    rho = np.maximum(dists[:, k], 1e-12)       # k-th NN distances
+    knn_dist = np.maximum(dists[:, k], 1e-12)  # k-th NN distances (not compression rho)
     log_cd = (d / 2) * np.log(_pi) - np.log(_gamma_fn(d / 2 + 1))
-    h = d * np.mean(np.log(rho)) + log_cd - digamma(k) + digamma(N)
+    h = d * np.mean(np.log(knn_dist)) + log_cd - digamma(k) + digamma(N)
     return float(max(h, 1e-8))
 
 
@@ -325,7 +327,7 @@ def metric_RSE(x: np.ndarray, xh: np.ndarray) -> float:
     Xs = x[idx, :d] / (x[idx, :d].std(0) + 1e-8)
     Ys = xh[idx, :d] / (xh[idx, :d].std(0) + 1e-8)
     mi = _knn_mi(Xs, Ys, k=3)
-    hx = _kl_entropy(Xs, k=3)
+    hx = _kle_entropy(Xs, k=3)
     return float(np.clip(mi / hx, 0, 1))
 
 
@@ -392,8 +394,8 @@ def metric_NSMI(x: np.ndarray, xh: np.ndarray) -> float:
     Xs = x[idx, :d] / (x[idx, :d].std(0) + 1e-8)
     Ys = xh[idx, :d] / (xh[idx, :d].std(0) + 1e-8)
     mi = _knn_mi(Xs, Ys, k=3)
-    hx = _kl_entropy(Xs, k=3)
-    hy = _kl_entropy(Ys, k=3)
+    hx = _kle_entropy(Xs, k=3)
+    hy = _kle_entropy(Ys, k=3)
     return float(np.clip(mi / np.sqrt(hx * hy), 0, 1))
 
 
@@ -458,7 +460,7 @@ def metric_CE(tsr: float, k: int, d: int) -> float:
     Values are NOT clipped so the full range is preserved for analysis.
     """
     if d <= 0:
-        return 0.0
+        raise ValueError(f"Embedding dimension d must be positive, got {d}")
     rho = k / d
     return float(tsr / rho)
 
@@ -779,11 +781,12 @@ def print_table_iv(R):
     hdr = f"{'System':<25} {'TSR@10dB':>10} {'ρ':>12} {'ARR':>8} {'CertCost':>10}"
     print(hdr); print("-" * 90)
     r = R.get("k32_AWGN_snr10.0", {})
+    ch_tag = "k=32, AWGN, 10 dB" if "k32_AWGN_snr10.0" in R else "first available config"
     cf = r.get('CertFLOPs')
     cf_str = f"{cf:.3e}" if cf is not None else "N/A"
     print(f"{'Proposed (k=32)':<25} {r.get('TSR',0):>10.3f} {'6.25%':>12} "
           f"{r.get('ARR',0):>8.3f} {r.get('CertCost_s',0):>8.2f}s")
-    print(f"  CertFLOPs (k=32, AWGN, 10 dB): {cf_str}")
+    print(f"  CertFLOPs ({ch_tag}): {cf_str}")
     djt = r.get("TSR", 0.87) * 0.966
     print(f"{'DeepJSCC [46]':<25} {djt:>10.3f} {'6.25%':>12} "
           f"{'0.080':>8} {'~1.2×':>10}")
