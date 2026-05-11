@@ -780,8 +780,10 @@ def print_table_iv(R):
     print("=" * 90)
     hdr = f"{'System':<25} {'TSR@10dB':>10} {'ρ':>12} {'ARR':>8} {'CertCost':>10}"
     print(hdr); print("-" * 90)
-    r = R.get("k32_AWGN_snr10.0", {})
-    ch_tag = "k=32, AWGN, 10 dB" if "k32_AWGN_snr10.0" in R else "first available config"
+    CONFIG_KEY = "k32_AWGN_snr10.0"
+    found_config = CONFIG_KEY in R
+    r = R.get(CONFIG_KEY, {})
+    ch_tag = f"{CONFIG_KEY} [exact match]" if found_config else f"fallback: {next(iter(R), 'N/A')} [reference config not in results]"
     cf = r.get('CertFLOPs')
     cf_str = f"{cf:.3e}" if cf is not None else "N/A"
     print(f"{'Proposed (k=32)':<25} {r.get('TSR',0):>10.3f} {'6.25%':>12} "
