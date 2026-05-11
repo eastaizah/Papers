@@ -6,7 +6,7 @@ Generates three datasets modeled after the descriptions in Section III of the
 LSTM Traffic Prediction paper:
   1. Milano (Telecom Italia) – 2 months, 10-min granularity, 100 cells
   2. Shanghai Telecom        – 6 months, 15-min granularity, 50 cells
-  3. Synthetic 5G            – 2 weeks,  1-min granularity,  20 cells
+  3. Synthetic 5G            – 3 months, 5-min granularity,  50 cells
 
 Traffic decomposition follows Section III.A:
     X(t) = T(t) + S(t) + C(t) + I(t) + epsilon(t)
@@ -33,7 +33,7 @@ RESULTS_DIR = Path(__file__).resolve().parent / "results"
 # Lookback windows (article Section III.C / problem statement)
 LOOKBACK_MILANO = 144   # 10-min granularity → 24 h
 LOOKBACK_SHANGHAI = 96  # 15-min granularity → 24 h
-LOOKBACK_5G = 60        # 1-min granularity → 1 h (reasonable for 5G)
+LOOKBACK_5G = 96        # 5-min granularity → 12 steps/h × 8 h = 96 (96 encoder steps, Section III.C)
 
 
 # ===================================================================
@@ -381,13 +381,18 @@ def generate_shanghai_dataset(
 # Dataset 3 – Synthetic 5G
 # ===================================================================
 def generate_synthetic_5g_dataset(
-    n_steps: int = 20160,
-    n_cells: int = 20,
-    steps_per_day: int = 1440,    # 1-min granularity
+    n_steps: int = 25920,
+    n_cells: int = 50,
+    steps_per_day: int = 288,     # 5-min granularity
     n_special_events: int = 3,
     seed: int = SEED,
 ) -> dict:
     """Generate synthetic 5G dataset with eMBB / URLLC / mMTC slices.
+
+    Matches Section III.C of the article:
+      - Granularity : 5 min (288 steps/day)
+      - Duration    : 3 months (90 days = 25 920 steps)
+      - Cells       : 50
 
     Features per cell (9 total, 3 per slice):
       eMBB  – volume_MB, throughput_Mbps, active_users

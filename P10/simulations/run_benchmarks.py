@@ -51,6 +51,7 @@ from generate_datasets import (
 from models import (
     AttentionLSTM,
     ARIMABaseline,
+    ProposedLSTM,
     SARIMABaseline,
     SVRBaseline,
     RandomForestBaseline,
@@ -115,14 +116,21 @@ TABLE_I_MODEL_ORDER: list[str] = [
 DATASET_CONFIGS: dict[str, dict] = {
     "milano":      {"lookback": LOOKBACK_MILANO,  "steps_per_day": 144},
     "shanghai":    {"lookback": LOOKBACK_SHANGHAI, "steps_per_day": 96},
-    "synthetic5g": {"lookback": LOOKBACK_5G,       "steps_per_day": 1440},
+    "synthetic5g": {"lookback": LOOKBACK_5G,       "steps_per_day": 288},
 }
 
 # Neural-network model names (trained via train.py infrastructure)
-NN_MODELS = {"FeedforwardNN", "SimpleRNN", "GRUModel", "LSTMNoAttention", "AttentionLSTM"}
+NN_MODELS = {"FeedforwardNN", "SimpleRNN", "GRUModel", "LSTMNoAttention",
+             "AttentionLSTM", "ProposedLSTM"}
 
 # Stat / ML baselines (fitted directly)
 STAT_ML_MODELS = {"ARIMA", "SARIMA", "SVR", "RandomForest"}
+
+# NOTE: XGBoostBaseline is implemented in models.py but excluded from benchmarks
+# to avoid requiring an additional 'xgboost' dependency.  To enable it, install
+# xgboost (see environment.yml for version), add it to requirements.txt, and
+# include "XGBoost" in STAT_ML_MODELS with a corresponding entry in
+# STAT_ML_EVALUATORS.
 
 
 # ═════════════════════════════════════════════════════════════════
