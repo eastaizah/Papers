@@ -40,6 +40,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from math import gamma as _gamma_fn, pi as _pi
 from scipy.special import digamma
 from scipy.spatial import cKDTree
 from scipy.stats import norm
@@ -302,7 +303,6 @@ def _kl_entropy(X: np.ndarray, k: int = 3) -> float:
     tree = cKDTree(X)
     dists, _ = tree.query(X, k=k + 1, p=2)   # k+1: first is self (dist=0)
     rho = np.maximum(dists[:, k], 1e-12)       # k-th NN distances
-    from math import gamma as _gamma_fn, pi as _pi
     log_cd = (d / 2) * np.log(_pi) - np.log(_gamma_fn(d / 2 + 1))
     h = d * np.mean(np.log(rho)) + log_cd - digamma(k) + digamma(N)
     return float(max(h, 1e-8))
@@ -457,6 +457,8 @@ def metric_CE(tsr: float, k: int, d: int) -> float:
     For the reference operating point (k=32, d=512): CE_max = 16 bit⁻¹.
     Values are NOT clipped so the full range is preserved for analysis.
     """
+    if d <= 0:
+        return 0.0
     rho = k / d
     return float(tsr / rho)
 
