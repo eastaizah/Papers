@@ -821,8 +821,9 @@ class ProposedLSTM(nn.Module):
         # ── Layer 5: Multi-Horizon Output ─────────────────────────────
         self.mc_drop = nn.Dropout(p=dropout)
         _fc_in = hidden_size + _enc_out  # 512
-        self.fc_mean = nn.Linear(_fc_in, output_size)
-        self.fc_logvar = nn.Linear(_fc_in, output_size)
+        # Each decoder step produces one scalar; horizon steps are concatenated
+        self.fc_mean = nn.Linear(_fc_in, 1)
+        self.fc_logvar = nn.Linear(_fc_in, 1)
 
         _xavier_init(self)
 

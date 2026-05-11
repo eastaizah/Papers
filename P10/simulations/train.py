@@ -29,6 +29,9 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
+# torch.amp is the unified AMP API introduced in PyTorch 2.x (replaces
+# the deprecated torch.cuda.amp sub-module for all device types).
+import torch.amp as _torch_amp
 from torch.utils.data import DataLoader, TensorDataset
 
 # Local imports
@@ -187,7 +190,12 @@ def make_dataloaders(
     Y_val: np.ndarray,
     batch_size: int = 64,
 ) -> tuple[DataLoader, DataLoader]:
-    """Convert numpy arrays to DataLoaders."""
+    """Convert numpy arrays to DataLoaders.
+
+    Uses ``pin_memory=True`` when CUDA is available to speed up host→device
+    transfers on RTX-class GPUs (e.g., RTX 5070).
+    """
+    use_cuda = torch.cuda.is_available()
     train_ds = TensorDataset(
         torch.tensor(X_train, dtype=torch.float32),
         torch.tensor(Y_train, dtype=torch.float32),
@@ -196,8 +204,14 @@ def make_dataloaders(
         torch.tensor(X_val, dtype=torch.float32),
         torch.tensor(Y_val, dtype=torch.float32),
     )
-    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(
+        train_ds, batch_size=batch_size, shuffle=True,
+        pin_memory=use_cuda, num_workers=0,
+    )
+    val_loader = DataLoader(
+        val_ds, batch_size=batch_size, shuffle=False,
+        pin_memory=use_cuda, num_workers=0,
+    )
     return train_loader, val_loader
 
 
@@ -257,6 +271,9 @@ def train(
         optimizer, step_size=lr_decay_step, gamma=lr_decay_factor,
     )
     criterion = nn.HuberLoss(delta=1.0)
+    # Automatic Mixed Precision: speeds up training on RTX-class GPUs ≥ Ampere
+    _use_amp = device.type == "cuda" and torch.cuda.is_bf16_supported()
+    _scaler = _torch_amp.GradScaler("cuda", enabled=_use_amp)
 
     # Determine if model supports teacher forcing
     has_teacher_forcing = model_name in ("AttentionLSTM", "ProposedLSTM")
@@ -285,16 +302,19 @@ def train(
             xb, yb = xb.to(device), yb.to(device)
             optimizer.zero_grad()
 
-            if has_teacher_forcing:
-                preds = model(xb, teacher_forcing_ratio=tf_ratio, target=yb)
-            else:
-                preds = model(xb)
+            with _torch_amp.autocast(device_type=device.type, enabled=_use_amp):
+                if has_teacher_forcing:
+                    preds = model(xb, teacher_forcing_ratio=tf_ratio, target=yb)
+                else:
+                    preds = model(xb)
+                loss = criterion(preds, yb)
 
-            loss = criterion(preds, yb)
             assert not torch.isnan(loss), f"NaN loss at epoch {epoch}"
-            loss.backward()
+            _scaler.scale(loss).backward()
+            _scaler.unscale_(optimizer)
             nn.utils.clip_grad_norm_(model.parameters(), clip_norm)
-            optimizer.step()
+            _scaler.step(optimizer)
+            _scaler.update()
 
             running_loss += loss.item()
             n_batches += 1
