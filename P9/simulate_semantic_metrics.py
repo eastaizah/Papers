@@ -286,22 +286,46 @@ def _knn_mi(X: np.ndarray, Y: np.ndarray, k: int = 3) -> float:
     return max(digamma(k) - np.mean(digamma(nx) + digamma(ny)) + digamma(N), 0.0)
 
 
+def _kl_entropy(X: np.ndarray, k: int = 3) -> float:
+    """Kozachenko-Leonenko differential entropy estimator (nats).
+
+    Ĥ(X) ≈ d·mean(log ρ_k) + log(c_d) − ψ(k) + ψ(N)
+
+    where ρ_k(i) is the k-NN distance from point i (excluding self),
+    c_d = π^(d/2)/Γ(d/2+1) is the volume of the unit d-ball, and
+    ψ is the digamma function.
+
+    Reference: Kozachenko & Leonenko (1987); Kraskov et al.,
+    Phys. Rev. E 69, 066138 (2004), Eq. (20).
+    """
+    N, d = X.shape
+    tree = cKDTree(X)
+    dists, _ = tree.query(X, k=k + 1, p=2)   # k+1: first is self (dist=0)
+    rho = np.maximum(dists[:, k], 1e-12)       # k-th NN distances
+    from math import gamma as _gamma_fn, pi as _pi
+    log_cd = (d / 2) * np.log(_pi) - np.log(_gamma_fn(d / 2 + 1))
+    h = d * np.mean(np.log(rho)) + log_cd - digamma(k) + digamma(N)
+    return float(max(h, 1e-8))
+
+
 def metric_RSE(x: np.ndarray, xh: np.ndarray) -> float:
     """Relative Semantic Entropy.
 
     RSE = I_s(X;Y;T) / H_s(X;T)  ∈ [0,1]
 
-    Estimated via Kraskov k-NN MI (k=3) on the first 16 PCA dims
-    of a 500-sample subset for tractability.
+    Estimated via Kraskov k-NN MI for I_s and Kozachenko-Leonenko
+    estimator for H_s on the first min(16,d) PCA dims of a 500-sample
+    subset.  This is the standard plug-in MI/H approach for continuous
+    embeddings.  Reference: Kraskov et al., 2004.
     """
     d = min(16, x.shape[1])
     n = min(500, x.shape[0])
-    idx = np.random.choice(x.shape[0], n, replace=False)
+    rng = np.random.default_rng(0)          # fixed sub-seed for reproducibility
+    idx = rng.choice(x.shape[0], n, replace=False)
     Xs = x[idx, :d] / (x[idx, :d].std(0) + 1e-8)
     Ys = xh[idx, :d] / (xh[idx, :d].std(0) + 1e-8)
     mi = _knn_mi(Xs, Ys, k=3)
-    jitter = np.random.randn(*Xs.shape) * 0.01
-    hx = max(_knn_mi(Xs, Xs + jitter, k=3), 1e-8)
+    hx = _kl_entropy(Xs, k=3)
     return float(np.clip(mi / hx, 0, 1))
 
 
@@ -357,17 +381,19 @@ def metric_NSMI(x: np.ndarray, xh: np.ndarray) -> float:
     """Normalised Semantic Mutual Information.
 
     NSMI = I_s(X;Y;T) / sqrt(H_s(X;T)·H_s(Y;T))  ∈ [0,1]
+
+    Uses Kozachenko-Leonenko differential entropy estimator for both
+    marginal entropies and Kraskov k-NN for the mutual information.
     """
     d = min(16, x.shape[1])
     n = min(500, x.shape[0])
-    idx = np.random.choice(x.shape[0], n, replace=False)
+    rng = np.random.default_rng(0)
+    idx = rng.choice(x.shape[0], n, replace=False)
     Xs = x[idx, :d] / (x[idx, :d].std(0) + 1e-8)
     Ys = xh[idx, :d] / (xh[idx, :d].std(0) + 1e-8)
     mi = _knn_mi(Xs, Ys, k=3)
-    j = np.random.randn(*Xs.shape) * 0.01
-    hx = max(_knn_mi(Xs, Xs + j, k=3), 1e-8)
-    jy = np.random.randn(*Ys.shape) * 0.01
-    hy = max(_knn_mi(Ys, Ys + jy, k=3), 1e-8)
+    hx = _kl_entropy(Xs, k=3)
+    hy = _kl_entropy(Ys, k=3)
     return float(np.clip(mi / np.sqrt(hx * hy), 0, 1))
 
 
@@ -424,9 +450,15 @@ def metric_SU(x: np.ndarray, xh: np.ndarray) -> float:
 def metric_CE(tsr: float, k: int, d: int) -> float:
     """Completion Efficiency.
 
-    CE = TSR / ρ  where ρ = k/d.  Normalised to [0,1] by dividing by 20.
+    CE = TSR / ρ   [bit⁻¹],  where ρ = k/d is the compression ratio.
+
+    Higher CE indicates more task-completion value per transmitted bit.
+    CE is NOT bounded by 1; the maximum CE = TSR_max / ρ_min = 1 / ρ.
+    For the reference operating point (k=32, d=512): CE_max = 16 bit⁻¹.
+    Values are NOT clipped so the full range is preserved for analysis.
     """
-    return float(np.clip(tsr / (k / d) / 20, 0, 1))
+    rho = k / d
+    return float(tsr / rho)
 
 
 # ╔══════════════════════════════════════════════════════════════╗
@@ -515,7 +547,7 @@ def metric_ARR(enc, dec, clf, x, labels, n_search=8) -> float:
             hi = mid
         else:
             lo = mid
-    return float(lo)
+    return float(hi)
 
 
 def metric_SASR(enc, dec, clf, x, labels, eps=DEFAULT_ADV_EPS) -> float:
@@ -643,13 +675,25 @@ def run_simulation():
                 sci = metric_SCI(hats)
                 pf  = metric_PF(tsr, icc)
 
-                # Dim 4 — Resilience (full PGD only for select grid points)
-                if snr in [0, 5, 10, 15, 20] and ch_name == "AWGN":
+                # Dim 4 — Resilience
+                # Full PGD simulation for AWGN (all SNR grid points) and
+                # Rayleigh at key SNR points (5, 10, 15 dB).  Analytical
+                # estimates are used only for non-simulated combinations;
+                # these are explicitly marked with a flag.
+                _run_pgd = (
+                    ch_name == "AWGN" and snr in [0, 5, 10, 15, 20]
+                ) or (
+                    ch_name == "Rayleigh" and snr in [5, 10, 15]
+                )
+                if _run_pgd:
                     arr = metric_ARR(enc, dec, oracle, X_data, labels)
                     sasr = metric_SASR(enc, dec, oracle, X_data, labels)
                     ct, cr = metric_CertCost(enc, dec, oracle, X_data)
                     msd = metric_MSD(enc, dec, oracle, X_data, labels)
                 else:
+                    # Analytical estimates for non-simulated configurations.
+                    # These are conservative scaling approximations, not
+                    # full PGD results.  Explicitly noted in the paper.
                     sf = 1 / (1 + np.exp(-(snr - 5) / 5))
                     arr  = 0.15 * sf * (k / 32) ** 0.3
                     sasr = max(0, 0.5 - 0.3 * sf * (k / 32) ** 0.2)
@@ -664,6 +708,7 @@ def run_simulation():
                     ID=id_v, ICC=icc, SCI=sci, PF=pf,
                     ARR=arr, SASR=sasr, CertCost_s=ct,
                     CertRadius=cr, MSD=msd,
+                    PGD_simulated=bool(_run_pgd),
                 )
 
                 if snr in [0, 10, 20] and ch_name == "AWGN":
@@ -712,6 +757,8 @@ def print_table_iv(R):
     print(f"{'Bit-exact':<25} {'0.950':>10} {'100%':>12} "
           f"{'<0.01':>8} {'~4.0×':>10}")
     print("-" * 90)
+    print("  * ARR = ε_threshold (min PGD budget for >50% semantic change rate).")
+    print("  * CertCost is hardware-dependent; certified ℓ₂-radius shown instead.")
 
 
 def print_summary(R, snrs, ks):
