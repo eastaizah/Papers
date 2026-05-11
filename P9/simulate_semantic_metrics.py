@@ -479,6 +479,24 @@ def metric_ID(x: np.ndarray, xh: np.ndarray) -> float:
     return float(max(np.sum(p * np.log(p / q)), 0))
 
 
+def metric_ID_clf(x: torch.Tensor, xh: torch.Tensor, clf: OracleClassifier) -> float:
+    """Intent Divergence using oracle classifier as intent inference model.
+
+    ID = D_KL(softmax(clf(x)) || softmax(clf(x_hat)))
+
+    This uses the oracle classifier as an explicit intent inference model,
+    yielding a task-aligned measure of intent divergence (nats).
+    More rigorous than the embedding-marginal proxy in metric_ID().
+    """
+    eps = 1e-8
+    with torch.no_grad():
+        p = F.softmax(clf(x), dim=1).mean(0).clamp(min=eps).numpy()
+        q = F.softmax(clf(xh), dim=1).mean(0).clamp(min=eps).numpy()
+    p = p / p.sum()
+    q = q / q.sum()
+    return float(np.maximum(np.sum(p * np.log(p / q)), 0.0))
+
+
 def metric_ICC(x: np.ndarray, xh: np.ndarray) -> float:
     """Intentional-Context Coherence.
 
@@ -568,10 +586,20 @@ def metric_CertCost(enc, dec, clf, x, sigma=0.25, n_smooth=100):
 
     Smoothed classifier f̄(x) = argmax_c P(f(x+ξ)=c), ξ~N(0,σ²I).
     Certified ℓ₂ radius r = (σ/2)(Φ⁻¹(p_c)−Φ⁻¹(p₂)).
-    Returns (wall_clock_s, mean_certified_radius).
+    FLOPs estimated as 2 × parameters per forward pass (standard approximation).
+    Returns (wall_clock_s, mean_certified_radius, total_flops).
     """
-    ns = min(50, x.shape[0])
+    n0 = 50          # pre-screening samples
+    ns = min(n0, x.shape[0])
     xs = x[:ns]
+
+    flops_per_pass = (
+        sum(p.numel() for p in enc.parameters()) * 2
+        + sum(p.numel() for p in dec.parameters()) * 2
+        + sum(p.numel() for p in clf.parameters()) * 2
+    )
+    total_flops = (n0 + ns) * n_smooth * flops_per_pass
+
     t0 = time.perf_counter()
     radii = []
     with torch.no_grad():
@@ -590,7 +618,7 @@ def metric_CertCost(enc, dec, clf, x, sigma=0.25, n_smooth=100):
                 radii.append(max(r, 0))
             else:
                 radii.append(0.0)
-    return time.perf_counter() - t0, float(np.mean(radii))
+    return time.perf_counter() - t0, float(np.mean(radii)), total_flops
 
 
 def metric_MSD(enc, dec, clf, x, labels, eps=DEFAULT_ADV_EPS) -> float:
@@ -690,7 +718,7 @@ def run_simulation():
                 if _run_pgd:
                     arr = metric_ARR(enc, dec, oracle, X_data, labels)
                     sasr = metric_SASR(enc, dec, oracle, X_data, labels)
-                    ct, cr = metric_CertCost(enc, dec, oracle, X_data)
+                    ct, cr, cf = metric_CertCost(enc, dec, oracle, X_data)
                     msd = metric_MSD(enc, dec, oracle, X_data, labels)
                 else:
                     # Analytical estimates for non-simulated configurations.
@@ -702,14 +730,16 @@ def run_simulation():
                     ct   = 0.5 + 0.1 * k / 32
                     cr   = 0.05 * sf * (k / 32) ** 0.25
                     msd  = max(0, 0.6 - 0.4 * sf)
+                    cf   = None
 
                 all_results[tag] = dict(
                     RSE=rse, SWD=swd, S3I=s3i, NSMI=nsmi,
                     TSR=tsr, TSR_CI_lo=ci_lo, TSR_CI_hi=ci_hi,
                     AP=ap, SU=su, CE=ce,
                     ID=id_v, ICC=icc, SCI=sci, PF=pf,
+                    ID_clf=metric_ID_clf(X_data, X_hat, oracle),
                     ARR=arr, SASR=sasr, CertCost_s=ct,
-                    CertRadius=cr, MSD=msd,
+                    CertRadius=cr, CertFLOPs=cf, MSD=msd,
                     PGD_simulated=bool(_run_pgd),
                 )
 
@@ -749,8 +779,11 @@ def print_table_iv(R):
     hdr = f"{'System':<25} {'TSR@10dB':>10} {'ρ':>12} {'ARR':>8} {'CertCost':>10}"
     print(hdr); print("-" * 90)
     r = R.get("k32_AWGN_snr10.0", {})
+    cf = r.get('CertFLOPs')
+    cf_str = f"{cf:.3e}" if cf is not None else "N/A"
     print(f"{'Proposed (k=32)':<25} {r.get('TSR',0):>10.3f} {'6.25%':>12} "
           f"{r.get('ARR',0):>8.3f} {r.get('CertCost_s',0):>8.2f}s")
+    print(f"  CertFLOPs (k=32, AWGN, 10 dB): {cf_str}")
     djt = r.get("TSR", 0.87) * 0.966
     print(f"{'DeepJSCC [46]':<25} {djt:>10.3f} {'6.25%':>12} "
           f"{'0.080':>8} {'~1.2×':>10}")
@@ -841,6 +874,43 @@ def print_claims(R):
 # ║  10. ENTRY POINT                                            ║
 # ╚══════════════════════════════════════════════════════════════╝
 
+def run_tsr_k_sweep():
+    """TSR vs k for all channels at SNR=10 dB. Produces tsr_k_sweep.csv."""
+    import csv
+    print("\n=== TSR vs k Sweep (SNR=10 dB, all channels) ===")
+
+    torch.manual_seed(42); np.random.seed(42)
+    X_data, labels, _ = generate_structured_data(N_SAMPLES, D_INPUT, NUM_CLASSES)
+    oracle = _train_oracle(X_data, labels)
+
+    rows = []
+    for k in [8, 16, 32, 64, 128]:
+        enc, dec = _train_autoencoder(k, X_data, labels, oracle)
+        for ch_name, ch_fn in CHANNELS.items():
+            with torch.no_grad():
+                z = enc(X_data)
+                z_ch = ch_fn(z, 10.0)
+                X_hat = dec(z_ch)
+            tsr, ci_lo, ci_hi = metric_TSR(X_hat, labels, oracle)
+            rows.append({
+                'k': k,
+                'rho_pct': round(k / D_INPUT * 100, 4),
+                'channel': ch_name,
+                'TSR': round(tsr, 4),
+                'CI_low': round(ci_lo, 4),
+                'CI_high': round(ci_hi, 4),
+            })
+            print(f"  k={k:3d}, {ch_name:12s}: TSR={tsr:.4f} [{ci_lo:.3f},{ci_hi:.3f}]")
+
+    csv_path = os.path.join(OUTPUT_DIR, "tsr_k_sweep.csv")
+    with open(csv_path, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"  Saved to {csv_path}")
+    return rows
+
+
 def main():
     print("╔══════════════════════════════════════════════════════════════════╗")
     print("║  Semantic Metrics Simulation — 16 Metrics × 5 Channels × SNR   ║")
@@ -855,3 +925,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    run_tsr_k_sweep()
