@@ -719,7 +719,7 @@ class XGBoostBaseline:
 # ══════════════════════════════════════════════════════════════════
 
 class ProposedLSTM(nn.Module):
-    """Unified 5-layer LSTM architecture with ~4.2M parameters (Section IV.E).
+    """Unified 5-layer LSTM architecture with ~4.55M parameters (Section IV.E).
 
     Layer 1 – Contextual Embedding:
         Linear projection of input features augmented with cyclic time
@@ -760,7 +760,7 @@ class ProposedLSTM(nn.Module):
 
     Notes
     -----
-    Parameter count is approximately 4.2 M for input_size ≈ 9, hidden_size=256.
+    Parameter count is approximately 4.55 M for input_size ≈ 9, hidden_size=256.
     Cyclic time encodings assume 5-min granularity (288 steps/day, Section III.C).
     """
 
