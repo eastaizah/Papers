@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import argparse
 import math
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import numpy as np
 import torch
@@ -274,7 +274,7 @@ class AttentionLSTM(nn.Module):
             predictions.append(pred)
 
             # Next decoder input
-            if target is not None and np.random.random() < teacher_forcing_ratio:
+            if target is not None and torch.rand(1).item() < teacher_forcing_ratio:
                 dec_input = target[:, t].unsqueeze(-1).unsqueeze(-1)
             else:
                 dec_input = pred.unsqueeze(1)  # (B, 1, 1)
@@ -713,9 +713,250 @@ class XGBoostBaseline:
         return self._model.predict(X)
 
 
+
 # ══════════════════════════════════════════════════════════════════
-# Self-test
+# ProposedLSTM  (Section IV.E – unified 5-layer architecture)
 # ══════════════════════════════════════════════════════════════════
+
+class ProposedLSTM(nn.Module):
+    """Unified 5-layer LSTM architecture with ~4.2M parameters (Section IV.E).
+
+    Layer 1 – Contextual Embedding:
+        Linear projection of input features augmented with cyclic time
+        encodings (sin/cos of hour-of-day, sin/cos of day-of-week) and
+        a holiday indicator, producing hidden_size-dimensional embeddings.
+
+    Layer 2 – Multi-Resolution Parallel Processing:
+        Three parallel 2-layer BiLSTM branches (downsample factors 1, 2, 4).
+        Each branch uses 128 hidden units (256 bidirectional output).
+
+    Layer 3 – Resolution Attention Fusion:
+        Learned attention weights β_k fuse the three branch outputs into a
+        single vector, followed by a linear projection with BatchNorm + ReLU.
+
+    Layer 4 – Encoder-Decoder with Bahdanau Attention:
+        2-layer bidirectional LSTM encoder (128 units → 256 output per step),
+        2-layer LSTM decoder (256 units) with Bahdanau additive attention over
+        all encoder states.  The multi-resolution fused vector from Layer 3
+        biases the first decoder layer's initial hidden state.
+
+    Layer 5 – Multi-Horizon Output:
+        Two parallel FC heads (mean and log-variance) with MC Dropout applied
+        during both training and inference (when mc_samples > 0).
+
+    Parameters
+    ----------
+    input_size : int
+        Number of input features per time-step.
+    hidden_size : int
+        Core hidden dimension (default 256).
+    output_size : int
+        Prediction horizon (default 1).
+    dropout : float
+        Dropout probability used throughout (default 0.3).
+    mc_dropout : bool
+        If True, the output dropout layer stays active during inference
+        when mc_samples > 0 for Monte-Carlo uncertainty estimation.
+
+    Notes
+    -----
+    Parameter count is approximately 4.2 M for input_size ≈ 9, hidden_size=256.
+    Cyclic time encodings assume 5-min granularity (288 steps/day, Section III.C).
+    """
+
+    def __init__(
+        self,
+        input_size: int,
+        hidden_size: int = 256,
+        output_size: int = 1,
+        dropout: float = 0.3,
+        mc_dropout: bool = True,
+    ) -> None:
+        super().__init__()
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        self.mc_dropout = mc_dropout
+
+        # ── Layer 1: Contextual Embedding ─────────────────────────────
+        _time_dim = 5  # sin(hour), cos(hour), sin(day), cos(day), holiday
+        self._time_dim = _time_dim
+        self.embedding = nn.Linear(input_size + _time_dim, hidden_size)
+
+        # ── Layer 2: Multi-Resolution Parallel BiLSTM ─────────────────
+        _branch_hidden = hidden_size // 2  # 128 units → 256 bidirectional output
+        self.branches = nn.ModuleList([
+            _ResolutionBranch(
+                hidden_size, _branch_hidden, num_layers=2,
+                dropout=dropout, downsample_factor=f,
+            )
+            for f in [1, 2, 4]
+        ])
+        _branch_out = _branch_hidden * 2  # 256
+
+        # ── Layer 3: Resolution Attention Fusion ──────────────────────
+        self.res_attn_score = nn.Linear(_branch_out, 1, bias=False)
+        self.res_proj = nn.Linear(_branch_out, hidden_size)
+        self.res_bn = nn.BatchNorm1d(hidden_size)
+
+        # ── Layer 4: Encoder-Decoder with Bahdanau Attention ──────────
+        _enc_hidden = hidden_size // 2  # 128 units per direction → 256 output
+        self._enc_hidden = _enc_hidden
+        _enc_out = _enc_hidden * 2      # 256
+        self.encoder = nn.LSTM(
+            hidden_size, _enc_hidden, num_layers=2,
+            batch_first=True, bidirectional=True, dropout=dropout,
+        )
+        # Project BiLSTM encoder final states to decoder initial states
+        self.h_proj = nn.Linear(_enc_out, hidden_size)
+        self.c_proj = nn.Linear(_enc_out, hidden_size)
+
+        self.attention = _BahdanauAttention(_enc_out, hidden_size)
+
+        # Decoder: input = previous prediction (1) + context (_enc_out)
+        self.decoder = nn.LSTM(
+            1 + _enc_out, hidden_size, num_layers=2,
+            batch_first=True, dropout=dropout,
+        )
+
+        # ── Layer 5: Multi-Horizon Output ─────────────────────────────
+        self.mc_drop = nn.Dropout(p=dropout)
+        _fc_in = hidden_size + _enc_out  # 512
+        self.fc_mean = nn.Linear(_fc_in, output_size)
+        self.fc_logvar = nn.Linear(_fc_in, output_size)
+
+        _xavier_init(self)
+
+    # -----------------------------------------------------------------
+    def _add_time_features(self, x: torch.Tensor) -> torch.Tensor:
+        """Append cyclic time encodings based on relative sequence position.
+
+        Assumes 5-min granularity (288 steps/day, 2016 steps/week).
+        """
+        B, T, _ = x.shape
+        pos = torch.arange(T, device=x.device, dtype=x.dtype)
+        steps_per_day, steps_per_week = 288, 288 * 7
+        sin_h = torch.sin(2 * math.pi * pos / steps_per_day)
+        cos_h = torch.cos(2 * math.pi * pos / steps_per_day)
+        sin_d = torch.sin(2 * math.pi * pos / steps_per_week)
+        cos_d = torch.cos(2 * math.pi * pos / steps_per_week)
+        holiday = torch.zeros(T, device=x.device, dtype=x.dtype)
+        time_feats = torch.stack([sin_h, cos_h, sin_d, cos_d, holiday], dim=-1)
+        time_feats = time_feats.unsqueeze(0).expand(B, -1, -1)
+        return torch.cat([x, time_feats], dim=-1)  # (B, T, input_size+5)
+
+    def _init_dec_state(
+        self,
+        h_enc: torch.Tensor,
+        c_enc: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """Merge BiLSTM encoder final states for decoder initialization."""
+        batch = h_enc.size(1)
+        h = h_enc.view(2, 2, batch, self._enc_hidden)
+        c = c_enc.view(2, 2, batch, self._enc_hidden)
+        h = torch.cat([h[:, 0], h[:, 1]], dim=-1)  # (2, B, 2*enc_hidden)
+        c = torch.cat([c[:, 0], c[:, 1]], dim=-1)
+        return torch.tanh(self.h_proj(h)).contiguous(), \
+               torch.tanh(self.c_proj(c)).contiguous()
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        target: Optional[torch.Tensor] = None,
+        teacher_forcing_ratio: float = 0.0,
+        mc_samples: int = 0,
+    ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
+        """Forward pass.
+
+        Parameters
+        ----------
+        x : (batch, seq_len, features)
+        target : (batch, horizon), optional
+            Ground-truth future values for teacher forcing.
+        teacher_forcing_ratio : float
+            Probability of using ground truth as next decoder input.
+        mc_samples : int
+            When > 0, keeps the output dropout layer active and returns
+            ``(mean_preds, log_var)`` for MC uncertainty estimation.
+            When 0 (default), returns ``mean_preds`` as a plain tensor.
+
+        Returns
+        -------
+        mean_preds : (batch, horizon)  – always returned
+        log_var    : (batch, horizon)  – only when mc_samples > 0
+        """
+        B = x.size(0)
+
+        # Force output dropout on during inference for MC sampling
+        if mc_samples > 0 and self.mc_dropout:
+            self.mc_drop.train()
+
+        # ── Layer 1: Contextual Embedding ─────────────────────────────
+        x_aug = self._add_time_features(x)           # (B, T, input_size+5)
+        emb = F.relu(self.embedding(x_aug))          # (B, T, hidden_size)
+
+        # ── Layer 2: Multi-Resolution Parallel BiLSTM ─────────────────
+        branch_outs = [br(emb) for br in self.branches]  # list of (B, 256)
+
+        # ── Layer 3: Resolution Attention Fusion ──────────────────────
+        stacked = torch.stack(branch_outs, dim=1)           # (B, 3, 256)
+        betas = F.softmax(
+            self.res_attn_score(stacked).squeeze(-1), dim=-1,
+        )                                                    # (B, 3)
+        fused = torch.bmm(betas.unsqueeze(1), stacked).squeeze(1)  # (B, 256)
+        fused = F.relu(self.res_bn(self.res_proj(fused)))    # (B, hidden_size)
+
+        # ── Layer 4: Encoder-Decoder with Bahdanau Attention ──────────
+        enc_out, (h_enc, c_enc) = self.encoder(emb)  # enc_out: (B, T, 256)
+        h_dec, c_dec = self._init_dec_state(h_enc, c_enc)   # (2, B, H)
+
+        # Bias first decoder layer with the multi-resolution fused context
+        h_list = list(h_dec.unbind(0))
+        h_list[0] = torch.tanh(h_list[0] + fused)
+        h_dec = torch.stack(h_list, dim=0)
+
+        dec_input = torch.zeros(B, 1, 1, device=x.device)  # start token
+        predictions_mean: list[torch.Tensor] = []
+        predictions_logvar: list[torch.Tensor] = []
+
+        for t in range(self.output_size):
+            context, _ = self.attention(h_dec[-1], enc_out)  # (B, 256)
+            dec_combined = torch.cat(
+                [dec_input, context.unsqueeze(1)], dim=-1,
+            )  # (B, 1, 1+256)
+            dec_out, (h_dec, c_dec) = self.decoder(
+                dec_combined, (h_dec, c_dec),
+            )  # dec_out: (B, 1, H)
+
+            # ── Layer 5: MC Dropout + dual FC heads ──
+            feat = self.mc_drop(dec_out.squeeze(1))      # (B, H)
+            feat = torch.cat([feat, context], dim=-1)    # (B, H+256)
+            mean_t = self.fc_mean(feat)                  # (B, output_size)
+            logvar_t = self.fc_logvar(feat)
+            predictions_mean.append(mean_t)
+            predictions_logvar.append(logvar_t)
+
+            # Teacher forcing or autoregressive input
+            if target is not None and torch.rand(1).item() < teacher_forcing_ratio:
+                dec_input = target[:, t].unsqueeze(-1).unsqueeze(-1)
+            else:
+                dec_input = mean_t.detach().unsqueeze(1)  # (B, 1, 1)
+
+        mean_preds = torch.cat(predictions_mean, dim=-1)   # (B, output_size)
+        log_var = torch.cat(predictions_logvar, dim=-1)    # (B, output_size)
+
+        if mc_samples > 0:
+            return mean_preds, log_var
+        return mean_preds
+
+    def count_parameters(self) -> int:
+        return _count_parameters(self)
+
+
+# Alias for explicit naming used in the article
+TrafficLSTM5Layer = ProposedLSTM
+
+
+
 
 def _self_test() -> None:
     """Instantiate every model with small dims, run a forward pass,
@@ -740,6 +981,7 @@ def _self_test() -> None:
         "GRUModel": GRUModel(INPUT_SIZE, HIDDEN_SIZE, NUM_LAYERS, OUTPUT_SIZE),
         "FeedforwardNN": FeedforwardNN(INPUT_SIZE, HIDDEN_SIZE, NUM_LAYERS, OUTPUT_SIZE, seq_len=SEQ_LEN),
         "LSTMNoAttention": LSTMNoAttention(INPUT_SIZE, HIDDEN_SIZE, NUM_LAYERS, OUTPUT_SIZE),
+        "ProposedLSTM": ProposedLSTM(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE),
     }
 
     print(f"{'Model':<25s} {'Params':>10s}  {'Output shape':>15s}  {'OK':>4s}")

@@ -9,7 +9,7 @@ Recursos en Redes 5G".
 Training configuration follows Section VII.A.2:
   - Adam optimizer (β1=0.9, β2=0.999), η=0.001
   - Exponential LR decay: factor 0.95 every 10 epochs
-  - Batch size 64, max 200 epochs, early stopping patience 20
+  - Batch size 64, max 200 epochs, early stopping patience 40
   - Dropout 0.3, gradient clipping max-norm 5.0
   - Huber loss (δ=1.0), Xavier weight initialization
   - Teacher forcing ratio decaying from 1.0 → 0.0
@@ -40,6 +40,7 @@ from models import (
     GRUModel,
     LSTMNoAttention,
     MultiResolutionLSTM,
+    ProposedLSTM,
     ResidualLSTM,
     SimpleRNN,
 )
@@ -58,6 +59,7 @@ MODEL_REGISTRY: dict[str, type[nn.Module]] = {
     "GRUModel": GRUModel,
     "FeedforwardNN": FeedforwardNN,
     "LSTMNoAttention": LSTMNoAttention,
+    "ProposedLSTM": ProposedLSTM,
 }
 
 DATASET_FILES: dict[str, str] = {
@@ -237,7 +239,7 @@ def train(
     device: torch.device,
     lr: float = 0.001,
     epochs: int = 200,
-    patience: int = 20,
+    patience: int = 40,
     clip_norm: float = 5.0,
     lr_decay_factor: float = 0.95,
     lr_decay_step: int = 10,
@@ -257,7 +259,7 @@ def train(
     criterion = nn.HuberLoss(delta=1.0)
 
     # Determine if model supports teacher forcing
-    has_teacher_forcing = model_name in ("AttentionLSTM",)
+    has_teacher_forcing = model_name in ("AttentionLSTM", "ProposedLSTM")
 
     history: dict = {
         "train_loss": [],
@@ -593,7 +595,7 @@ def main() -> None:
         device=device,
         lr=args.lr,
         epochs=args.epochs,
-        patience=20,
+        patience=40,
         clip_norm=5.0,
     )
     elapsed = time.time() - t0
