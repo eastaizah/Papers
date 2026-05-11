@@ -102,7 +102,7 @@ DISPLAY_NAMES: dict[str, str] = {
     "FeedforwardNN":   "Feedforward NN",
     "SimpleRNN":       "Simple RNN",
     "GRUModel":        "GRU",
-    "LSTMNoAttention": "LSTM w/o Attention",
+    "LSTMNoAttention": "LSTM without Attention",
     "AttentionLSTM":   "Attention LSTM",
     "ProposedLSTM":    "Proposed LSTM (5-layer)",
 }

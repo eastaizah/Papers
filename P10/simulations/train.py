@@ -29,6 +29,8 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
+# torch.amp is the unified AMP API introduced in PyTorch 2.x (replaces
+# the deprecated torch.cuda.amp sub-module for all device types).
 import torch.amp as _torch_amp
 from torch.utils.data import DataLoader, TensorDataset
 
