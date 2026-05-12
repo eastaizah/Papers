@@ -227,9 +227,12 @@ def plot_tsr_vs_snr(output_dir: str):
     awgn_0 = float(r32.get("AWGN__snr0.0__TSR", np.nan))
     cl_0   = _classical_tsr(0.0)
     if not np.isnan(awgn_0):
-        ratio = awgn_0 / cl_0 if cl_0 > 0 else float("inf")
+        if cl_0 > 0:
+            ratio_str = f"≈ {awgn_0 / cl_0:.0f}×"
+        else:
+            ratio_str = "»"
         ax.annotate(
-            f"≈ {ratio:.0f}× at 0 dB\n({awgn_0:.3f} vs {cl_0:.3f})",
+            f"{ratio_str} at 0 dB\n({awgn_0:.3f} vs {cl_0:.3f})",
             xy=(0, awgn_0), xytext=(3, awgn_0 - 0.12),
             arrowprops=dict(arrowstyle="->", color="black"),
             fontsize=8,
