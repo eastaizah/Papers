@@ -95,6 +95,7 @@ Proposed timeline: Release 20 (2025–2026) foundational Study Items → Release
 SemmMetricsFr/
 ├── Framework_Semanticas_Summary_IEEE.md  # Full article (16 sections, 73+ IEEE references)
 ├── simulate_semantic_metrics.py          # Simulation script reproducing all article figures/tables
+├── plot_results.py                       # Generates PNG figures from simulation_results/
 ├── measurement_algorithms.md            # Pseudocode and complexity for all 16 measurement algorithms
 ├── complexity_channels_analysis.md      # Detailed channel model and complexity analysis
 ├── simulation_results/                   # Saved .npz numerical results (auto-created on first run)
@@ -209,6 +210,31 @@ The script executes the full pipeline automatically:
 
 ---
 
+## Generating Figures
+
+After running the simulation (or using the pre-computed results in `simulation_results/`), generate the two representative PNG figures with:
+
+```bash
+python plot_results.py
+```
+
+This produces two publication-quality PNG files in `simulation_results/`:
+
+| File | Description |
+|------|-------------|
+| `fig_semantic_fidelity_vs_k.png` | Semantic Fidelity (RSE, S³I, NSMI) vs. Bottleneck Dimension $k$ at SNR = 10 dB, AWGN |
+| `fig_tsr_vs_snr.png` | TSR vs. SNR for k=32, all five channel models, vs. classical JPEG2000+LDPC baseline |
+
+An optional `--output-dir` argument can redirect the PNG output:
+
+```bash
+python plot_results.py --output-dir /path/to/output
+```
+
+Both figures require only pre-computed `.npz` files; they do not re-run the full simulation.
+
+---
+
 ## Output Files
 
 All outputs are written to `simulation_results/` (auto-created):
@@ -217,6 +243,9 @@ All outputs are written to `simulation_results/` (auto-created):
 |------|----------|
 | `results_k{k}.npz` | All 16 metrics per channel and SNR for bottleneck dimension k (one file per k value) |
 | `results_combined.npz` | Single file with all configurations merged |
+| `tsr_k_sweep.csv` | TSR vs. k at SNR=10 dB for all five channel models (CSV) |
+| `fig_semantic_fidelity_vs_k.png` | Figure: Semantic Fidelity (RSE, S³I) vs. bottleneck dimension k |
+| `fig_tsr_vs_snr.png` | Figure: TSR vs. SNR graceful degradation for all channels (k=32) |
 
 Each `.npz` file stores arrays indexed by keys of the form `{channel}__snr{snr}__{metric}`, e.g.:
 
@@ -240,8 +269,8 @@ Printed automatically to stdout. Reference values from the article:
 
 | System | TSR @ 10 dB | Compression ρ | ARR | CertCost |
 |--------|-------------|---------------|-----|----------|
-| **Proposed (k=32)** | **0.867** | **6.25%** | **0.045** | **0.045 s** |
-| DeepJSCC [46] | 0.838 | 6.25% | 0.08 | ~1.2× |
+| **Proposed (k=32)** | **0.897** | **6.25%** | **0.043** | **0.026 s** |
+| DeepJSCC [46] | 0.867 | 6.25% | 0.08 | ~1.2× |
 | JPEG2000+LDPC | 0.888 | ~12.5% | 0.02 | ~2.5× |
 | Bit-exact | 0.950 | 100% | <0.01 | ~4.0× |
 
@@ -266,7 +295,7 @@ Load `results_k32.npz` and extract TSR, RSE, S³I, SWD at SNR ∈ {10, 20} dB ac
 
 The script automatically verifies:
 
-1. **TSR ≈ 0.87** at k=32, SNR=10 dB, AWGN (target 0.80–0.94 range)
+1. **TSR ≈ 0.897** at k=32, SNR=10 dB, AWGN (95% CI: [0.877, 0.914])
 2. **60–80% overhead reduction**: ρ = 32/512 = 6.25% → 93.75% overhead reduction
 3. **Graceful degradation**: semantic TSR at 0 dB >> classical JPEG2000+LDPC TSR at 0 dB
 4. **Spectral efficiency gain**: d/k = 512/32 = 16× raw compression; ~25.6× with intent-driven pruning
