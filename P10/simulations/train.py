@@ -267,7 +267,7 @@ def train(
     """
     model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999))
-    # OneCycleLR: cosine annealing with warm-up; step() called per batch
+    # OneCycleLR: cosine annealing with warmup; step() called per batch
     total_steps = len(train_loader) * epochs
     scheduler = torch.optim.lr_scheduler.OneCycleLR(
         optimizer,

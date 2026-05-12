@@ -229,7 +229,7 @@ def generate_milano_dataset(
     # Weekly factor: weekdays=1.0, weekends=0.65
     weekly_factor = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 0.65, 0.60])
 
-    # Monthly oscillation (2 months ≈ 8640 steps → period 4320)
+    # Monthly oscillation: ~30-day sinusoidal period
     n_days = int(np.ceil(n_steps / steps_per_day))
     month_mod = 1.0 + 0.08 * np.sin(2 * np.pi * np.arange(n_days) / 30.0)
 
@@ -280,8 +280,8 @@ def generate_milano_dataset(
             # Monthly modulation
             signal *= monthly_factor
 
-            # Traffic memory effect: high traffic 3-6 hrs ago raises current
-            lag = int(steps_per_day * 0.2)   # ~4.8 hrs
+            # Traffic memory effect: high traffic ~4.8 hours ago raises current
+            lag = int(steps_per_day * 0.2)   # memory window: ~4.8 hours of time
             alpha = 0.04
             threshold = signal.mean() * 0.7
             signal_copy = signal.copy()

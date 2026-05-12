@@ -934,7 +934,7 @@ class ProposedLSTM(nn.Module):
         # ── TCN preprocessing: multi-scale local temporal features ────
         emb_t = emb.transpose(1, 2)  # (B, H, T) for Conv1d
         tcn_out = sum(conv(emb_t) for conv in self.tcn_convs) / len(self.tcn_convs)
-        # Trim/pad to match emb length in case of edge effects
+        # Trim if off-by-one from even-kernel padding (k//2 may add 1 extra step)
         T = emb.size(1)
         if tcn_out.size(2) != T:
             tcn_out = tcn_out[:, :, :T]

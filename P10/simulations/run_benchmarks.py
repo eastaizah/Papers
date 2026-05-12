@@ -232,9 +232,10 @@ def _evaluate_arima(X_train: np.ndarray, Y_train: np.ndarray,
                     norm_params=None, **kw) -> dict[str, float]:
     """Fit ARIMA and evaluate with rolling 1-step-ahead forecasts.
 
-    Fits once on history + test using ``dynamic=False`` predict, which
-    conditions each t-step forecast on the actual values up to t-1
-    (standard 1-step-ahead rolling evaluation, no per-step refitting).
+    Fits on the last 500 training points (history). Concatenates history with
+    test data solely so that ``predict(dynamic=False)`` can condition each
+    t-step forecast on actual values up to t-1, giving standard 1-step-ahead
+    rolling evaluation without per-step refitting.
     Caps test points at 1000 for efficiency.
     """
     train_series = Y_train.flatten()
@@ -275,10 +276,11 @@ def _evaluate_sarima(X_train: np.ndarray, Y_train: np.ndarray,
                      seasonal_period: int = 24, norm_params=None, **kw) -> dict[str, float]:
     """Fit SARIMA and evaluate with rolling 1-step-ahead forecasts.
 
-    Uses ``dynamic=False`` predict over history + test series, giving
-    proper 1-step-ahead evaluation without per-step refitting.
-    History is capped at max(4 * seasonal_period, 100) for tractability.
-    Caps test points at 1000 for efficiency.
+    Fits on the last max(4*seasonal_period, 100) training points (history).
+    Concatenates history with test data solely so that ``predict(dynamic=False)``
+    conditions each t-step forecast on actual values up to t-1, giving proper
+    1-step-ahead evaluation without per-step refitting.
+    History capped for tractability. Test points capped at 1000 for efficiency.
     """
     train_series = Y_train.flatten()
     test_series = Y_test.flatten()
