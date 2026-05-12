@@ -229,80 +229,95 @@ def print_metrics_table(
 
 def _evaluate_arima(X_train: np.ndarray, Y_train: np.ndarray,
                     X_test: np.ndarray, Y_test: np.ndarray,
-                    **kw) -> dict[str, float]:
-    """Fit ARIMA on training target series and forecast all test steps at once.
+                    norm_params=None, **kw) -> dict[str, float]:
+    """Fit ARIMA and evaluate with rolling 1-step-ahead forecasts.
 
-    Uses a one-shot batch forecast (fit once, forecast n_test steps) instead
-    of a rolling per-sample loop, which was prohibitively slow.
+    Fits once on history + test using ``dynamic=False`` predict, which
+    conditions each t-step forecast on the actual values up to t-1
+    (standard 1-step-ahead rolling evaluation, no per-step refitting).
+    Caps test points at 1000 for efficiency.
     """
     train_series = Y_train.flatten()
     test_series = Y_test.flatten()
-    n_test = len(test_series)
+    n_test = min(len(test_series), 1000)
+    test_series = test_series[:n_test]
 
-    # Use a compact history for speed: last 200 training points
-    history = train_series[-200:]
+    # Use last 500 training points as history for fitting
+    history = train_series[-500:]
+    full_series = np.concatenate([history, test_series])
+    n_hist = len(history)
 
-    model = ARIMABaseline(order=(5, 1, 0))
     try:
-        model.fit(history)
-        yhat = model.predict(steps=n_test)
-        y_pred = np.array(yhat).flatten()
+        from statsmodels.tsa.arima.model import ARIMA as _ARIMA
+        result = _ARIMA(full_series, order=(5, 1, 0)).fit(disp=False)
+        y_pred = np.array(
+            result.predict(start=n_hist, end=n_hist + n_test - 1, dynamic=False)
+        ).flatten()
     except Exception:
-        # Fallback: naïve persistence forecast
         y_pred = np.full(n_test, float(train_series[-1]))
 
-    # Guard length
     if len(y_pred) > n_test:
         y_pred = y_pred[:n_test]
     elif len(y_pred) < n_test:
         y_pred = np.pad(y_pred, (0, n_test - len(y_pred)), mode="edge")
 
-    return compute_all_metrics(test_series, y_pred)
+    metrics = compute_all_metrics(test_series, y_pred)
+    if norm_params is not None:
+        scale = float(norm_params['max'][0]) - float(norm_params['min'][0])
+        if scale > 0:
+            metrics['RMSE_abs'] = metrics['RMSE'] * scale
+            metrics['MAE_abs'] = metrics['MAE'] * scale
+    return metrics
 
 
 def _evaluate_sarima(X_train: np.ndarray, Y_train: np.ndarray,
                      X_test: np.ndarray, Y_test: np.ndarray,
-                     seasonal_period: int = 24, **kw) -> dict[str, float]:
-    """Fit SARIMA on training target series and forecast all test steps at once.
+                     seasonal_period: int = 24, norm_params=None, **kw) -> dict[str, float]:
+    """Fit SARIMA and evaluate with rolling 1-step-ahead forecasts.
 
-    Uses a one-shot batch forecast (fit once, forecast n_test steps) instead
-    of a rolling per-sample loop.  Rolling SARIMA with seasonal period ≥ 24
-    and 500 training points takes > 4 hours; one-shot fitting completes in
-    seconds while retaining statistical validity for benchmarking.
-
-    History is capped at max(4 * seasonal_period, 100) points to keep
-    fitting tractable while providing enough seasonal cycles.
+    Uses ``dynamic=False`` predict over history + test series, giving
+    proper 1-step-ahead evaluation without per-step refitting.
+    History is capped at max(4 * seasonal_period, 100) for tractability.
+    Caps test points at 1000 for efficiency.
     """
     train_series = Y_train.flatten()
     test_series = Y_test.flatten()
-    n_test = len(test_series)
+    n_test = min(len(test_series), 1000)
+    test_series = test_series[:n_test]
 
-    # Minimum history: ≥ 4 seasonal cycles for reliable seasonal estimation
     max_history = max(4 * seasonal_period, 100)
     history = train_series[-max_history:]
+    full_series = np.concatenate([history, test_series])
+    n_hist = len(history)
 
-    model = SARIMABaseline(order=(1, 1, 1),
-                           seasonal_order=(1, 1, 1, seasonal_period))
     try:
-        model.fit(history)
-        yhat = model.predict(steps=n_test)
-        y_pred = np.array(yhat).flatten()
+        from statsmodels.tsa.statespace.sarimax import SARIMAX as _SARIMAX
+        result = _SARIMAX(
+            full_series,
+            order=(1, 1, 1),
+            seasonal_order=(1, 1, 1, seasonal_period),
+        ).fit(disp=False)
+        y_pred = np.array(
+            result.predict(start=n_hist, end=n_hist + n_test - 1, dynamic=False)
+        ).flatten()
     except Exception:
-        # Fallback: naïve persistence forecast
         y_pred = np.full(n_test, float(train_series[-1]))
 
-    # Guard length
     if len(y_pred) > n_test:
         y_pred = y_pred[:n_test]
     elif len(y_pred) < n_test:
         y_pred = np.pad(y_pred, (0, n_test - len(y_pred)), mode="edge")
 
-    return compute_all_metrics(test_series, y_pred)
+    metrics = compute_all_metrics(test_series, y_pred)
+    if norm_params is not None:
+        scale = float(norm_params['max'][0]) - float(norm_params['min'][0])
+        if scale > 0:
+            metrics['RMSE_abs'] = metrics['RMSE'] * scale
+            metrics['MAE_abs'] = metrics['MAE'] * scale
+    return metrics
 
 
-def _evaluate_svr(X_train: np.ndarray, Y_train: np.ndarray,
-                  X_test: np.ndarray, Y_test: np.ndarray,
-                  **kw) -> dict[str, float]:
+def _evaluate_svr(X_train, Y_train, X_test, Y_test, norm_params=None, **kw):
     """Fit SVR baseline (RBF kernel) on flattened lookback windows."""
     n_train = X_train.shape[0]
     n_test = X_test.shape[0]
@@ -312,12 +327,16 @@ def _evaluate_svr(X_train: np.ndarray, Y_train: np.ndarray,
     model = SVRBaseline(kernel="rbf", C=1.0, epsilon=0.1)
     model.fit(X_tr_flat, Y_train.flatten())
     y_pred = model.predict(X_te_flat)
-    return compute_all_metrics(Y_test.flatten(), y_pred.flatten())
+    metrics = compute_all_metrics(Y_test.flatten(), y_pred.flatten())
+    if norm_params is not None:
+        scale = float(norm_params["max"][0]) - float(norm_params["min"][0])
+        if scale > 0:
+            metrics["RMSE_abs"] = metrics["RMSE"] * scale
+            metrics["MAE_abs"] = metrics["MAE"] * scale
+    return metrics
 
 
-def _evaluate_random_forest(X_train: np.ndarray, Y_train: np.ndarray,
-                            X_test: np.ndarray, Y_test: np.ndarray,
-                            **kw) -> dict[str, float]:
+def _evaluate_random_forest(X_train, Y_train, X_test, Y_test, norm_params=None, **kw):
     """Fit Random Forest baseline on flattened lookback windows."""
     n_train = X_train.shape[0]
     n_test = X_test.shape[0]
@@ -327,7 +346,13 @@ def _evaluate_random_forest(X_train: np.ndarray, Y_train: np.ndarray,
     model = RandomForestBaseline(n_estimators=100, random_state=42)
     model.fit(X_tr_flat, Y_train.flatten())
     y_pred = model.predict(X_te_flat)
-    return compute_all_metrics(Y_test.flatten(), y_pred.flatten())
+    metrics = compute_all_metrics(Y_test.flatten(), y_pred.flatten())
+    if norm_params is not None:
+        scale = float(norm_params["max"][0]) - float(norm_params["min"][0])
+        if scale > 0:
+            metrics["RMSE_abs"] = metrics["RMSE"] * scale
+            metrics["MAE_abs"] = metrics["MAE"] * scale
+    return metrics
 
 
 STAT_ML_EVALUATORS: dict[str, callable] = {
@@ -350,9 +375,10 @@ def _train_and_evaluate_nn(
     lookback: int,
     dataset_name: str,
     device: torch.device,
-    epochs: int = 50,
-    patience: int = 20,
+    epochs: int = 150,
+    patience: int = 40,
     lr: float = 0.001,
+    norm_params=None,
 ) -> dict[str, float]:
     """Build, train, and evaluate a neural network model."""
     # AttentionLSTM teacher forcing requires 2D targets (batch, horizon).
@@ -389,7 +415,7 @@ def _train_and_evaluate_nn(
     )
 
     metrics = evaluate_test(model, X_test, _Y_test, device,
-                            model_name=model_name)
+                            model_name=model_name, norm_params=norm_params)
     return metrics
 
 
@@ -401,8 +427,8 @@ def run_table_i(
     dataset_name: str = "milano",
     model_list: list[str] | None = None,
     device: torch.device | None = None,
-    epochs: int = 50,
-    patience: int = 20,
+    epochs: int = 150,
+    patience: int = 40,
     self_test: bool = False,
     results_dir: Path | None = None,
 ) -> dict[str, dict[str, float]]:
@@ -428,7 +454,7 @@ def run_table_i(
         # Generate small synthetic data in-memory
         X, Y = _generate_selftest_data(n_steps=500, n_cells=5,
                                        lookback=lookback, horizon=horizon)
-        norm_params = {"min": 0.0, "max": 1.0}
+        norm_params = {"min": np.array([0.0]), "max": np.array([1.0])}
     else:
         X, Y, norm_params = load_dataset(dataset_name, lookback=lookback,
                                          horizon=horizon, cell_idx=0)
@@ -447,7 +473,7 @@ def run_table_i(
 
         if name in STAT_ML_MODELS:
             evaluator = STAT_ML_EVALUATORS[name]
-            extra_kw = {}
+            extra_kw = {"norm_params": norm_params}
             if name == "SARIMA":
                 extra_kw["seasonal_period"] = min(
                     cfg["steps_per_day"], 24)
@@ -464,6 +490,7 @@ def run_table_i(
                 device=device,
                 epochs=epochs,
                 patience=patience,
+                norm_params=norm_params,
             )
         else:
             print(f"  ⚠ Unknown model '{name}', skipping.")
@@ -471,9 +498,12 @@ def run_table_i(
 
         elapsed = time.time() - t0
         results[name] = metrics
+        abs_str = ""
+        if "RMSE_abs" in metrics:
+            abs_str = f"  RMSE_abs={metrics['RMSE_abs']:.2f}  MAE_abs={metrics.get('MAE_abs', 0):.2f}"
         print(f"  → {name}: RMSE={metrics['RMSE']:.4f}  "
               f"MAE={metrics['MAE']:.4f}  MAPE={metrics['MAPE']:.2f}%  "
-              f"R²={metrics['R2']:.4f}  ({elapsed:.1f}s)")
+              f"R²={metrics['R2']:.4f}{abs_str}  ({elapsed:.1f}s)")
 
     # Print the table
     rows = [(n, results[n]) for n in model_list if n in results]
@@ -503,8 +533,8 @@ def run_multi_horizon(
     dataset_name: str = "milano",
     horizons: list[int] | None = None,
     device: torch.device | None = None,
-    epochs: int = 50,
-    patience: int = 20,
+    epochs: int = 150,
+    patience: int = 40,
     self_test: bool = False,
     results_dir: Path | None = None,
 ) -> dict[int, dict[str, float]]:
@@ -625,8 +655,8 @@ def run_cross_dataset(
     model_name: str = "ProposedLSTM",
     datasets: list[str] | None = None,
     device: torch.device | None = None,
-    epochs: int = 50,
-    patience: int = 20,
+    epochs: int = 150,
+    patience: int = 40,
     self_test: bool = False,
     results_dir: Path | None = None,
 ) -> dict[str, dict[str, float]]:
@@ -1037,7 +1067,7 @@ def run_full_benchmark(results_dir: Path) -> None:
         dataset_name="milano",
         model_list=list(TABLE_I_MODEL_ORDER),
         device=device,
-        epochs=100,
+        epochs=150,
         patience=40,
         self_test=False,
         results_dir=results_dir,
@@ -1048,7 +1078,7 @@ def run_full_benchmark(results_dir: Path) -> None:
         dataset_name="milano",
         horizons=[4, 8, 12, 24],
         device=device,
-        epochs=100,
+        epochs=150,
         patience=40,
         self_test=False,
         results_dir=results_dir,
@@ -1059,7 +1089,7 @@ def run_full_benchmark(results_dir: Path) -> None:
         model_name="ProposedLSTM",
         datasets=["milano", "shanghai", "synthetic5g"],
         device=device,
-        epochs=100,
+        epochs=150,
         patience=40,
         self_test=False,
         results_dir=results_dir,

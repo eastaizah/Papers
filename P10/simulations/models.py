@@ -821,9 +821,41 @@ class ProposedLSTM(nn.Module):
         # ── Layer 5: Multi-Horizon Output ─────────────────────────────
         self.mc_drop = nn.Dropout(p=dropout)
         _fc_in = hidden_size + _enc_out  # 512
-        # Each decoder step produces one scalar; horizon steps are concatenated
-        self.fc_mean = nn.Linear(_fc_in, 1)
-        self.fc_logvar = nn.Linear(_fc_in, 1)
+        # Two-layer FC heads with GeLU for better gradient flow
+        self.fc_mean = nn.Sequential(
+            nn.Linear(_fc_in, 128),
+            nn.GELU(),
+            nn.Dropout(dropout * 0.5),
+            nn.Linear(128, 1),
+        )
+        self.fc_logvar = nn.Sequential(
+            nn.Linear(_fc_in, 64),
+            nn.GELU(),
+            nn.Linear(64, 1),
+        )
+
+        # ── Encoder multi-head self-attention (4 heads) ───────────────
+        self.enc_self_attn = nn.MultiheadAttention(
+            embed_dim=_enc_out,
+            num_heads=4,
+            dropout=dropout,
+            batch_first=True,
+        )
+        self.enc_attn_norm = nn.LayerNorm(_enc_out)
+
+        # ── Temporal conv preprocessing (multi-scale local features) ──
+        self.tcn_convs = nn.ModuleList([
+            nn.Conv1d(hidden_size, hidden_size, kernel_size=k,
+                      padding=k // 2, groups=hidden_size)
+            for k in [3, 5, 7]
+        ])
+        self.tcn_norm = nn.LayerNorm(hidden_size)
+
+        # ── Enhanced decoder init: weighted pool over encoder sequence ─
+        self.enc_pool_proj = nn.Linear(_enc_out, hidden_size)
+
+        # ── Decoder layer norm ────────────────────────────────────────
+        self.dec_norm = nn.LayerNorm(hidden_size)
 
         _xavier_init(self)
 
@@ -899,6 +931,16 @@ class ProposedLSTM(nn.Module):
         x_aug = self._add_time_features(x)           # (B, T, input_size+5)
         emb = F.relu(self.embedding(x_aug))          # (B, T, hidden_size)
 
+        # ── TCN preprocessing: multi-scale local temporal features ────
+        emb_t = emb.transpose(1, 2)  # (B, H, T) for Conv1d
+        tcn_out = sum(conv(emb_t) for conv in self.tcn_convs) / len(self.tcn_convs)
+        # Trim/pad to match emb length in case of edge effects
+        T = emb.size(1)
+        if tcn_out.size(2) != T:
+            tcn_out = tcn_out[:, :, :T]
+        tcn_out = tcn_out.transpose(1, 2)  # (B, T, H)
+        emb = self.tcn_norm(emb + tcn_out)  # residual + LayerNorm
+
         # ── Layer 2: Multi-Resolution Parallel BiLSTM ─────────────────
         branch_outs = [br(emb) for br in self.branches]  # list of (B, 256)
 
@@ -912,11 +954,19 @@ class ProposedLSTM(nn.Module):
 
         # ── Layer 4: Encoder-Decoder with Bahdanau Attention ──────────
         enc_out, (h_enc, c_enc) = self.encoder(emb)  # enc_out: (B, T, 256)
+
+        # Multi-head self-attention over encoder outputs
+        enc_attn_out, _ = self.enc_self_attn(enc_out, enc_out, enc_out)
+        enc_out = self.enc_attn_norm(enc_out + enc_attn_out)  # residual
+
         h_dec, c_dec = self._init_dec_state(h_enc, c_enc)   # (2, B, H)
 
-        # Bias first decoder layer with the multi-resolution fused context
+        # Enhanced decoder init: bias all layers with fused + enc_pool context
+        enc_pooled = enc_out.mean(dim=1)                                 # (B, 256)
+        enc_pool_bias = torch.tanh(self.enc_pool_proj(enc_pooled))       # (B, H)
         h_list = list(h_dec.unbind(0))
-        h_list[0] = torch.tanh(h_list[0] + fused)
+        h_list[0] = torch.tanh(h_list[0] + fused + enc_pool_bias)
+        h_list[1] = torch.tanh(h_list[1] + enc_pool_bias)
         h_dec = torch.stack(h_list, dim=0)
 
         dec_input = torch.zeros(B, 1, 1, device=x.device)  # start token
@@ -932,10 +982,11 @@ class ProposedLSTM(nn.Module):
                 dec_combined, (h_dec, c_dec),
             )  # dec_out: (B, 1, H)
 
-            # ── Layer 5: MC Dropout + dual FC heads ──
-            feat = self.mc_drop(dec_out.squeeze(1))      # (B, H)
-            feat = torch.cat([feat, context], dim=-1)    # (B, H+256)
-            mean_t = self.fc_mean(feat)                  # (B, output_size)
+            # ── Layer 5: LayerNorm + MC Dropout + dual GeLU FC heads ──
+            dec_out_normed = self.dec_norm(dec_out.squeeze(1))  # (B, H)
+            feat = self.mc_drop(dec_out_normed)
+            feat = torch.cat([feat, context], dim=-1)           # (B, H+256)
+            mean_t = self.fc_mean(feat)                         # (B, 1)
             logvar_t = self.fc_logvar(feat)
             predictions_mean.append(mean_t)
             predictions_logvar.append(logvar_t)

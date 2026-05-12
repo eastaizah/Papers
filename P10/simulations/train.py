@@ -267,8 +267,16 @@ def train(
     """
     model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999))
-    scheduler = torch.optim.lr_scheduler.StepLR(
-        optimizer, step_size=lr_decay_step, gamma=lr_decay_factor,
+    # OneCycleLR: cosine annealing with warm-up; step() called per batch
+    total_steps = len(train_loader) * epochs
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        optimizer,
+        max_lr=lr * 3,
+        total_steps=total_steps,
+        pct_start=0.1,
+        anneal_strategy='cos',
+        div_factor=10.0,
+        final_div_factor=100.0,
     )
     criterion = nn.HuberLoss(delta=1.0)
     # Automatic Mixed Precision: speeds up training on RTX-class GPUs ≥ Ampere
@@ -315,6 +323,7 @@ def train(
             nn.utils.clip_grad_norm_(model.parameters(), clip_norm)
             _scaler.step(optimizer)
             _scaler.update()
+            scheduler.step()
 
             running_loss += loss.item()
             n_batches += 1
@@ -327,8 +336,6 @@ def train(
                                      model_name=model_name)
         history["val_loss"].append(val_loss)
         history["val_r2"].append(val_r2)
-
-        scheduler.step()
 
         # ── Early stopping ──
         if val_loss < best_val_loss:
@@ -405,6 +412,7 @@ def evaluate_test(
     Y_test: np.ndarray,
     device: torch.device,
     model_name: str = "",
+    norm_params=None,
 ) -> dict[str, float]:
     """Evaluate all metrics on test set."""
     model.eval()
@@ -412,6 +420,11 @@ def evaluate_test(
     with torch.no_grad():
         preds = model(x_t).cpu().numpy()
     metrics = compute_all_metrics(Y_test.flatten(), preds.flatten())
+    if norm_params is not None:
+        scale = float(norm_params['max'][0]) - float(norm_params['min'][0])
+        if scale > 0:
+            metrics['RMSE_abs'] = metrics['RMSE'] * scale
+            metrics['MAE_abs'] = metrics['MAE'] * scale
     return metrics
 
 
