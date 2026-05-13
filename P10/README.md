@@ -77,8 +77,6 @@ Algorithm 3 uses `μ̂ + k·σ̂` (k=1.65 for 95th-percentile headroom) as the p
 
 ```
 P10/
-├── LSTM_Traffic_Prediction_5G_IEEE_Summary.md    # Full article (IEEE WC format, English)
-├── LSTM_Traffic_Prediction_5G_IEEE_WC_v2.docx   # Original Word document
 ├── README.md                                      # This file
 └── simulations/
     ├── generate_datasets.py          # Dataset generation (Milano, Shanghai, Synthetic 5G)
@@ -375,10 +373,10 @@ Dataset generation (`generate_datasets.py`) uses the same seeds; the Milano and 
 If you use this simulation code or the ProposedLSTM architecture in your research, please cite:
 
 ```bibtex
-@article{lstm5g2024,
+@article{lstm5g2026,
   title   = {LSTM-Based Traffic Prediction for Proactive Resource Management
              in 5G Networks},
-  journal = {IEEE Wireless Communications},
-  year    = {2024},
+  journal = {},
+  year    = {2026},
 }
 ```
