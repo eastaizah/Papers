@@ -461,7 +461,6 @@ def fig7_radar(table_i, cross_ds, kpis, out_dir):
     # Raw scores (higher is better on all axes)
     br = float(kpis["blocking_reduction"])
     lr = float(kpis["latency_reduction"])
-    cross_r2 = {m: list(cross_ds.values())[0][2] for m in ["ProposedLSTM"]}
 
     def _scores(model):
         rmse  = table_i[model][0]
@@ -539,7 +538,7 @@ def fig8_attention_weights(out_dir):
     for p in range(pred_steps):
         # Strong recency effect
         recency = np.exp(np.linspace(-3.5, 0, input_steps))
-        # Secondary peak ~24 steps ago (24h periodicity) — wraps within window
+        # Secondary peak ~24 steps ago (24h periodicity) -- wraps within window
         periodic = 0.35 * np.exp(-((np.arange(input_steps) - 1) ** 2) / 3)
         combined = recency + periodic
         combined += rng.normal(0, 0.02, input_steps)
