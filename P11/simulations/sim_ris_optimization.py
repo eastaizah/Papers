@@ -19,7 +19,6 @@ os.makedirs(FIGURE_DIR, exist_ok=True)
 
 N_RIS_VALUES = np.array([16, 32, 64, 128, 256, 512])
 N_SEEDS = 5
-RNG_BASE = np.random.default_rng(42)
 
 # ── Parametric throughput models (bps/Hz) ──────────────────────────────────
 
@@ -57,8 +56,6 @@ def latency_ao(n_ris, rng):
 
 
 def run():
-    rng = np.random.default_rng(42)
-
     schemes = {
         'No RIS':              (throughput_no_ris,      latency_no_ris,      '#7f7f7f', 'D--'),
         'RIS Random Phase':    (throughput_random_phase, latency_random_phase, '#1f77b4', 's-'),

@@ -184,8 +184,8 @@ def run():
     ax.set_xlabel('Normalized Load')
     ax.set_ylabel('Resource Utilization (%)')
     ax.set_title('PRB Utilization vs. Network Load')
-    ax.legend()
     ax.axhline(y=100, color='gray', linestyle=':', linewidth=1.2, alpha=0.7, label='100% Capacity')
+    ax.legend()
     ax.set_ylim(0, 110)
     fig.tight_layout()
     fig.savefig(os.path.join(FIGURE_DIR, 'fig2_utilization_vs_load.png'),
