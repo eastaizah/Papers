@@ -3,6 +3,10 @@
 Simulation 1: Multi-Slice Resource Allocation (Monte Carlo)
 Compares Hard Isolation vs Soft Isolation vs UMRO-5G dynamic allocation
 across 3 slice types: eMBB, URLLC, mMTC.
+
+5G NR parameters (μ=0, SCS=15 kHz):
+  B = 20 MHz, N_PRB = 100, Δf_PRB = 12 × 15 kHz = 180 kHz = 0.18 MHz
+  Throughput (Mbps) = alloc_PRBs × SPEC_EFF (bps/Hz) × PRB_BW_MHz
 """
 
 import os
@@ -27,11 +31,14 @@ SOFT_SHARED = TOTAL_PRBS - SOFT_MIN.sum()  # 40
 # Spectral efficiencies (bps/Hz per PRB) for each slice type
 SPEC_EFF = np.array([4.0, 1.5, 0.5])
 
+# 5G NR PRB bandwidth: 12 subcarriers × 15 kHz = 180 kHz = 0.18 MHz
+PRB_BW_MHz = 0.18
+
 # Latency budget (ms) – only URLLC has tight constraint
 LATENCY_BUDGET = np.array([20.0, 1.0, 50.0])
 
 LOAD_POINTS = np.linspace(0.1, 1.0, 10)
-N_MONTE_CARLO = 200  # reduced for speed
+N_MONTE_CARLO = 1000
 SEEDS = [42, 123, 256, 789, 1024]
 
 
@@ -90,7 +97,8 @@ def umro5g_alloc(demand, load, rng):
 
 
 def compute_throughput(alloc):
-    return alloc * SPEC_EFF
+    """Return throughput in Mbps using 5G NR PRB bandwidth."""
+    return alloc * SPEC_EFF * PRB_BW_MHz
 
 
 def compute_latency_violation(alloc, demand):
@@ -155,13 +163,13 @@ def run():
             ax.fill_between(LOAD_POINTS, mean - std, mean + std,
                             alpha=0.15, color=colors[m])
         ax.set_xlabel('Normalized Load')
-        ax.set_ylabel('Throughput (bps/Hz)')
+        ax.set_ylabel('Throughput (Mbps)')
         ax.set_title(f'{sname} Slice')
         ax.legend(fontsize=9)
     fig.suptitle('Multi-Slice Throughput vs. Network Load', fontsize=13, y=1.02)
     fig.tight_layout()
     fig.savefig(os.path.join(FIGURE_DIR, 'fig1_throughput_vs_load.png'),
-                bbox_inches='tight', dpi=200)
+                bbox_inches='tight', dpi=300)
     plt.close(fig)
 
     # Figure 2: Resource Utilization vs Load
@@ -176,11 +184,12 @@ def run():
     ax.set_xlabel('Normalized Load')
     ax.set_ylabel('Resource Utilization (%)')
     ax.set_title('PRB Utilization vs. Network Load')
+    ax.axhline(y=100, color='gray', linestyle=':', linewidth=1.2, alpha=0.7, label='100% Capacity')
     ax.legend()
-    ax.set_ylim(0, 105)
+    ax.set_ylim(0, 110)
     fig.tight_layout()
     fig.savefig(os.path.join(FIGURE_DIR, 'fig2_utilization_vs_load.png'),
-                bbox_inches='tight', dpi=200)
+                bbox_inches='tight', dpi=300)
     plt.close(fig)
 
     # Figure 3: Latency Violation Probability (URLLC slice)
@@ -197,11 +206,12 @@ def run():
     ax.set_xlabel('Normalized Load')
     ax.set_ylabel('Latency Violation Probability')
     ax.set_title('URLLC Latency Violation Probability vs. Load')
+    ax.set_yscale('log')
     ax.legend()
-    ax.set_ylim(-0.02, 1.02)
+    ax.set_ylim(1e-3, 2.0)
     fig.tight_layout()
     fig.savefig(os.path.join(FIGURE_DIR, 'fig3_latency_violation.png'),
-                bbox_inches='tight', dpi=200)
+                bbox_inches='tight', dpi=300)
     plt.close(fig)
 
     print("  [Sim 1] Generated: fig1_throughput_vs_load.png, "

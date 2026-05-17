@@ -21,6 +21,10 @@ SIMULATIONS = [
     ('sim_scheduling', 'Simulation 3: Scheduling Algorithm Comparison'),
     ('sim_sfc_latency', 'Simulation 4: SFC Latency Sensitivity Analysis'),
     ('sim_complexity', 'Simulation 5: Computational Complexity Comparison'),
+    ('sim_architecture_fig', 'Simulation 6: UMRO-5G Architecture Diagram (Fig. 8)'),
+    ('sim_ris_optimization', 'Simulation 7: RIS Phase Shift Optimization (Fig. 9)'),
+    ('sim_ee_tradeoff', 'Simulation 8: Energy Efficiency–Throughput Trade-off (Fig. 10)'),
+    ('sim_latency_budget', 'Simulation 9: Latency Budget Decomposition (Fig. 11)'),
 ]
 
 

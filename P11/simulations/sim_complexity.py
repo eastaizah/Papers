@@ -165,7 +165,7 @@ def run():
 
     fig.tight_layout()
     fig.savefig(os.path.join(FIGURE_DIR, 'fig7_complexity.png'),
-                bbox_inches='tight', dpi=200)
+                bbox_inches='tight', dpi=300)
     plt.close(fig)
 
     print("  [Sim 5] Generated: fig7_complexity.png")
