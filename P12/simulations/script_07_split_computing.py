@@ -5,7 +5,10 @@ Dynamic Split Computing Optimization for 6G Edge Intelligence.
 Context
 -------
 Implements the dynamic programming split-point selection methodology from
-"Massive AI Model Orchestration para 6G", Section IV.C.
+"Massive AI Model Orchestration for 6G" (IEEE Wireless Communications), Section IV.C.
+
+NOTE: Implements dynamic programming over an analytical latency model for split
+computing point optimization.
 Article claims reproduced
 --------------------------
 1. Dynamic programming finds the optimal split point in O(L) time.

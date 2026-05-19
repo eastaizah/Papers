@@ -5,7 +5,10 @@ Early-Exit (BranchyNet-style) Neural Networks for Adaptive Wireless Signal Class
 Context
 -------
 Implements the adaptive inference methodology described in
-"Massive AI Model Orchestration para 6G", Sections III.C.2 and IV.C.5.
+"Massive AI Model Orchestration for 6G" (IEEE Wireless Communications), Sections III.C.2 and IV.C.5.
+
+NOTE: This implements an analytical accuracy-latency model for early-exit networks,
+not a trained neural network.
 Article claims reproduced
 --------------------------
 1. Early-exit reduces average latency 2-5× while maintaining accuracy in >95% of cases.

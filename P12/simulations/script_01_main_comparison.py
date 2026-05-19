@@ -2,8 +2,12 @@
 ================================================================================
 script_01_main_comparison.py
 ================================================================================
-Article : "Massive AI Model Orchestration para 6G"
+Article : "Massive AI Model Orchestration for 6G" (IEEE Wireless Communications)
 Section : Main comparison + scalability / sensitivity analysis
+
+NOTE: This implements a parametric system-level simulation calibrated against
+3GPP UMa path-loss models, NOT deep-learning inference on real channel traces.
+The mobility model is Random Waypoint (NOT real NYC taxi data or similar datasets).
 
 WHAT THIS SCRIPT SIMULATES
 ---------------------------
@@ -573,7 +577,7 @@ def main():
     np.random.seed(SEED)
 
     print("=" * 72)
-    print("  Massive AI Model Orchestration para 6G – Main Comparison")
+    print("  Massive AI Model Orchestration for 6G – Main Comparison")
     print("  Monte-Carlo Simulation  |  seed=42  |  100 episodes × 1 000 users")
     print("=" * 72)
 

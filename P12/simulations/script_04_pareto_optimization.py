@@ -2,7 +2,7 @@
 script_04_pareto_optimization.py
 =================================
 Reproduces the Pareto-optimal energy-performance analysis from:
-  "Massive AI Model Orchestration para 6G", Section V.D
+  "Massive AI Model Orchestration for 6G" (IEEE Wireless Communications), Section V.D
 This script:
   1. Encodes the six inference configurations (C1-C6) from Table V.D with their
      exact article values (energy Wh, accuracy %, latency ms, performance score).
@@ -182,7 +182,7 @@ ax.legend(handles=[proxy_pareto, proxy_dom, proxy_cloud, proxy_edge, proxy_devic
           fontsize=8, loc="lower left")
 ax.set_xlabel("Energy (Wh)", fontsize=12)
 ax.set_ylabel("Performance Score  (Acc − 0.1·Lat)", fontsize=12)
-ax.set_title("Pareto Frontier: Energy vs Performance\n(Massive AI Model Orchestration para 6G – Section V.D)",
+ax.set_title("Pareto Frontier: Energy vs Performance\n(Massive AI Model Orchestration for 6G – Section V.D)",
              fontsize=11)
 ax.grid(True, alpha=0.3)
 ax.set_xlim(10, 28)

@@ -3,8 +3,11 @@ script_03_channel_estimation_vit.py
 =====================================
 Channel Estimation in 6G Massive MIMO Systems Using Vision Transformer (ViT)
 
-Article: "Massive AI Model Orchestration para 6G"
+Article: "Massive AI Model Orchestration for 6G" (IEEE Wireless Communications)
 Section: Channel Estimation with Deep Learning
+
+NOTE: This uses a simplified 4×4 MIMO channel (CDL-C model) as a proof-of-concept.
+Massive MIMO (64-256 antennas) would require scaled-up versions.
 
 System Model (3GPP CDL-C inspired):
 - MIMO: Nt=4 transmit, Nr=4 receive antennas

@@ -3,7 +3,7 @@ script_02_handover_prediction_lstm.py
 ======================================
 Bidirectional LSTM with Temporal Attention for Handover Prediction in 6G Networks
 ----------------------------------------------------------------------------------
-Article: "Massive AI Model Orchestration para 6G"
+Article: "Massive AI Model Orchestration for 6G" (IEEE Wireless Communications)
 
 OVERVIEW
 --------
