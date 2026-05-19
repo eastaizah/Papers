@@ -1,9 +1,9 @@
 """
 script_08_kpi_summary.py
 ========================
-Comprehensive KPI Summary for "Massive AI Model Orchestration para 6G".
-Reproduces Tabla VI-I (Mejoras Cuantitativas en KPIs 6G) and
-Tabla VI-II (Comparación Arquitectural con Estado del Arte), generates
+Comprehensive KPI Summary for "Massive AI Model Orchestration for 6G" (IEEE Wireless Communications).
+Reproduces Table VI-I (Quantitative KPI Improvements for 6G) and
+Table VI-II (Architectural Comparison with State of the Art), generates
 five summary figures, prints all key metrics, and verifies article claims.
 Dependencies: numpy, matplotlib, scipy
 Random seed: 42
@@ -18,33 +18,33 @@ import os
 np.random.seed(42)
 OUTDIR = os.path.dirname(os.path.abspath(__file__))
 # ---------------------------------------------------------------------------
-# TABLA VI-I data
+# TABLE VI-I data
 # ---------------------------------------------------------------------------
-tabla1_headers = ["Caso de Uso", "KPI", "Baseline", "Propuesta", "Mejora"]
-tabla1_rows = [
-    ["eMBB Semantic Video",  "Bitrate efectivo",    "1 Gbps",     "2.5-4 Gbps",    "2.5-4×"],
-    ["eMBB Channel Est.",    "MSE estimación",      "-15 dB",     "-23 a -27 dB",  "8-12 dB"],
-    ["URLLC Teleoperation",  "Latencia E2E",        "45 ms",      "2.1 ms",        "21×"],
+table1_headers = ["Use Case", "KPI", "Baseline", "Proposed", "Improvement"]
+table1_rows = [
+    ["eMBB Semantic Video",  "Effective Bitrate",   "1 Gbps",     "2.5-4 Gbps",    "2.5-4×"],
+    ["eMBB Channel Est.",    "Estimation MSE",      "-15 dB",     "-23 to -27 dB", "8-12 dB"],
+    ["URLLC Teleoperation",  "E2E Latency",         "45 ms",      "2.1 ms",        "21×"],
     ["URLLC Industrial",     "Reliability",         "99.99%",     "99.9999%",      "100×"],
-    ["mMTC Smart City",      "Energía/dispositivo", "1.5 Wh/día", "0.08 Wh/día",  "19×"],
-    ["mMTC Escalabilidad",   "Dispositivos/km²",    "10^5",       "10^6",          "10×"],
+    ["mMTC Smart City",      "Energy/device",       "1.5 Wh/day", "0.08 Wh/day",  "19×"],
+    ["mMTC Scalability",     "Devices/km²",         "10^5",       "10^6",          "10×"],
     ["ISAC Automotive",      "Rate-resolution",     "15 Gbps·cm", "45 Gbps·cm",    "3×"],
-    ["ISAC Energía",         "Potencia total",      "15 W",       "2.5 W",         "6×"],
+    ["ISAC Energy",          "Total power",         "15 W",       "2.5 W",         "6×"],
 ]
 # ---------------------------------------------------------------------------
-# TABLA VI-II data
+# TABLE VI-II data
 # ---------------------------------------------------------------------------
-tabla2_headers = ["Característica", "Offloading [46][47]", "Compression [52][53]",
-                  "Federated [43][44]", "Propuesta"]
-tabla2_rows = [
-    ["Escala de modelos",       "<10M params",        "<50M params",        "<10M params",        "10M-1000M params"],
-    ["Layers jerárquicas",      "2 (mobile-cloud)",   "1 (edge)",           "2-3 (edge-cloud)",   "3 (device-edge-cloud)"],
-    ["Adaptación dinámica",     "Sí (offload)",       "No",                 "No",                 "Sí (model+layer+compr.)"],
-    ["Split computing",         "No",                 "No",                 "No",                 "Sí"],
-    ["Channel-aware",           "Limitado",           "No",                 "No",                 "Sí (predicción+LSTM)"],
-    ["Carbon-aware",            "No",                 "No",                 "No",                 "Sí (temporal+geográfico)"],
-    ["Convergencia garantizada","Heurísticos",        "N/A",                "Sí (gradients)",     "Sí (dual+RL)"],
-    ["Latencia típica",         "30-100 ms",          "5-20 ms",            "50-200 ms",          "<5 ms (URLLC)"],
+table2_headers = ["Feature", "Offloading [46][47]", "Compression [52][53]",
+                  "Federated [43][44]", "Proposed"]
+table2_rows = [
+    ["Model scale",              "<10M params",        "<50M params",        "<10M params",        "10M-1000M params"],
+    ["Hierarchical layers",      "2 (mobile-cloud)",   "1 (edge)",           "2-3 (edge-cloud)",   "3 (device-edge-cloud)"],
+    ["Dynamic adaptation",       "Yes (offload)",      "No",                 "No",                 "Yes (model+layer+compr.)"],
+    ["Split computing",          "No",                 "No",                 "No",                 "Yes"],
+    ["Channel-aware",            "Limited",            "No",                 "No",                 "Yes (LSTM prediction)"],
+    ["Carbon-aware",             "No",                 "No",                 "No",                 "Yes (temporal+geographic)"],
+    ["Guaranteed convergence",   "Heuristics",         "N/A",                "Yes (gradients)",    "Yes (dual+RL)"],
+    ["Typical latency",          "30-100 ms",          "5-20 ms",            "50-200 ms",          "<5 ms (URLLC)"],
 ]
 # ---------------------------------------------------------------------------
 # Simulation results (from script_01)
@@ -71,10 +71,10 @@ def print_table(title, headers, rows):
     for row in rows:
         print(fmt.format(*row))
     print(sep)
-print_table("TABLA VI-I: MEJORAS CUANTITATIVAS EN KPIs 6G",
-            tabla1_headers, tabla1_rows)
-print_table("TABLA VI-II: COMPARACIÓN ARQUITECTURAL CON ESTADO DEL ARTE",
-            tabla2_headers, tabla2_rows)
+print_table("TABLE VI-I: QUANTITATIVE KPI IMPROVEMENTS FOR 6G",
+            table1_headers, table1_rows)
+print_table("TABLE VI-II: ARCHITECTURAL COMPARISON WITH STATE OF THE ART",
+            table2_headers, table2_rows)
 # ---------------------------------------------------------------------------
 # Additional summary metrics
 # ---------------------------------------------------------------------------
@@ -131,7 +131,7 @@ ax.set_xscale("log")
 ax.set_yticks(y)
 ax.set_yticklabels(kpi_labels, fontsize=9)
 ax.set_xlabel("Improvement Factor (log scale)", fontsize=11)
-ax.set_title("Tabla VI-I: KPI Improvements – Massive AI Orchestration para 6G", fontsize=12, fontweight="bold")
+ax.set_title("Table VI-I: KPI Improvements – Massive AI Orchestration for 6G", fontsize=12, fontweight="bold")
 for bar, val in zip(bars, improvements):
     ax.text(bar.get_width() * 1.05, bar.get_y() + bar.get_height()/2,
             f"{val:.1f}×", va="center", fontsize=9)
@@ -146,7 +146,7 @@ plt.savefig(os.path.join(OUTDIR, "fig8_kpi_improvements.png"), dpi=150)
 plt.close()
 print("\nSaved: fig8_kpi_improvements.png")
 # ===========================================================================
-# FIGURE 2 – Architectural Comparison Heatmap (Tabla VI-II)
+# FIGURE 2 – Architectural Comparison Heatmap (Table VI-II)
 # ===========================================================================
 # Encode: 2=Yes/proposed, 1=Partial/heuristic, 0=No/N/A
 cell_vals = np.array([
@@ -159,19 +159,19 @@ cell_vals = np.array([
     [1, 0, 2, 2],   # Convergencia
     [1, 2, 0, 2],   # Latencia
 ], dtype=float)
-row_labels = [r[0] for r in tabla2_rows]
+row_labels = [r[0] for r in table2_rows]
 col_labels = ["Offloading\n[46][47]", "Compression\n[52][53]",
-              "Federated\n[43][44]", "Propuesta"]
+              "Federated\n[43][44]", "Proposed"]
 fig, ax = plt.subplots(figsize=(10, 6))
 from matplotlib.colors import ListedColormap
 cmap = ListedColormap(["#EF5350", "#FFA726", "#66BB6A"])
 im = ax.imshow(cell_vals, cmap=cmap, vmin=0, vmax=2, aspect="auto")
 ax.set_xticks(range(4)); ax.set_xticklabels(col_labels, fontsize=10)
 ax.set_yticks(range(len(row_labels))); ax.set_yticklabels(row_labels, fontsize=9)
-ax.set_title("Tabla VI-II: Comparación Arquitectural con Estado del Arte",
+ax.set_title("Table VI-II: Architectural Comparison with State of the Art",
              fontsize=12, fontweight="bold")
 # annotate cells with original text
-cell_texts = [[r[i+1] for i in range(4)] for r in tabla2_rows]
+cell_texts = [[r[i+1] for i in range(4)] for r in table2_rows]
 for ri in range(len(row_labels)):
     for ci in range(4):
         ax.text(ci, ri, cell_texts[ri][ci], ha="center", va="center",
@@ -191,7 +191,7 @@ print("Saved: fig8_comparison_table.png")
 x = np.arange(len(approaches))
 w = 0.55
 fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-fig.suptitle("Simulation Results Summary – Massive AI Orchestration para 6G",
+fig.suptitle("Simulation Results Summary – Massive AI Orchestration for 6G",
              fontsize=13, fontweight="bold")
 datasets = [
     (axes[0,0], latency,  "Latency (ms)",           "ms",   "#1565C0"),
@@ -226,7 +226,7 @@ scores = {
     "Offloading":   [1, 2, 2, 0, 1, 0],
     "Compression":  [2, 1, 0, 0, 0, 0],
     "Federated":    [1, 2, 0, 0, 0, 0],
-    "Propuesta":    [3, 3, 3, 3, 3, 3],
+    "Proposed":    [3, 3, 3, 3, 3, 3],
 }
 colors_r = ["#FF7043", "#42A5F5", "#66BB6A", "#AB47BC"]
 fig, ax = plt.subplots(figsize=(7, 7), subplot_kw=dict(polar=True))

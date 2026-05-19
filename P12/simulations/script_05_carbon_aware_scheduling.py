@@ -2,7 +2,7 @@
 script_05_carbon_aware_scheduling.py
 ======================================
 Reproduces the carbon-aware scheduling analysis from:
-  "Massive AI Model Orchestration para 6G", Sections V.B and V.C
+  "Massive AI Model Orchestration for 6G" (IEEE Wireless Communications), Sections V.B and V.C
 This script:
   1. Encodes geographic carbon intensity data (gCO2eq/kWh) for six regions
      and verifies the ≥23× factor between the cleanest (Norway) and dirtiest (India) regions.
