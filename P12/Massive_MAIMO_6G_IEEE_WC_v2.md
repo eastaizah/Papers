@@ -363,7 +363,7 @@ where $P_i^{\text{compute}}$ is the active compute power, $T_i^{\text{inf}}$ is 
 |---|---|---|---|
 | Cloud | 16.6 | A100 GPU data center | Data center PUE = 1.3 included |
 | Edge | 30.8 | Nvidia Jetson AGX + NIC | Includes idle power over scheduling slot |
-| Device | 25.4 | Mobile NPU, 6 TOPS | GPT-3 scale reference; see Remark |
+| Device | 25.4 | Mobile NPU, 6 TOPS | Per-inference energy for GPT-3-scale model (175B params); see Section V.A for device-tier scaling |
 
 **Important remark on energy scales.** The device-tier value of 25.4 Wh/inference cited above represents the energy consumption of a GPT-3-scale foundation model (175 billion parameters) as published in the literature [38]. This is the per-inference energy for the largest-scale model variant. In the MAIMO simulation, device-side models are highly compressed (50M–500M parameters), and their actual per-inference energy is proportionally lower by two to three orders of magnitude. The simulation reports total energy for 1,000 concurrent users over one hour as approximately 45 kWh—this is an aggregate figure for the full operational deployment (including idle power, communication, and server overhead) and should not be directly compared with the 25.4 Wh per single GPT-3-scale inference figure. These two measurements operate at fundamentally different scales and serve different analytic purposes.
 
@@ -483,8 +483,6 @@ Empirically, MAIMO achieves 12 ms end-to-end latency for joint semantic communic
 The open challenges analyzed in Section VI—catastrophic forgetting, adversarial FL, THz and NTN integration, spectrum coexistence, regulatory governance, and model lifecycle management—collectively define a rich research agenda. The MAIMO architecture is specifically designed to accommodate advances in each of these areas: the modular orchestration plane, standardized O-RAN interfaces [47], and open model registry enable incremental substitution of components (e.g., replacing the BiLSTM predictor with a more powerful transformer-based forecaster, or adding THz-specific compression modules) without redesigning the full framework.
 
 Looking ahead, the most impactful extensions of MAIMO are: (i) integration with Reconfigurable Intelligent Surface (RIS) panels as a fourth infrastructure tier capable of passively shaping the propagation environment to improve inference offloading efficiency; (ii) formal verification of the DRL orchestration policy for safety-critical applications using bounded model checking or barrier certificate methods; and (iii) standardization of the MAIMO model registry schema and orchestration API within 3GPP Release 19 and O-RAN Working Group 2. These extensions will be pursued in future work, with the current MAIMO framework providing the foundational architecture on which such additions build.
-
-Open challenges in catastrophic forgetting, adversarial FL robustness, spectrum coexistence, regulatory governance, and model lifecycle management define the research agenda for operationalizing AI-native 6G. MAIMO provides a modular architectural blueprint that accommodates advances in each of these areas as they mature. Future work will extend the framework to reconfigurable intelligent surface (RIS) integration, 6G non-terrestrial network (NTN) tiers, and formal verification methods for safety-critical AI network functions.
 
 ---
 
