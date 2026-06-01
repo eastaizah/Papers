@@ -462,7 +462,6 @@ $$
 ### 2.1.4 Entropía conjunta y condicional
 
 En muchas aplicaciones interesa estudiar dos variables aleatorias conjuntamente, por ejemplo una fuente y su salida retardada, o la entrada y salida de un canal.
-
 #### Entropía conjunta
 
 Para dos variables discretas $X$ e $Y$ con distribución conjunta $p(x,y)$, la **entropía conjunta** se define como
@@ -1154,7 +1153,6 @@ $$
 $$
 
 **sí aparece aliasing**. En consecuencia, no es posible reconstruir perfectamente la señal original sin distorsión.
-
 ---
 
 ### 2.2.2 Muestreo ideal y práctico
@@ -1638,7 +1636,6 @@ n=11\text{ bits}
 $$
 
 si se exige superar la cota con margen entero.
-
 ---
 
 ### 2.2.7 Codificación PCM completa
@@ -2061,7 +2058,6 @@ C_2=10^6\log_2(21)\approx 4.392\,\text{Mbit/s}
 $$
 
 Aunque la SNR se duplicó, la capacidad no se duplicó. Ésta es una consecuencia directa de la ley logarítmica.
-
 ---
 
 ### 2.3.3 Límite de Shannon
@@ -2557,7 +2553,6 @@ $$
 $$
 
 Se elige $\mathbf{s}_1$. El ejemplo ilustra que ML conserva la misma lógica en cualquier dimensión.
-
 ---
 
 ### 2.4.3 Criterio de máximo a posteriori (MAP)
@@ -3002,7 +2997,6 @@ $$
 - La probabilidad de error en sistemas binarios gaussianos se expresa mediante la función $Q$.
 
 Desde la perspectiva semántica, esta sección deja una pregunta abierta: el detector clásico decide cuál símbolo fue transmitido. Pero en sistemas cognitivos o semánticos podría interesar, más bien, decidir **qué intención**, **qué estado del entorno** o **qué acción** debe inferirse, incluso si no todos los bits se recuperan exactamente. Esta idea reaparecerá en la sección 2.5.
-
 ---
 
 ## 2.5 Teoría de Información Semántica
@@ -3336,7 +3330,6 @@ $$
 $$
 
 **Interpretación:** la medida no depende ya del número de mundos, sino del peso lógico total de los mundos compatibles con la proposición.
-
 ---
 
 ### 2.5.5 Entropía semántica y diferencia con la entropía de Shannon
@@ -3722,7 +3715,7 @@ La novedad está en el bloque de extracción semántica: antes de transmitir, el
 - Carnap y Bar-Hillel formalizaron el contenido semántico como reducción lógica de posibilidades.
 - Floridi introdujo la idea de información semántica **fuerte**, donde la verdad es esencial.
 - La probabilidad lógica difiere de la probabilidad estadística, aunque ambas pueden relacionarse.
-- La entropía semántica mide incertidumbre sobre significados o estados del mundo, no sólo sobre símbolos.
+- La entropía semántica mide incertidumbre sobre significados, estados del mundo o tareas.
 - En comunicaciones modernas, resulta natural optimizar la transmisión respecto a tareas, decisiones o conocimiento relevante, especialmente en contextos 6G y sistemas inteligentes.
 
 En resumen, la teoría de la información semántica amplía el programa clásico de la comunicación: de transmitir correctamente símbolos, a transmitir correctamente **lo que importa**.
