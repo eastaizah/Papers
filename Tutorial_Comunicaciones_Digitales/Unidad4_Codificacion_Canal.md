@@ -2,17 +2,20 @@
 
 ## Introducción de la unidad
 
-La **codificación de canal** constituye uno de los pilares de las comunicaciones digitales modernas. Su propósito es introducir **redundancia controlada** en la información transmitida para **detectar** y, en muchos casos, **corregir** errores causados por ruido, interferencia, desvanecimiento y otras degradaciones del canal. En términos conceptuales, la codificación de canal transforma una secuencia de bits de información en una secuencia más larga, estructurada de acuerdo con reglas algebraicas o temporales, de modo que el receptor pueda inferir el mensaje original incluso cuando algunos símbolos hayan sido alterados durante la transmisión.
+La **codificación de canal** añade redundancia estructurada a la información para combatir los errores introducidos por ruido térmico, interferencia, desvanecimiento, distorsión no lineal y pérdidas del medio físico. A diferencia de la codificación de fuente, que busca eliminar redundancia, la codificación de canal la **introduce deliberadamente** para aumentar la confiabilidad.
 
-Desde una perspectiva geométrica y probabilística, la codificación de canal puede entenderse como un mecanismo para **separar más claramente** los mensajes posibles en el espacio de señales. Cuanto mayor sea la separación entre palabras-código o trayectorias válidas, menor será la probabilidad de que el ruido haga que el receptor confunda una palabra con otra. Esta idea conecta directamente con conceptos fundamentales como la **distancia euclidiana**, la **distancia de Hamming**, el **síndrome**, la **distancia mínima** y la **distancia libre**.
+Desde el punto de vista geométrico, codificar equivale a separar más las señales o las palabras-código válidas dentro de un espacio de decisión. Desde el punto de vista algebraico, equivale a restringir la transmisión a subconjuntos con estructura matemática controlada. Desde el punto de vista probabilístico, equivale a reducir la probabilidad de error a costa de transmitir más símbolos por bit de información.
 
-En esta unidad estudiaremos tres bloques fundamentales:
+En esta unidad se desarrollan cuatro bloques complementarios:
 
-- **4.1 Espacio de señal y espacios vectoriales**, que proporciona el fundamento geométrico de la detección óptima.
-- **4.2 Codificación de bloques**, basada en estructuras algebraicas finitas y matrices generadoras y de chequeo.
-- **4.3 Codificación convolucional**, basada en memoria, diagramas de estados y decodificación óptima mediante el algoritmo de Viterbi.
+- **4.1 Espacio de señal y espacios vectoriales**, base geométrica de la detección óptima.
+- **4.2 Teoría de campos de Galois y construcción de códigos**, fundamento algebraico de los códigos modernos.
+- **4.3 Codificación de bloques**, incluyendo códigos lineales, cíclicos, Hamming, BCH, Reed-Solomon, LDPC y polares.
+- **4.4 Codificación convolucional**, incluyendo variantes sistemáticas, no sistemáticas, RSC, códigos punzados y turbo.
 
-El enfoque será **pedagógico**, **matemáticamente riguroso** y orientado a estudiantes que se inician en el tema, pero sin sacrificar profundidad formal.
+La meta pedagógica es enlazar la intuición física del canal con la formalización matemática de la codificación. En particular, se mostrará que conceptos como distancia de Hamming, síndrome, raíces consecutivas, polinomio generador, trellis o distancia libre no son piezas aisladas, sino manifestaciones de una misma idea: **imponer estructura para hacer inferencia confiable**.
+
+> **Concepto clave:** un buen código de canal no “elimina” el ruido; lo hace **observable y corregible** mediante relaciones algebraicas o temporales entre símbolos transmitidos.
 
 ---
 
@@ -20,173 +23,154 @@ El enfoque será **pedagógico**, **matemáticamente riguroso** y orientado a es
 
 ## 4.1.1 Representación vectorial de señales
 
-En comunicaciones digitales, una señal transmitida en un intervalo temporal $0 \le t \le T$ puede representarse como un elemento de un espacio funcional. Si el conjunto de señales de interés tiene dimensión finita, es posible describir cada señal como una combinación lineal de funciones base ortonormales.
+En comunicaciones digitales, una señal transmitida durante el intervalo $0 \le t \le T$ puede modelarse como un elemento de un espacio funcional. Cuando el conjunto relevante de señales tiene dimensión finita, es posible trabajar con una base ortonormal y representar cada señal por un vector de coordenadas.
 
-Sea un conjunto de señales
+Sea
 $$
-\mathcal{S} = \{s_1(t), s_2(t), \dots, s_M(t)\}, \quad 0 \le t \le T.
+\mathcal{S} = \{s_1(t), s_2(t), \dots, s_M(t)\}, \qquad 0 \le t \le T.
 $$
 
-Si existen $N$ funciones base ortonormales $\{\phi_1(t), \phi_2(t), \dots, \phi_N(t)\}$ tales que toda señal $s_m(t)$ puede escribirse como
+Si existen $N$ funciones ortonormales $\{\phi_1(t),\phi_2(t),\dots,\phi_N(t)\}$ tales que
 $$
-s_m(t) = \sum_{i=1}^{N} s_{mi}\, \phi_i(t),
+s_m(t)=\sum_{i=1}^{N} s_{mi}\,\phi_i(t),
 $$
-entonces la señal queda asociada al vector
+entonces la señal queda representada por el vector
 $$
-\mathbf{s}_m = [s_{m1}, s_{m2}, \dots, s_{mN}]^{T}.
+\mathbf{s}_m=[s_{m1},s_{m2},\dots,s_{mN}]^T.
 $$
 
 Los coeficientes se obtienen por proyección:
 $$
-s_{mi} = \langle s_m(t), \phi_i(t) \rangle = \int_0^T s_m(t)\,\phi_i(t)\,dt.
+s_{mi}=\langle s_m,\phi_i\rangle = \int_0^T s_m(t)\phi_i(t)\,dt.
 $$
 
-Aquí el producto interno entre dos señales $x(t)$ y $y(t)$ se define como
+El producto interno entre dos señales se define como
 $$
-\langle x(t), y(t) \rangle = \int_0^T x(t)y(t)\,dt.
+\langle x,y\rangle = \int_0^T x(t)y(t)\,dt,
 $$
-
-La energía de una señal resulta
+y la energía de la señal es
 $$
-E_s = \int_0^T |s_m(t)|^2 dt = \sum_{i=1}^{N} s_{mi}^2 = \|\mathbf{s}_m\|^2.
-$$
-
-**Concepto clave:** la representación vectorial transforma un problema de detección de señales continuas en un problema geométrico en $\mathbb{R}^N$.
-
-[Figura 4.1]: Imagine un conjunto de señales temporales distintas, cada una proyectada sobre dos o tres funciones base ortonormales. La figura debe mostrar, a la izquierda, varias formas de onda en el tiempo y, a la derecha, los puntos correspondientes en un plano o espacio tridimensional. El objetivo pedagógico de la figura es enfatizar que señales aparentemente complejas en el dominio temporal pueden verse como vectores en un espacio geométrico, donde distancias y ángulos adquieren significado físico en la detección.
-
-### Ejemplo 4.1: Representación vectorial en una base dada
-
-Considérese la base ortonormal en $[0,T]$ formada por dos funciones $\phi_1(t)$ y $\phi_2(t)$, y la señal
-$$
-s(t) = 3\phi_1(t) - 2\phi_2(t).
+E_s = \int_0^T |s_m(t)|^2dt = \sum_{i=1}^{N}s_{mi}^2 = \|\mathbf{s}_m\|^2.
 $$
 
-Entonces su representación vectorial es
-$$
-\mathbf{s} = [3, -2]^T.
-$$
+Esta formulación convierte un problema analógico continuo en uno geométrico discreto sobre $\mathbb{R}^N$.
 
-La energía vale
-$$
-E_s = 3^2 + (-2)^2 = 13.
-$$
+> **Concepto clave:** al pasar del dominio temporal al vectorial, la detección óptima se reformula como un problema de distancias, ángulos y proyecciones.
 
+**[Figura 4.1]:** representación conceptual de varias formas de onda temporales proyectadas sobre una base ortonormal de dos o tres dimensiones. A la izquierda deben verse señales $s_1(t),s_2(t),s_3(t)$ en el tiempo; a la derecha, sus vectores asociados en el plano o en el espacio. La figura debe enfatizar que las diferencias temporales entre señales se convierten en separación geométrica entre puntos.
+
+**Ejemplo 4.1:** representación vectorial en una base dada.
+
+Sea
+$$
+s(t)=3\phi_1(t)-2\phi_2(t).
+$$
+Entonces
+$$
+\mathbf{s}=[3,-2]^T.
+$$
 Si otra señal es
 $$
 r(t)=2\phi_1(t)+\phi_2(t),
 $$
-entonces su vector es
+entonces
 $$
-\mathbf{r} = [2,1]^T,
+\mathbf{r}=[2,1]^T.
 $$
-y el producto interno entre ambas señales es
+La energía de $s(t)$ es
+$$
+E_s=3^2+(-2)^2=13.
+$$
+La energía de $r(t)$ es
+$$
+E_r=2^2+1^2=5.
+$$
+El producto interno resulta
 $$
 \langle s,r\rangle = 3\cdot 2 + (-2)\cdot 1 = 4.
 $$
-
-Por tanto, el ángulo $\theta$ entre ambos vectores satisface
+Por tanto,
 $$
 \cos\theta = \frac{\langle s,r\rangle}{\|\mathbf{s}\|\,\|\mathbf{r}\|} = \frac{4}{\sqrt{13}\sqrt{5}}.
 $$
-
----
+El ejemplo muestra que la correlación entre señales se traduce directamente en el ángulo entre vectores.
 
 ## 4.1.2 Base ortonormal: procedimiento de Gram-Schmidt
 
-Con frecuencia las señales disponibles no son ortogonales entre sí. En tal caso, puede construirse una base ortonormal equivalente mediante el procedimiento de **Gram-Schmidt**.
+En la práctica, las funciones disponibles no siempre son ortogonales. El procedimiento de Gram-Schmidt permite construir una base ortonormal equivalente sin perder información.
 
-Sea un conjunto linealmente independiente de funciones $\{g_1(t), g_2(t), \dots, g_N(t)\}$. El procedimiento construye funciones ortonormales $\{\phi_1(t), \phi_2(t), \dots, \phi_N(t)\}$ tales que generan el mismo subespacio.
+Dado un conjunto linealmente independiente $\{g_1(t),g_2(t),\dots,g_N(t)\}$, se define:
 
-### Paso 1
-Se define
 $$
-\phi_1(t) = \frac{g_1(t)}{\|g_1(t)\|}, \qquad \|g_1(t)\| = \sqrt{\langle g_1,g_1\rangle}.
+\phi_1(t)=\frac{g_1(t)}{\|g_1\|},
 $$
-
-### Paso 2
-Se elimina de $g_2(t)$ la componente en la dirección de $\phi_1(t)$:
 $$
-u_2(t)=g_2(t)-\langle g_2,\phi_1\rangle\phi_1(t).
+\nu_2(t)=g_2(t)-\langle g_2,\phi_1\rangle\phi_1(t),
 $$
-Luego se normaliza:
 $$
-\phi_2(t)=\frac{u_2(t)}{\|u_2(t)\|}.
+\phi_2(t)=\frac{\nu_2(t)}{\|\nu_2\|},
 $$
 
-### Paso general
-Para $k\ge 2$,
+y, en general,
 $$
-u_k(t)=g_k(t)-\sum_{i=1}^{k-1}\langle g_k,\phi_i\rangle\phi_i(t),
+\nu_k(t)=g_k(t)-\sum_{i=1}^{k-1}\langle g_k,\phi_i\rangle\phi_i(t),
 $$
 $$
-\phi_k(t)=\frac{u_k(t)}{\|u_k(t)\|}.
+\phi_k(t)=\frac{\nu_k(t)}{\|\nu_k\|}.
 $$
 
-Estas funciones satisfacen
+Las funciones construidas satisfacen
 $$
 \langle \phi_i,\phi_j\rangle =
 \begin{cases}
 1, & i=j,\\
-0, & i\ne j.
+0, & i\neq j.
 \end{cases}
 $$
 
-**Concepto clave:** Gram-Schmidt no cambia la información contenida en las señales; solo cambia el sistema de coordenadas a uno más conveniente.
+> **Concepto clave:** Gram-Schmidt no altera el subespacio útil de señales; únicamente lo expresa en coordenadas ortogonales, lo que simplifica análisis, implementación de receptores y cálculo de distancia.
 
-[Figura 4.2]: La figura debe representar geométricamente el procedimiento de Gram-Schmidt en un plano o espacio tridimensional. Primero se muestra el vector original $g_1$ y su versión normalizada $\phi_1$. Después, el vector $g_2$ se descompone en una proyección sobre $\phi_1$ y una componente ortogonal $\nu_2$, que al normalizarse produce $\phi_2$. Esta visualización es esencial para comprender que el algoritmo elimina dependencias angulares y construye ejes mutuamente perpendiculares.
+**[Figura 4.2]:** visualización geométrica del procedimiento de Gram-Schmidt. Debe mostrarse primero $g_1$ y su versión normalizada $\phi_1$, y después el vector $g_2$ descompuesto en una proyección sobre $\phi_1$ y una componente ortogonal $\nu_2$ que, al normalizarse, produce $\phi_2$. El mensaje central es que la ortogonalización consiste en “restar dependencia angular”.
 
-### Ejemplo 4.2: Gram-Schmidt con dos señales
+**Ejemplo 4.2:** Gram-Schmidt con dos señales en $[0,1]$.
 
-Considérense dos señales en $[0,T]$:
+Sea
 $$
-g_1(t)=1,
-$$
-$$
-g_2(t)=t,
-$$
-para $0\le t\le 1$.
-
-#### Paso 1: normalización de $g_1(t)$
-Se calcula
-$$
-\|g_1\| = \sqrt{\int_0^1 1^2 dt} = 1.
-$$
-Así,
-$$
-\phi_1(t)=1.
-$$
-
-#### Paso 2: ortogonalización de $g_2(t)$
-La proyección de $g_2$ sobre $\phi_1$ es
-$$
-\langle g_2,\phi_1\rangle = \int_0^1 t\,dt = \frac{1}{2}.
+g_1(t)=1, \qquad g_2(t)=t.
 $$
 Entonces
 $$
-\nu_2(t)=t-\frac{1}{2}.
+\|g_1\|=\sqrt{\int_0^1 1\,dt}=1,
 $$
-Su norma es
+por lo que
 $$
-\|\nu_2\| = \sqrt{\int_0^1 \left(t-\frac{1}{2}\right)^2 dt}
-= \sqrt{\frac{1}{12}} = \frac{1}{2\sqrt{3}}.
+\phi_1(t)=1.
+$$
+La proyección de $g_2$ sobre $\phi_1$ vale
+$$
+\langle g_2,\phi_1\rangle = \int_0^1 t\,dt = \frac{1}{2}.
 $$
 Por tanto,
 $$
+\nu_2(t)=t-\frac{1}{2}.
+$$
+La norma de $\nu_2$ es
+$$
+\|\nu_2\|=\sqrt{\int_0^1\left(t-\frac{1}{2}\right)^2dt} = \sqrt{\frac{1}{12}} = \frac{1}{2\sqrt{3}}.
+$$
+Finalmente,
+$$
 \phi_2(t)=\frac{t-1/2}{1/(2\sqrt{3})}=2\sqrt{3}\left(t-\frac{1}{2}\right).
 $$
-
 Se verifica que
 $$
-\langle \phi_1,\phi_2\rangle=0,
+\langle \phi_1,\phi_2\rangle = 0,
 $$
-y ambas funciones tienen norma unitaria.
-
----
+y que ambas funciones tienen norma unitaria.
 
 ## 4.1.3 Geometría de las señales de comunicación
 
-Una vez representadas como vectores, las señales transmitidas se convierten en puntos en un espacio euclidiano. El canal con ruido aditivo blanco gaussiano (AWGN) puede modelarse como
+En un canal AWGN, la señal recibida puede escribirse como
 $$
 r(t)=s_m(t)+n(t),
 $$
@@ -196,1648 +180,1698 @@ $$
 $$
 donde $\mathbf{n}$ es un vector gaussiano con componentes independientes de media cero y varianza $N_0/2$ sobre cada dimensión ortonormal.
 
-La detección óptima por máxima verosimilitud en AWGN consiste en elegir la señal $\mathbf{s}_i$ que minimiza la distancia euclidiana al vector recibido:
+La detección de máxima verosimilitud se formula como
 $$
 \hat{\mathbf{s}} = \arg\min_{\mathbf{s}_i\in\mathcal{S}} \|\mathbf{r}-\mathbf{s}_i\|^2.
 $$
 
-Si todas las señales son equiprobables y de igual energía, esto equivale a seleccionar la señal más cercana geométricamente.
+Si las señales son equiprobables, la regla óptima es escoger la señal más cercana en distancia euclidiana. Esto induce regiones de Voronoi: cada punto del espacio queda asignado a la señal más próxima.
 
-### Regiones de decisión
-El espacio se divide en regiones de Voronoi. Cada región contiene todos los puntos más cercanos a una señal dada que a las demás.
-
-Si el ruido desplaza el punto transmitido dentro de su región, no hay error. Si lo desplaza fuera de ella, ocurre un error de decisión.
-
-[Figura 4.3]: La figura debe mostrar varias señales representadas como puntos en un plano y las fronteras de decisión entre ellas, definidas por los lugares geométricos donde la distancia a dos señales es igual. Es útil destacar una realización del ruido que mueve el punto transmitido sin cruzar la frontera y otra que sí la cruza, para conectar directamente la geometría con el fenómeno de error de detección.
-
-### Correlación y ángulo entre señales
-Dos señales cercanas angularmente son más fáciles de confundir. La correlación entre señales se expresa como
+La correlación entre señales también es central:
 $$
-\langle s_i,s_j\rangle = \sum_{k=1}^{N} s_{ik}s_{jk}.
+\langle s_i,s_j\rangle = \sum_{k=1}^{N}s_{ik}s_{jk}.
 $$
-
-Si las señales son ortogonales,
+Si dos señales son ortogonales, entonces
 $$
 \langle s_i,s_j\rangle = 0,
 $$
-lo que favorece la separación geométrica y simplifica la detección.
+lo que favorece la separación geométrica.
 
-### Ejemplo 4.3: Señales antipodales
+> **Concepto clave:** en AWGN, la probabilidad de error decrece cuando las señales válidas están más separadas en el espacio euclidiano; por eso la codificación busca incrementar distancias efectivas.
 
-Considérense dos señales binarias antipodales:
+**[Figura 4.3]:** plano de señales con fronteras de decisión entre varios puntos. Debe ilustrarse una realización del ruido que no cruza la frontera y otra que sí lo hace. La figura debe conectar de manera visual la geometría de Voronoi con la ocurrencia de errores de detección.
+
+**Ejemplo 4.3:** señales antipodales.
+
+Sea
 $$
-s_1(t)=+\sqrt{E_b}\,\phi(t), \qquad s_2(t)=-\sqrt{E_b}\,\phi(t),
+s_1(t)=+\sqrt{E_b}\,\phi(t), \qquad s_2(t)=-\sqrt{E_b}\,\phi(t), \qquad \|\phi\|=1.
 $$
-con $\|\phi(t)\|=1$.
-
-Las representaciones vectoriales son
+Entonces
 $$
 \mathbf{s}_1=[\sqrt{E_b}], \qquad \mathbf{s}_2=[-\sqrt{E_b}].
 $$
-
 La distancia euclidiana entre ambas señales es
 $$
 d_E = \|\mathbf{s}_1-\mathbf{s}_2\| = 2\sqrt{E_b}.
 $$
+La frontera de decisión se ubica en el origen. Si se transmite $s_1$ y el ruido desplaza la observación a la región negativa, el receptor decide erróneamente $s_2$.
 
-La frontera de decisión está en el origen. Si se transmite $s_1$ y el ruido es suficientemente negativo como para que la observación caiga a la izquierda de cero, se decide erróneamente $s_2$.
+## 4.1.4 Distancia euclidiana y probabilidad de error
 
----
-
-## 4.1.4 Distancia euclidiana y su relación con la probabilidad de error
-
-La distancia euclidiana entre dos señales $s_i(t)$ y $s_j(t)$ se define como
+La distancia euclidiana entre dos señales $s_i(t)$ y $s_j(t)$ es
 $$
-d_{ij} = \left( \int_0^T |s_i(t)-s_j(t)|^2 dt \right)^{1/2}.
+d_{ij}=\left(\int_0^T |s_i(t)-s_j(t)|^2dt\right)^{1/2} = \|\mathbf{s}_i-\mathbf{s}_j\|.
 $$
 
-En representación vectorial,
+Para señales binarias equiprobables en AWGN,
 $$
-d_{ij}=\|\mathbf{s}_i-\mathbf{s}_j\|.
+P_e = Q\left(\frac{d_{12}}{\sqrt{2N_0}}\right),
 $$
-
-### Probabilidad de error binaria en AWGN
-Para dos señales equiprobables, la probabilidad de error óptima es
+donde
 $$
-P_e = Q\left(\frac{d_{12}}{2\sigma}\right),
-$$
-donde $\sigma^2=N_0/2$ por dimensión, y
-$$
-Q(x)=\frac{1}{\sqrt{2\pi}}\int_x^{\infty} e^{-u^2/2}\,du.
+Q(x)=\frac{1}{\sqrt{2\pi}}\int_x^{\infty}e^{-u^2/2}\,du.
 $$
 
-Equivalentemente,
+En particular, para señalización antipodal binaria coherente,
 $$
-P_e = Q\left(\sqrt{\frac{d_{12}^2}{2N_0}}\right).
+P_b = Q\left(\sqrt{\frac{2E_b}{N_0}}\right),
 $$
-
-Esto muestra un resultado central: **a mayor distancia euclidiana entre señales, menor probabilidad de error**.
-
-### Caso antipodal
-Si $d_{12}=2\sqrt{E_b}$,
+y para señalización ortogonal binaria coherente,
 $$
-P_e = Q\left(\sqrt{\frac{2E_b}{N_0}}\right).
+P_b = Q\left(\sqrt{\frac{E_b}{N_0}}\right).
 $$
 
-### Caso ortogonal binario coherente
-Si dos señales ortogonales tienen energía $E_b$, la distancia es
-$$
-d_{12} = \sqrt{E_b+E_b} = \sqrt{2E_b},
-$$
-y por tanto
-$$
-P_e = Q\left(\sqrt{\frac{E_b}{N_0}}\right).
-$$
+La diferencia aparece porque la distancia entre señales ortogonales es menor que la distancia entre señales antipodales de la misma energía.
 
-Esto confirma que la señalización antipodal ofrece mejor desempeño que la ortogonal binaria coherente para la misma energía por bit.
+> **Concepto clave:** la distancia mínima relevante para el desempeño no es únicamente la energía, sino cómo esa energía se distribuye geométricamente entre palabras o trayectorias candidatas.
 
-[Figura 4.4]: La figura debe comparar, sobre una recta o plano, dos constelaciones binarias: una antipodal y otra ortogonal. Debe remarcarse la separación entre puntos y su relación con la frontera de decisión. Una buena descripción pedagógica destacaría que la constelación antipodal “usa mejor” el espacio disponible al maximizar la distancia entre señales para una energía dada.
+**Ejemplo 4.4:** probabilidad de error a partir de la distancia.
 
-### Ejemplo 4.4: Cálculo de probabilidad de error a partir de la distancia
-
-Supóngase un sistema binario con distancia euclidiana entre señales
+Si dos señales binarias tienen separación euclidiana
 $$
 d_{12}=4,
 $$
-y varianza de ruido por dimensión
+y el canal tiene
 $$
-\sigma^2=1.
+N_0=2,
 $$
-Entonces
+entonces
 $$
-P_e = Q\left(\frac{4}{2\cdot 1}\right)=Q(2).
+P_e = Q\left(\frac{4}{\sqrt{4}}\right)=Q(2)\approx 2.28\times 10^{-2}.
 $$
-
-Usando tablas de la función $Q$,
+Si la distancia se duplica a $8$, entonces
 $$
-Q(2)\approx 2.28\times 10^{-2}.
+P_e = Q\left(\frac{8}{2}\right)=Q(4)\approx 3.17\times 10^{-5}.
 $$
-
-Por tanto,
-$$
-P_e \approx 0.0228.
-$$
-
-Si la distancia se duplicara a $d_{12}=8$,
-$$
-P_e = Q(4) \approx 3.17\times 10^{-5},
-$$
-lo que demuestra la fuerte sensibilidad del error frente a la separación geométrica.
-
----
+El descenso es drástico, lo que anticipa por qué la codificación de canal es tan poderosa.
 
 ## 4.1.5 Ejemplos resueltos integradores
 
-### Ejemplo 4.5: Expansión de señales y distancia entre ellas
+**Ejemplo 4.5:** expansión de señales y distancia entre ellas.
 
-Sean las señales
+Sean
 $$
-s_1(t)=\phi_1(t),
+s_1(t)=2\phi_1(t)+\phi_2(t), \qquad s_2(t)=\phi_1(t)-2\phi_2(t),
 $$
+con $\phi_1$ y $\phi_2$ ortonormales. Entonces
 $$
-s_2(t)=\frac{1}{2}\phi_1(t)+\frac{\sqrt{3}}{2}\phi_2(t),
+\mathbf{s}_1=[2,1]^T, \qquad \mathbf{s}_2=[1,-2]^T.
 $$
-con base ortonormal $\{\phi_1,\phi_2\}$.
-
-Sus vectores son
+La diferencia es
 $$
-\mathbf{s}_1=[1,0]^T,
+\mathbf{s}_1-\mathbf{s}_2=[1,3]^T,
 $$
+y la distancia euclidiana vale
 $$
-\mathbf{s}_2=\left[\frac{1}{2},\frac{\sqrt{3}}{2}\right]^T.
+d_{12}=\sqrt{1^2+3^2}=\sqrt{10}.
 $$
-
-La distancia euclidiana es
-$$
-d_{12}^2 = \left(1-\frac{1}{2}\right)^2 + \left(0-\frac{\sqrt{3}}{2}\right)^2
-=\frac{1}{4}+\frac{3}{4}=1.
-$$
-Luego,
-$$
-d_{12}=1.
-$$
-
 El producto interno es
 $$
-\langle s_1,s_2\rangle = \frac{1}{2}.
+\langle s_1,s_2\rangle = 2\cdot 1 + 1\cdot (-2)=0,
 $$
+por lo que las señales son ortogonales, aunque no tengan la misma energía.
 
-Como ambas señales tienen energía unitaria,
-$$
-\cos\theta = \frac{1}{2}, \qquad \theta = 60^{\circ}.
-$$
+**Ejemplo 4.6:** construcción de un receptor correlador.
 
-### Ejemplo 4.6: Construcción de receptor correlador
-
-Si una señal cualquiera del conjunto bidimensional se expresa como
+Si el conjunto de señales usa la base ortonormal $\{\phi_1,\phi_2\}$, el receptor suficiente calcula
 $$
-s_m(t)=s_{m1}\phi_1(t)+s_{m2}\phi_2(t),
+y_1 = \int_0^T r(t)\phi_1(t)dt, \qquad y_2 = \int_0^T r(t)\phi_2(t)dt.
 $$
-el receptor óptimo puede proyectar la observación $r(t)$ sobre cada base:
+Supóngase que se recibe el vector
 $$
-r_1=\int_0^T r(t)\phi_1(t)dt,
+\mathbf{y}=[1.9,0.8]^T,
+$$
+y que las hipótesis posibles son $\mathbf{s}_1=[2,1]^T$ y $\mathbf{s}_2=[1,-2]^T$. Entonces
+$$
+\|\mathbf{y}-\mathbf{s}_1\|^2=(1.9-2)^2+(0.8-1)^2=0.01+0.04=0.05,
 $$
 $$
-r_2=\int_0^T r(t)\phi_2(t)dt.
+\|\mathbf{y}-\mathbf{s}_2\|^2=(1.9-1)^2+(0.8+2)^2=0.81+7.84=8.65.
 $$
-
-El vector recibido será
-$$
-\mathbf{r}=[r_1,r_2]^T.
-$$
-La decisión se toma comparando $\mathbf{r}$ con todos los vectores válidos del alfabeto.
-
-**Interpretación:** el banco de correladores o filtros casados implementa físicamente la proyección sobre la base ortonormal.
+Por consiguiente, el detector decide $\mathbf{s}_1$.
 
 ---
 
-# 4.2 Codificación de Bloques
+# 4.2 Teoría de Campos de Galois y Construcción de Códigos
 
-## 4.2.1 Conceptos fundamentales: código $(n,k)$, tasa de código, distancia de Hamming
+La teoría algebraica de códigos modernos descansa sobre estructuras finitas en las que suma y multiplicación están perfectamente controladas. Los polinomios generadores de los códigos cíclicos, BCH y Reed-Solomon no aparecen por casualidad: emergen de la aritmética en campos finitos y de la teoría de raíces de polinomios.
 
-Un **código de bloque** transforma una palabra de información de longitud $k$ bits en una palabra-código de longitud $n$ bits. Se habla de un código $(n,k)$.
+## 4.2.1 Fundamentos algebraicos: grupos, anillos y campos
 
-- $k$: número de bits de información.
-- $n$: número total de bits transmitidos.
-- $n-k$: bits de redundancia.
+Un **grupo** $(G,+)$ es un conjunto dotado de una operación interna asociativa, con elemento neutro, inversos y, en el caso abeliano, conmutatividad. Un **anillo** $(R,+,\cdot)$ añade una segunda operación compatible con la suma. Un **campo** $(F,+,\cdot)$ es un anillo conmutativo en el que todo elemento no nulo posee inverso multiplicativo.
 
-La **tasa de código** se define como
+En codificación interesa especialmente el caso binario $GF(2)=\{0,1\}$, donde
 $$
-R = \frac{k}{n}.
+1+1=0, \qquad 1\cdot 1=1.
 $$
+Este simple hecho explica que las matrices generadoras, las matrices de paridad y las ecuaciones de síndrome se escriban como álgebra lineal sobre $GF(2)$.
 
-Cuanto mayor es $R$, menor es la redundancia; cuanto menor es $R$, mayor es la capacidad potencial de protección, a costa de eficiencia espectral.
+> **Concepto clave:** la teoría de códigos lineales es álgebra lineal sobre campos finitos; la teoría de códigos cíclicos y BCH es álgebra polinomial sobre esos mismos campos.
 
-### Distancia de Hamming
-La distancia de Hamming entre dos palabras binarias $\mathbf{x}$ y $\mathbf{y}$, denotada $d_H(\mathbf{x},\mathbf{y})$, es el número de posiciones en que difieren.
+**[Figura 4.4]:** diagrama jerárquico que muestre la inclusión conceptual **grupo $\subset$ anillo $\subset$ campo**. Debajo del diagrama deben aparecer ejemplos: enteros módulo $p$, polinomios binarios y campos finitos usados en codificación. La intención didáctica es evidenciar que cada capa algebraica agrega herramientas nuevas para diseñar códigos.
 
-Ejemplo:
-$$
-\mathbf{x}=101101, \qquad \mathbf{y}=100001.
-$$
-Difieren en dos posiciones, por tanto
-$$
-d_H(\mathbf{x},\mathbf{y})=2.
-$$
+## 4.2.2 Campos finitos $GF(p)$
 
-El **peso de Hamming** de una palabra $\mathbf{x}$, denotado $w_H(\mathbf{x})$, es el número de unos que contiene.
+Si $p$ es primo, el conjunto de clases de equivalencia módulo $p$ forma un campo finito:
+$$
+GF(p)=\mathbb{Z}_p=\{0,1,\dots,p-1\}.
+$$
+Las operaciones se realizan módulo $p$.
 
-Para códigos lineales,
+Por ejemplo, en $GF(5)$,
 $$
-d_H(\mathbf{x},\mathbf{y}) = w_H(\mathbf{x}+\mathbf{y}),
+3+4 \equiv 2 \pmod{5}, \qquad 3\cdot 4 \equiv 2 \pmod{5}, \qquad 2^{-1}=3,
 $$
-donde la suma es módulo 2.
+porque $2\cdot 3=6\equiv 1 \pmod{5}$.
 
-La **distancia mínima** de un código es
-$$
-d_{\min} = \min_{\mathbf{c}_i\ne \mathbf{c}_j} d_H(\mathbf{c}_i,\mathbf{c}_j).
-$$
+Todos los códigos lineales bloque clásicos sobre alfabeto binario trabajan sobre $GF(2)$. Cuando el alfabeto es no binario, como en Reed-Solomon, se utiliza $GF(q)$ con $q=p^m$.
 
-Esta magnitud determina la capacidad de detección y corrección.
+**Ejemplo 4.7:** aritmética elemental en $GF(5)$.
 
-[Figura 4.5]: La figura debe mostrar varias palabras-código binarias representadas como nodos en un hipercubo o, de forma más pedagógica, como cadenas de bits con posiciones marcadas. La idea es ilustrar visualmente qué significa distancia de Hamming: contar cuántos bits deben cambiar para transformar una palabra en otra. También conviene sugerir “esferas” de Hamming alrededor de cada código para anticipar el concepto de corrección de errores.
+Calcular
+$$
+(4+4)\cdot 3^{-1}.
+$$
+Primero,
+$$
+4+4 = 8 \equiv 3 \pmod{5}.
+$$
+Como
+$$
+3^{-1}=2,
+$$
+se obtiene
+$$
+(4+4)\cdot 3^{-1} \equiv 3\cdot 2 = 6 \equiv 1 \pmod{5}.
+$$
+El ejemplo prepara la intuición para trabajar después con clases de equivalencia polinómicas.
 
-### Ejemplo 4.7: Parámetros básicos de un código
+## 4.2.3 Extensiones $GF(p^m)$ y polinomios irreducibles
 
-Considérese el código
+No existen campos de cardinalidad arbitraria; solo existen campos de tamaño $p^m$, con $p$ primo y $m\in\mathbb{N}$. Para construir $GF(2^m)$ se parte del anillo de polinomios binarios $GF(2)[x]$ y se toma cociente por un polinomio irreducible $p(x)$ de grado $m$:
 $$
-\mathcal{C}=\{000,011,101,110\}.
-$$
-
-Hay $4$ palabras-código, luego
-$$
-2^k=4 \Rightarrow k=2.
-$$
-Como cada palabra tiene longitud 3,
-$$
-n=3.
-$$
-Por tanto es un código $(3,2)$ con tasa
-$$
-R=\frac{2}{3}.
+GF(2^m) \cong GF(2)[x]/\langle p(x)\rangle.
 $$
 
-Calculamos distancias:
-- $d_H(000,011)=2$
-- $d_H(000,101)=2$
-- $d_H(000,110)=2$
-- $d_H(011,101)=2$
-- $d_H(011,110)=2$
-- $d_H(101,110)=2$
-
-Así,
+Si $\alpha$ denota la clase del polinomio $x$, entonces en el campo se cumple la relación
 $$
-d_{\min}=2.
+p(\alpha)=0.
 $$
+Por ello, todas las potencias de grado mayor o igual que $m$ pueden reducirse a combinaciones de $1,\alpha,\alpha^2,\dots,\alpha^{m-1}$.
 
----
-
-## 4.2.2 Códigos lineales: definición y propiedades
-
-Un código binario de bloque de longitud $n$ es **lineal** si el conjunto de palabras-código forma un subespacio vectorial de $\mathbb{F}_2^n$.
-
-Esto implica:
-1. La palabra nula $\mathbf{0}$ pertenece al código.
-2. La suma módulo 2 de dos palabras-código es otra palabra-código.
-3. Todo múltiplo escalar (en $\mathbb{F}_2$, solo 0 o 1) de una palabra-código pertenece al código.
-
-Si el código tiene dimensión $k$, entonces contiene exactamente
+Para $GF(2^3)$ elegimos típicamente
 $$
-2^k
+p(x)=x^3+x+1,
 $$
-palabras-código.
-
-### Propiedad fundamental
-En un código lineal,
+de modo que
 $$
-d_{\min} = \min_{\mathbf{c}\ne \mathbf{0}} w_H(\mathbf{c}).
+\alpha^3=\alpha+1.
+$$
+Para $GF(2^4)$ es común usar
+$$
+p(x)=x^4+x+1,
+$$
+lo que implica
+$$
+\alpha^4=\alpha+1.
 $$
 
-Es decir, basta buscar el peso mínimo entre palabras-código no nulas.
+> **Concepto clave:** un polinomio irreducible juega el mismo papel que un número primo en aritmética entera: permite construir una estructura en la que la división por elementos no nulos vuelve a ser posible.
 
-### Ejemplo 4.8: Verificación de linealidad
+**[Figura 4.5]:** representación circular de las potencias de un elemento primitivo $\alpha$ en $GF(2^m)$, mostrando cómo la multiplicación por $\alpha$ recorre cíclicamente los elementos no nulos del campo. Sobre la figura deben indicarse las reducciones impuestas por el polinomio irreducible, por ejemplo $\alpha^3=\alpha+1$ o $\alpha^4=\alpha+1$.
 
-Sea
-$$
-\mathcal{C}=\{000,011,101,110\}.
-$$
+**Ejemplo 4.8:** construcción explícita de $GF(2^3)$.
 
-Verificamos cierres:
+Con
 $$
-011+101=110,
-$$
-$$
-011+110=101,
-$$
-$$
-101+110=011.
-$$
-Además, $000\in\mathcal{C}$. Luego el código es lineal.
-
-Los pesos de las palabras no nulas son todos 2, por tanto
-$$
-d_{\min}=2.
-$$
-
----
-
-## 4.2.3 Matriz generadora $G$: construcción y forma sistemática
-
-Un código lineal $(n,k)$ puede describirse mediante una **matriz generadora** $G$ de tamaño $k\times n$, cuyas filas son linealmente independientes y generan el código.
-
-Si $\mathbf{u}$ es una palabra de información de longitud $k$, la palabra-código es
-$$
-\mathbf{c} = \mathbf{u}G.
-$$
-
-Todas las operaciones son en $\mathbb{F}_2$.
-
-### Forma sistemática
-Una forma particularmente útil es
-$$
-G = [I_k\; P],
-$$
-donde:
-- $I_k$ es la matriz identidad $k\times k$,
-- $P$ es una matriz $k\times(n-k)$.
-
-En este caso, la palabra-código tiene la forma
-$$
-\mathbf{c}=[\mathbf{u}\;\mathbf{p}],
-$$
-con los bits de información explícitos y seguidos de bits de paridad.
-
-### Ejemplo 4.9: Construcción de un código a partir de $G$
-
-Sea
-$$
-G=
-\begin{bmatrix}
-1 & 0 & 0 & 1 & 1\\
-0 & 1 & 0 & 1 & 0\\
-0 & 0 & 1 & 0 & 1
-\end{bmatrix}.
-$$
-
-Es un código $(5,3)$, ya que $G$ tiene 3 filas y 5 columnas. La tasa es
-$$
-R=\frac{3}{5}.
-$$
-
-Para la palabra de información
-$$
-\mathbf{u}=[1\;0\;1],
-$$
-la palabra-código es
-$$
-\mathbf{c}=\mathbf{u}G = [1\;0\;1]
-\begin{bmatrix}
-1 & 0 & 0 & 1 & 1\\
-0 & 1 & 0 & 1 & 0\\
-0 & 0 & 1 & 0 & 1
-\end{bmatrix}.
-$$
-
-La multiplicación módulo 2 da
-$$
-\mathbf{c}=[1\;0\;1\;1\;0].
-$$
-
-Comprobación componente a componente:
-- Primera: $1$
-- Segunda: $0$
-- Tercera: $1$
-- Cuarta: $1\oplus 0 = 1$
-- Quinta: $1\oplus 1 = 0$
-
----
-
-## 4.2.4 Codificación usando $G$
-
-Dado un mensaje binario $\mathbf{u}$ de longitud $k$, la codificación es el producto lineal
-$$
-\mathbf{c}=\mathbf{u}G.
-$$
-
-Si $G$ está en forma sistemática $[I_k\;P]$, entonces los primeros $k$ bits de $\mathbf{c}$ coinciden con el mensaje.
-
-### Ejemplo 4.10: Enumeración completa de palabras-código
-
-Con la matriz generadora del ejemplo anterior,
-$$
-G=
-\begin{bmatrix}
-1 & 0 & 0 & 1 & 1\\
-0 & 1 & 0 & 1 & 0\\
-0 & 0 & 1 & 0 & 1
-\end{bmatrix},
-$$
-se generan todas las palabras-código para las $2^3=8$ palabras de información:
-
-1. $\mathbf{u}=000 \Rightarrow \mathbf{c}=00000$
-2. $\mathbf{u}=001 \Rightarrow \mathbf{c}=00101$
-3. $\mathbf{u}=010 \Rightarrow \mathbf{c}=01010$
-4. $\mathbf{u}=011 \Rightarrow \mathbf{c}=01111$
-5. $\mathbf{u}=100 \Rightarrow \mathbf{c}=10011$
-6. $\mathbf{u}=101 \Rightarrow \mathbf{c}=10110$
-7. $\mathbf{u}=110 \Rightarrow \mathbf{c}=11001$
-8. $\mathbf{u}=111 \Rightarrow \mathbf{c}=11100$
-
-Los pesos no nulos son: $2,2,4,3,3,3,3$, luego
-$$
-d_{\min}=2.
-$$
-
----
-
-## 4.2.5 Matriz de chequeo de paridad $H$: construcción y relación con $G$
-
-La **matriz de chequeo de paridad** $H$ es una matriz de tamaño $(n-k)\times n$ tal que una palabra $\mathbf{c}$ pertenece al código si y solo si
-$$
-\mathbf{c}H^T=\mathbf{0}.
-$$
-
-Si $G$ está en forma sistemática
-$$
-G=[I_k\;P],
-$$
-entonces una matriz de chequeo compatible es
-$$
-H=[P^T\;I_{n-k}].
-$$
-
-En binario, el signo negativo no importa porque $-1 \equiv 1 \pmod 2$.
-
-La relación fundamental es
-$$
-GH^T=0.
-$$
-
-### Ejemplo 4.11: Construcción de $H$ a partir de $G$
-
-Dado
-$$
-G=
-\begin{bmatrix}
-1 & 0 & 0 & 1 & 1\\
-0 & 1 & 0 & 1 & 0\\
-0 & 0 & 1 & 0 & 1
-\end{bmatrix}
-= [I_3\;P],
+p(x)=x^3+x+1,
 $$
 se tiene
 $$
-P=
-\begin{bmatrix}
-1 & 1\\
-1 & 0\\
-0 & 1
-\end{bmatrix}.
+\alpha^3=\alpha+1.
 $$
-Por tanto,
+Entonces:
 $$
-H=[P^T\;I_2]=
-\begin{bmatrix}
-1 & 1 & 0 & 1 & 0\\
-1 & 0 & 1 & 0 & 1
-\end{bmatrix}.
+\alpha^4=\alpha\cdot\alpha^3=\alpha(\alpha+1)=\alpha^2+\alpha,
+$$
+$$
+\alpha^5=\alpha\cdot\alpha^4=\alpha^3+\alpha^2=(\alpha+1)+\alpha^2=\alpha^2+\alpha+1,
+$$
+$$
+\alpha^6=\alpha\cdot\alpha^5=\alpha^3+\alpha^2+\alpha=(\alpha+1)+\alpha^2+\alpha=\alpha^2+1,
+$$
+$$
+\alpha^7=\alpha\cdot\alpha^6=\alpha^3+\alpha=(\alpha+1)+\alpha=1.
+$$
+Como $\alpha^7=1$, el elemento $\alpha$ genera todos los elementos no nulos y, por tanto, es **primitivo**.
+
+## 4.2.4 Elementos primitivos, orden multiplicativo y polinomios mínimos
+
+El conjunto no nulo de $GF(q)$ forma un grupo multiplicativo cíclico de orden $q-1$. Un elemento $\alpha$ se dice **primitivo** si genera todos los elementos no nulos:
+$$
+GF(q)^* = \{1,\alpha,\alpha^2,\dots,\alpha^{q-2}\}.
 $$
 
-Verificación:
+El **orden multiplicativo** de $\beta\neq 0$ es el menor entero $\ell$ tal que
 $$
-GH^T=0.
-$$
-
-Por ejemplo, para la primera fila de $G$, $[1\;0\;0\;1\;1]$:
-$$
-[1\;0\;0\;1\;1]
-\begin{bmatrix}
-1 & 1\\
-1 & 0\\
-0 & 1\\
-1 & 0\\
-0 & 1
-\end{bmatrix}
-=
-[1\oplus 1,\;1\oplus 1]=[0,0].
+\beta^{\ell}=1.
 $$
 
----
-
-## 4.2.6 Síndrome: definición $s=rH^T$, interpretación
-
-Si se recibe una palabra
+El **polinomio mínimo** de un elemento $\beta\in GF(2^m)$ sobre $GF(2)$ es el polinomio mónico de menor grado con coeficientes en $GF(2)$ tal que
 $$
-\mathbf{r}=\mathbf{c}+\mathbf{e},
-$$
-donde $\mathbf{e}$ es el vector de error, entonces el **síndrome** se define como
-$$
-\mathbf{s}=\mathbf{r}H^T.
+M_\beta(\beta)=0.
 $$
 
-Sustituyendo,
+Si $\beta=\alpha^i$, sus conjugados bajo el automorfismo de Frobenius son
 $$
-\mathbf{s}=(\mathbf{c}+\mathbf{e})H^T = \mathbf{c}H^T + \mathbf{e}H^T = \mathbf{e}H^T,
+\beta,\beta^2,\beta^{2^2},\dots
 $$
-porque $\mathbf{c}H^T=0$.
+hasta cerrar ciclo. El polinomio mínimo es el producto
+$$
+M_\beta(x)=\prod_j (x-\beta^{2^j}).
+$$
+En característica $2$, restar y sumar son equivalentes.
 
-**Interpretación clave:** el síndrome depende solo del patrón de error, no de la palabra-código transmitida.
+**Ejemplo 4.9:** polinomio mínimo de $\alpha$ y de $\alpha^3$ en $GF(2^4)$.
 
-Si $\mathbf{s}=0$, la palabra recibida es una palabra-código válida (aunque en algunos casos podría contener un patrón de error no detectable). Si $\mathbf{s}\ne 0$, se detecta error.
-
-### Ejemplo 4.12: Cálculo del síndrome
-
-Usando la matriz
+Usando $p(x)=x^4+x+1$ y un elemento primitivo $\alpha$, los conjugados de $\alpha$ son
 $$
-H=
-\begin{bmatrix}
-1 & 1 & 0 & 1 & 0\\
-1 & 0 & 1 & 0 & 1
-\end{bmatrix},
+\alpha,\alpha^2,\alpha^4,\alpha^8.
 $$
-supóngase que se recibe
-$$
-\mathbf{r}=10100.
-$$
-
 Entonces
 $$
-\mathbf{s}=\mathbf{r}H^T = [1\;0\;1\;0\;0]
-\begin{bmatrix}
-1 & 1\\
-1 & 0\\
-0 & 1\\
-1 & 0\\
-0 & 1
-\end{bmatrix}.
+M_{\alpha}(x)=(x+\alpha)(x+\alpha^2)(x+\alpha^4)(x+\alpha^8)=x^4+x+1.
 $$
+Es decir, el propio polinomio irreducible de construcción es el polinomio mínimo de $\alpha$.
 
-Primera componente:
+Para $\alpha^3$, los conjugados son
 $$
-1\cdot 1 \oplus 0\cdot 1 \oplus 1\cdot 0 \oplus 0\cdot 1 \oplus 0\cdot 0 = 1.
+\alpha^3,\alpha^6,\alpha^{12},\alpha^9.
 $$
-Segunda componente:
-$$
-1\cdot 1 \oplus 0\cdot 0 \oplus 1\cdot 1 \oplus 0\cdot 0 \oplus 0\cdot 1 = 1\oplus 1=0.
-$$
-
 Por tanto,
 $$
-\mathbf{s}=[1\;0].
+M_{\alpha^3}(x)=(x+\alpha^3)(x+\alpha^6)(x+\alpha^{12})(x+\alpha^9)=x^4+x^3+x^2+x+1.
+$$
+Este resultado será esencial cuando se diseñen códigos BCH mediante raíces consecutivas.
+
+## 4.2.5 Tabla completa de representaciones y aritmética en $GF(2^3)$
+
+Tomando $GF(2^3)=GF(2)[x]/\langle x^3+x+1\rangle$, la representación completa de los elementos es la siguiente:
+
+|Representación|Polinomio asociado|Vector binario|Inverso multiplicativo|
+|---|---|---|---|
+|0|0|[0,0,0]|No existe|
+|1|1|[0,0,1]|1|
+|α|x|[0,1,0]|α^6|
+|α^2|x^2|[1,0,0]|α^5|
+|α^3|x + 1|[0,1,1]|α^4|
+|α^4|x^2 + x|[1,1,0]|α^3|
+|α^5|x^2 + x + 1|[1,1,1]|α^2|
+|α^6|x^2 + 1|[1,0,1]|α|
+
+La suma se realiza coeficiente a coeficiente módulo $2$, es decir, mediante una operación XOR sobre los vectores binarios. La tabla completa de suma es:
+
+|+|0|1|α|α^2|α^3|α^4|α^5|α^6|
+|---|---|---|---|---|---|---|---|---|
+|0|0|1|α|α^2|α^3|α^4|α^5|α^6|
+|1|1|0|α^3|α^6|α|α^5|α^4|α^2|
+|α|α|α^3|0|α^4|1|α^2|α^6|α^5|
+|α^2|α^2|α^6|α^4|0|α^5|α|α^3|1|
+|α^3|α^3|α|1|α^5|0|α^6|α^2|α^4|
+|α^4|α^4|α^5|α^2|α|α^6|0|1|α^3|
+|α^5|α^5|α^4|α^6|α^3|α^2|1|0|α|
+|α^6|α^6|α^2|α^5|1|α^4|α^3|α|0|
+
+La multiplicación se obtiene reduciendo potencias con la identidad $\alpha^3=\alpha+1$. La tabla completa de multiplicación es:
+
+|×|0|1|α|α^2|α^3|α^4|α^5|α^6|
+|---|---|---|---|---|---|---|---|---|
+|0|0|0|0|0|0|0|0|0|
+|1|0|1|α|α^2|α^3|α^4|α^5|α^6|
+|α|0|α|α^2|α^3|α^4|α^5|α^6|1|
+|α^2|0|α^2|α^3|α^4|α^5|α^6|1|α|
+|α^3|0|α^3|α^4|α^5|α^6|1|α|α^2|
+|α^4|0|α^4|α^5|α^6|1|α|α^2|α^3|
+|α^5|0|α^5|α^6|1|α|α^2|α^3|α^4|
+|α^6|0|α^6|1|α|α^2|α^3|α^4|α^5|
+
+**Ejemplo 4.10:** operaciones completas en $GF(2^3)$.
+
+1. **Suma:**
+$$
+\alpha^5+\alpha^2 = (\alpha^2+\alpha+1)+\alpha^2 = \alpha+1 = \alpha^3.
 $$
 
-Se detecta error.
-
----
-
-## 4.2.7 Capacidad de detección y corrección de errores
-
-Si un código tiene distancia mínima $d_{\min}$, entonces:
-
-- Puede **detectar** hasta
+2. **Producto:**
 $$
-d_{\min}-1
+\alpha^4\cdot \alpha^6 = \alpha^{10}=\alpha^{10\bmod 7}=\alpha^3=\alpha+1.
 $$
-errores.
-
-- Puede **corregir** hasta
+También puede verificarse en forma polinómica:
 $$
-t = \left\lfloor \frac{d_{\min}-1}{2} \right\rfloor
+(\alpha^2+\alpha)(\alpha^2+1)=\alpha^4+\alpha^3+\alpha^2+\alpha.
 $$
-errores.
-
-### Justificación intuitiva
-Para corregir $t$ errores, las esferas de Hamming de radio $t$ alrededor de palabras-código distintas no deben solaparse. Esto exige
+Como
 $$
-2t+1 \le d_{\min}.
+\alpha^4=\alpha^2+\alpha, \qquad \alpha^3=\alpha+1,
+$$
+se obtiene
+$$
+(\alpha^2+\alpha)+(\alpha+1)+\alpha^2+\alpha = \alpha+1 = \alpha^3.
 $$
 
-### Ejemplo 4.13: Capacidad correctora
-
-Si un código tiene
+3. **Inverso:**
 $$
-d_{\min}=5,
+(\alpha^4)^{-1}=\alpha^3,
 $$
-entonces puede detectar hasta
+porque
 $$
-5-1=4
-$$
-errores y corregir hasta
-$$
-\left\lfloor\frac{5-1}{2}\right\rfloor=2
-$$
-errores.
-
-Si ocurren 3 errores, el receptor puede detectar que algo anda mal, pero no necesariamente decidir de forma única cuál era la palabra original.
-
-[Figura 4.6]: La figura debe representar esferas de Hamming alrededor de distintas palabras-código. Cada esfera incluye todas las palabras recibidas que se encuentran a distancia menor o igual que $t$. La figura debe mostrar visualmente que, cuando las esferas no se superponen, la corrección es inequívoca; cuando empiezan a solaparse, aparece la ambigüedad. Esta es una imagen central para conectar la teoría algebraica con la geometría discreta.
-
----
-
-## 4.2.8 Arreglo estándar: construcción y líderes de coset
-
-El **arreglo estándar** organiza todas las palabras de $\mathbb{F}_2^n$ en una tabla cuyas filas son cosets del código.
-
-- La primera fila contiene todas las palabras-código.
-- Cada fila adicional se obtiene sumando un vector llamado **líder de coset** a todas las palabras-código.
-- El líder de coset suele escogerse como el vector de menor peso no incluido en filas previas.
-
-Si $\mathcal{C}$ es un código lineal, cada coset tiene la forma
-$$
-\mathbf{e}+\mathcal{C} = \{\mathbf{e}+\mathbf{c}:\mathbf{c}\in\mathcal{C}\}.
+\alpha^4\cdot \alpha^3 = \alpha^7 = 1.
 $$
 
-### Ejemplo 4.14: Arreglo estándar para un código simple
+## 4.2.6 Tabla de representaciones, logaritmos e inversos en $GF(2^4)$
 
-Considérese el código
-$$
-\mathcal{C}=\{000,011,101,110\}.
-$$
+Tomando $GF(2^4)=GF(2)[x]/\langle x^4+x+1\rangle$, la tabla completa de representación es:
 
-La primera fila es
-$$
-000\quad 011\quad 101\quad 110.
-$$
+|Representación|Polinomio asociado|Vector binario|Inverso multiplicativo|
+|---|---|---|---|
+|0|0|[0,0,0,0]|No existe|
+|1|1|[0,0,0,1]|1|
+|α|x|[0,0,1,0]|α^14|
+|α^2|x^2|[0,1,0,0]|α^13|
+|α^3|x^3|[1,0,0,0]|α^12|
+|α^4|x + 1|[0,0,1,1]|α^11|
+|α^5|x^2 + x|[0,1,1,0]|α^10|
+|α^6|x^3 + x^2|[1,1,0,0]|α^9|
+|α^7|x^3 + x + 1|[1,0,1,1]|α^8|
+|α^8|x^2 + 1|[0,1,0,1]|α^7|
+|α^9|x^3 + x|[1,0,1,0]|α^6|
+|α^10|x^2 + x + 1|[0,1,1,1]|α^5|
+|α^11|x^3 + x^2 + x|[1,1,1,0]|α^4|
+|α^12|x^3 + x^2 + x + 1|[1,1,1,1]|α^3|
+|α^13|x^3 + x^2 + 1|[1,1,0,1]|α^2|
+|α^14|x^3 + 1|[1,0,0,1]|α|
 
-Elegimos como primer líder no usado el vector de menor peso:
-$$
-001.
-$$
-Entonces su coset es
-$$
-001+\mathcal{C} = \{001,010,100,111\}.
-$$
+Una tabla log/antilog completa, útil para implementación práctica, es:
 
-El arreglo estándar completo es
+|Exponente|Elemento|Polinomio|
+|---|---|---|
+|-∞|0|0|
+|0|1|1|
+|1|α|x|
+|2|α^2|x^2|
+|3|α^3|x^3|
+|4|α^4|x + 1|
+|5|α^5|x^2 + x|
+|6|α^6|x^3 + x^2|
+|7|α^7|x^3 + x + 1|
+|8|α^8|x^2 + 1|
+|9|α^9|x^3 + x|
+|10|α^10|x^2 + x + 1|
+|11|α^11|x^3 + x^2 + x|
+|12|α^12|x^3 + x^2 + x + 1|
+|13|α^13|x^3 + x^2 + 1|
+|14|α^14|x^3 + 1|
 
-| Líder de coset | Elementos del coset |
-|---|---|
-| 000 | 000, 011, 101, 110 |
-| 001 | 001, 010, 100, 111 |
-
-Aquí ya se cubren las $2^3=8$ palabras binarias posibles.
-
-**Interpretación:** si una palabra recibida pertenece a la fila cuyo líder es $001$, el decodificador supone que el error más probable fue precisamente $001$.
-
----
-
-## 4.2.9 Decodificación por síndrome y tabla de búsqueda
-
-La decodificación por síndrome asocia cada síndrome a un patrón de error probable, usualmente el líder de coset.
-
-Procedimiento:
-1. Se recibe $\mathbf{r}$.
-2. Se calcula el síndrome
+Como el grupo multiplicativo no nulo tiene orden $15$, toda multiplicación entre elementos no nulos puede escribirse como
 $$
-\mathbf{s}=\mathbf{r}H^T.
+\alpha^i\cdot\alpha^j = \alpha^{(i+j)\bmod 15},
 $$
-3. Se consulta una tabla síndrome $\leftrightarrow$ líder de coset.
-4. Se estima el error $\hat{\mathbf{e}}$.
-5. Se corrige:
+y el inverso se obtiene como
 $$
-\hat{\mathbf{c}}=\mathbf{r}+\hat{\mathbf{e}}.
+(\alpha^i)^{-1}=\alpha^{15-i}.
 $$
+La suma sigue siendo XOR sobre las representaciones binarias. Este doble punto de vista —vectorial para sumar y exponencial para multiplicar— es la herramienta práctica más utilizada en implementación de decodificadores BCH y Reed-Solomon.
 
-### Ejemplo 4.15: Decodificación por síndrome
+**Ejemplo 4.11:** aritmética en $GF(2^4)$.
 
-Consideremos el código binario de paridad par
-$$
-\mathcal{C}=\{000,011,101,110\},
-$$
-que es un código lineal $(3,2)$ con matriz de chequeo
-$$
-H=\begin{bmatrix}1 & 1 & 1\end{bmatrix}.
-$$
+Usando $\alpha^4=\alpha+1$:
 
-Para cualquier palabra recibida $\mathbf{r}=[r_1\;r_2\;r_3]$, el síndrome es
+1. **Suma:**
 $$
-s=\mathbf{r}H^T=r_1\oplus r_2\oplus r_3.
+\alpha^7+\alpha^3 = (\alpha^3+\alpha+1)+\alpha^3 = \alpha+1 = \alpha^4.
 $$
 
-Por tanto:
-- si $s=0$, la palabra recibida tiene paridad par y pertenece al código;
-- si $s=1$, la palabra recibida no pertenece al código y se detecta error.
-
-Construimos la tabla de síndromes más simple:
-
-| Síndrome | Interpretación |
-|---|---|
-| $0$ | no se detecta error |
-| $1$ | se detecta error |
-
-Supóngase que se transmite la palabra-código
+2. **Producto:**
 $$
-\mathbf{c}=110.
+\alpha^9\cdot\alpha^{11}=\alpha^{20}=\alpha^5.
 $$
-Si durante la transmisión se invierte el tercer bit, el error es
+En forma polinómica,
 $$
-\mathbf{e}=001,
+\alpha^9=x^3+x, \qquad \alpha^{11}=x^3+x^2+x,
 $$
-y la palabra recibida es
+por lo que
 $$
-\mathbf{r}=\mathbf{c}+\mathbf{e}=111.
+(x^3+x)(x^3+x^2+x)=x^6+x^5+x^3+x^2.
 $$
-
-Calculamos el síndrome:
+Reduciendo con $x^4=x+1$:
 $$
-s=111H^T = 1\oplus 1\oplus 1 = 1.
+x^6=x^2x^4=x^2(x+1)=x^3+x^2,
+$$
+$$
+x^5=x(x^4)=x(x+1)=x^2+x.
+$$
+Entonces
+$$
+x^6+x^5+x^3+x^2=(x^3+x^2)+(x^2+x)+x^3+x^2=x^2+x=\alpha^5.
 $$
 
-Luego se detecta que hubo error. Sin embargo, este código tiene
+3. **Polinomio mínimo de $\alpha^5$:** como sus conjugados son $\alpha^5$ y $\alpha^{10}$, se obtiene
 $$
-d_{\min}=2,
-$$
-por lo que **no puede corregirlo unívocamente**. En efecto, cualquiera de los tres errores de un solo bit produce el mismo síndrome 1. Este ejemplo muestra que la decodificación por síndrome puede servir tanto para **detección** como para **corrección**, dependiendo de la distancia mínima del código y de la riqueza de la tabla síndrome-líder de coset.
-
----
-
-## 4.2.10 Códigos cíclicos: definición, polinomio generador, codificación y decodificación
-
-Un código lineal binario de longitud $n$ es **cíclico** si, cada vez que una palabra-código
-$$
-(c_0,c_1,\dots,c_{n-1})
-$$
-pertenece al código, también pertenece el corrimiento cíclico
-$$
-(c_{n-1},c_0,c_1,\dots,c_{n-2}).
+M_{\alpha^5}(x)=(x+\alpha^5)(x+\alpha^{10})=x^2+x+1.
 $$
 
-### Representación polinomial
-La palabra
+## 4.2.7 De la teoría de campos a los polinomios generadores
+
+Sea $C$ un código cíclico binario de longitud $n$. Si identificamos una palabra-código
 $$
 \mathbf{c}=(c_0,c_1,\dots,c_{n-1})
 $$
-se asocia al polinomio
+con el polinomio
 $$
-c(x)=c_0+c_1x+\cdots+c_{n-1}x^{n-1}.
+c(x)=c_0+c_1x+\cdots+c_{n-1}x^{n-1},
+$$
+entonces la ciclicidad equivale a trabajar en el anillo cociente
+$$
+GF(2)[x]/\langle x^n-1\rangle.
+$$
+Todo ideal de este anillo es principal, luego existe un único polinomio mónico $g(x)$ tal que
+$$
+C=\{m(x)g(x)\bmod (x^n-1)\}.
+$$
+Ese polinomio es el **polinomio generador** del código.
+
+La teoría de campos de Galois entra en juego cuando se eligen raíces deseadas de $g(x)$. Si $\alpha$ es un elemento de orden $n$ en una extensión adecuada, un diseño BCH prescribe que
+$$
+g(\alpha^b)=g(\alpha^{b+1})=\cdots=g(\alpha^{b+\delta-2})=0.
+$$
+Entonces $g(x)$ debe contener los polinomios mínimos de esas raíces:
+$$
+g(x)=\operatorname{mcm}\big(M_{\alpha^b}(x),M_{\alpha^{b+1}}(x),\dots,M_{\alpha^{b+\delta-2}}(x)\big).
 $$
 
-Las operaciones se realizan módulo 2 y módulo $x^n+1$ (equivalentemente $x^n-1$ en binario).
+> **Concepto clave:** la distancia mínima de muchos códigos algebraicos se controla imponiendo que el polinomio generador tenga raíces consecutivas en una extensión $GF(2^m)$.
 
-### Polinomio generador
-Todo código cíclico puede describirse mediante un polinomio generador $g(x)$ de grado $n-k$ tal que
-$$
-g(x) \mid (x^n+1).
-$$
+**[Figura 4.6]:** diagrama que conecte tres niveles: abajo, el campo extendido $GF(2^m)$ con sus potencias de $\alpha$; en el medio, los polinomios mínimos asociados a clases ciclotómicas; arriba, el polinomio generador $g(x)$ obtenido como mínimo común múltiplo. La figura debe hacer visible que el diseño de un código es una selección organizada de raíces.
 
-Las palabras-código son todos los múltiplos de $g(x)$:
-$$
-c(x)=m(x)g(x),
-$$
-donde $m(x)$ es el polinomio del mensaje de grado menor que $k$.
+**Ejemplo 4.12:** obtención del polinomio generador del Hamming $(7,4)$ desde teoría de campos.
 
-### Codificación sistemática
-Para un mensaje $m(x)$, se forma
+Sea $n=7=2^3-1$ y sea $\alpha$ primitivo en $GF(2^3)$. Para un BCH binario de distancia diseñada $\delta=3$, se imponen como raíces $\alpha$ y $\alpha^2$. Ambas pertenecen a la misma clase ciclotómica
 $$
-x^{n-k}m(x),
+C_1=\{1,2,4\}.
 $$
-se divide entre $g(x)$,
+Su polinomio mínimo es
 $$
-x^{n-k}m(x)=q(x)g(x)+p(x),
+M_{\alpha}(x)=(x+\alpha)(x+\alpha^2)(x+\alpha^4)=x^3+x+1.
 $$
-y se construye la palabra-código sistemática
-$$
-c(x)=x^{n-k}m(x)+p(x).
-$$
-Como en binario suma y resta son iguales, $p(x)$ se agrega módulo 2.
-
-### Ejemplo 4.16: Codificación cíclica
-
-Sea un código cíclico $(7,4)$ con
+Luego
 $$
 g(x)=x^3+x+1.
 $$
-Tomemos el mensaje
+Como $\deg g=3$, la dimensión es
 $$
-m(x)=x^3+x^2+1,
+k=n-\deg g = 7-3=4.
 $$
-correspondiente a 1101 según la convención adecuada de coeficientes.
+Por tanto, el Hamming $(7,4)$ aparece como un caso particular de código BCH primitivo binario.
 
-Primero multiplicamos por $x^{n-k}=x^3$:
-$$
-x^3m(x)=x^6+x^5+x^3.
-$$
+**Ejemplo 4.13:** polinomio generador de un Reed-Solomon corto sobre $GF(2^3)$.
 
-Ahora dividimos $x^6+x^5+x^3$ entre $g(x)=x^3+x+1$.
-
-1. Primer término:
+Considérese un código RS de longitud $n=7$ sobre $GF(2^3)$ con dos raíces consecutivas $\alpha$ y $\alpha^2$. Entonces
 $$
-\frac{x^6}{x^3}=x^3.
+g(x)=(x-\alpha)(x-\alpha^2).
 $$
-Multiplicamos:
+En característica $2$, restar y sumar coinciden, así que
 $$
-x^3g(x)=x^6+x^4+x^3.
+g(x)=(x+\alpha)(x+\alpha^2)=x^2+\alpha^4x+\alpha^3.
 $$
-Restando módulo 2:
+La verificación se obtiene al expandir:
 $$
-(x^6+x^5+x^3)+(x^6+x^4+x^3)=x^5+x^4.
+(x+\alpha)(x+\alpha^2)=x^2+(\alpha+\alpha^2)x+\alpha^3.
 $$
-
-2. Siguiente término:
+Como
 $$
-\frac{x^5}{x^3}=x^2.
+\alpha+\alpha^2 = \alpha^4,
 $$
-Multiplicamos:
+se concluye que
 $$
-x^2g(x)=x^5+x^3+x^2.
+g(x)=x^2+\alpha^4x+\alpha^3.
 $$
-Restando:
-$$
-(x^5+x^4)+(x^5+x^3+x^2)=x^4+x^3+x^2.
-$$
-
-3. Siguiente término:
-$$
-\frac{x^4}{x^3}=x.
-$$
-Multiplicamos:
-$$
-xg(x)=x^4+x^2+x.
-$$
-Restando:
-$$
-(x^4+x^3+x^2)+(x^4+x^2+x)=x^3+x.
-$$
-
-4. Siguiente término:
-$$
-\frac{x^3}{x^3}=1.
-$$
-Multiplicamos:
-$$
-g(x)=x^3+x+1.
-$$
-Restando:
-$$
-(x^3+x)+(x^3+x+1)=1.
-$$
-
-El residuo es
-$$
-p(x)=1.
-$$
-
-Por tanto, la palabra-código sistemática es
-$$
-c(x)=x^6+x^5+x^3+1.
-$$
-
-En bits, esto corresponde a
-$$
-1101001.
-$$
-
-### Decodificación cíclica
-La recepción se modela como
-$$
-r(x)=c(x)+e(x).
-$$
-El síndrome polinomial puede obtenerse calculando el residuo de dividir $r(x)$ entre $g(x)$. Si el residuo es cero, no se detecta error.
-
-### Ejemplo 4.17: Detección de error en código cíclico
-
-Si se recibe
-$$
-r(x)=c(x)+x^2,
-$$
-entonces como $c(x)$ es múltiplo de $g(x)$,
-$$
-r(x) \bmod g(x) = x^2 \bmod g(x).
-$$
-Como $x^2$ tiene grado menor que $g(x)$, el residuo es $x^2\ne 0$, por lo que el error se detecta.
+Este ejemplo ilustra que en Reed-Solomon los coeficientes del generador viven en el propio campo extendido, no necesariamente en $GF(2)$.
 
 ---
 
-## 4.2.11 Códigos de paridad
+# 4.3 Codificación de Bloques
 
-El código de verificación de paridad simple añade un bit de paridad a $k$ bits de información para forzar que el número total de unos sea par (o impar).
+## 4.3.1 Conceptos fundamentales: código $(n,k)$, tasa y distancia de Hamming
 
-Para paridad par, el bit de paridad es
+Un código de bloques transforma cada bloque de $k$ símbolos de información en una palabra-código de longitud $n$. En el caso binario,
 $$
-p=u_1\oplus u_2\oplus \cdots \oplus u_k.
+\mathbf{u}\in GF(2)^k \longmapsto \mathbf{c}\in GF(2)^n.
 $$
+La **tasa de código** es
+$$
+R=\frac{k}{n}.
+$$
+La **distancia de Hamming** entre dos palabras $\mathbf{x}$ y $\mathbf{y}$ es el número de posiciones en las que difieren:
+$$
+d_H(\mathbf{x},\mathbf{y}) = w_H(\mathbf{x}-\mathbf{y}),
+$$
+donde $w_H$ es el peso de Hamming.
 
-El código resultante es $(k+1,k)$.
-
-Su distancia mínima es
+La distancia mínima del código es
 $$
-d_{\min}=2.
+d_{\min}=\min_{\mathbf{c}_i\neq \mathbf{c}_j} d_H(\mathbf{c}_i,\mathbf{c}_j).
 $$
-
-Por tanto, puede detectar un error, pero no corregirlo.
-
-### Ejemplo 4.18: Código de paridad simple
-
-Sea el mensaje
+Sus consecuencias operativas son
 $$
-\mathbf{u}=1011.
+\text{detección máxima}=d_{\min}-1,
 $$
-La suma módulo 2 es
 $$
-1\oplus 0\oplus 1\oplus 1 = 1.
-$$
-Entonces el bit de paridad para paridad par es
-$$
-p=1,
-$$
-porque así el número total de unos será 4, que es par.
-
-La palabra-código es
-$$
-\mathbf{c}=10111.
+\text{corrección máxima}=\left\lfloor\frac{d_{\min}-1}{2}\right\rfloor.
 $$
 
-Si se recibe $10110$, el número de unos es 3, impar, luego se detecta error.
+> **Concepto clave:** en códigos de bloques, la confiabilidad se diseña en el espacio discreto de palabras binarias mediante la separación en distancia de Hamming.
 
-[Figura 4.7]: La figura debe mostrar un bloque de datos de $k$ bits entrando a un circuito XOR en cascada que genera el bit de paridad, el cual se añade al final del bloque. En el receptor, otro bloque calcula de nuevo la paridad y la compara. Pedagógicamente, esta figura ayuda a conectar la definición algebraica con una implementación digital concreta muy simple.
+**Ejemplo 4.14:** parámetros básicos de un código.
 
----
-
-## 4.2.12 Código Hamming: construcción, propiedades, ejemplo completo
-
-Los códigos de Hamming binarios son una familia de códigos lineales perfectos con parámetros
+Si un código tiene $n=7$ y $k=4$, entonces
 $$
-(n,k)=\left(2^m-1,\;2^m-m-1\right), \qquad m\ge 2.
+R=\frac{4}{7}\approx 0.571.
 $$
+Si además $d_{\min}=3$, puede detectar hasta
+$$
+3-1=2
+$$
+errores y corregir
+$$
+\left\lfloor\frac{3-1}{2}\right\rfloor=1
+$$
+error por palabra.
 
-Su distancia mínima es
-$$
-d_{\min}=3,
-$$
-por lo que corrigen un error y detectan hasta dos.
+## 4.3.2 Códigos lineales: definición y propiedades
 
-### Construcción de $H$
-La matriz $H$ de un código Hamming se forma colocando como columnas todas las combinaciones binarias no nulas de longitud $m$.
-
-Para $m=3$, se obtiene el código Hamming $(7,4)$. Una posible matriz es
+Un código binario es **lineal** si el conjunto de palabras-código forma un subespacio vectorial de $GF(2)^n$. Por tanto, para cualesquiera $\mathbf{c}_1,\mathbf{c}_2\in C$ y $a,b\in GF(2)$ se cumple
 $$
-H=
-\begin{bmatrix}
-1 & 0 & 1 & 0 & 1 & 0 & 1\\
-0 & 1 & 1 & 0 & 0 & 1 & 1\\
-0 & 0 & 0 & 1 & 1 & 1 & 1
-\end{bmatrix}.
+a\mathbf{c}_1+b\mathbf{c}_2\in C.
 $$
 
-Cada columna es la representación binaria de un índice de posición.
-
-### Forma sistemática
-Reordenando columnas, puede obtenerse una forma sistemática compatible con
+En el caso binario, esto implica en particular que la suma módulo $2$ de dos palabras válidas es otra palabra válida. Una propiedad fundamental es que, en un código lineal,
 $$
-G=[I_4\;P].
+d_{\min}=\min_{\mathbf{c}\neq\mathbf{0}} w_H(\mathbf{c}).
 $$
 
-### Propiedad de corrección
-Si ocurre un error en la posición $i$, el síndrome es igual a la columna $i$ de $H$. Por ello, el receptor puede identificar directamente la posición errónea.
+**Ejemplo 4.15:** verificación de linealidad.
 
-### Ejemplo 4.19: Construcción completa del Hamming $(7,4)$
-
-Tomemos la forma sistemática
+Considérese el código generado por
 $$
 G=
 \begin{bmatrix}
-1 & 0 & 0 & 0 & 1 & 1 & 0\\
-0 & 1 & 0 & 0 & 1 & 0 & 1\\
-0 & 0 & 1 & 0 & 0 & 1 & 1\\
-0 & 0 & 0 & 1 & 1 & 1 & 1
+1&0&0&1&1&0\\
+0&1&0&1&0&1\\
+0&0&1&0&1&1
 \end{bmatrix}.
 $$
+Dos mensajes son
+$$
+\mathbf{u}_1=[1\ 0\ 1], \qquad \mathbf{u}_2=[0\ 1\ 1].
+$$
+Sus palabras-código son
+$$
+\mathbf{c}_1=\mathbf{u}_1G=[1\ 0\ 1\ 1\ 0\ 1],
+$$
+$$
+\mathbf{c}_2=\mathbf{u}_2G=[0\ 1\ 1\ 1\ 1\ 0].
+$$
+La suma es
+$$
+\mathbf{c}_1+\mathbf{c}_2=[1\ 1\ 0\ 0\ 1\ 1].
+$$
+Pero también
+$$
+\mathbf{u}_1+\mathbf{u}_2=[1\ 1\ 0],
+$$
+y
+$$
+[1\ 1\ 0]G=[1\ 1\ 0\ 0\ 1\ 1].
+$$
+Por tanto, el conjunto es lineal.
 
-Entonces
+## 4.3.3 Matriz generadora $G$ y forma sistemática
+
+En un código lineal $(n,k)$, una matriz generadora $G$ de tamaño $k\times n$ permite codificar mediante
+$$
+\mathbf{c}=\mathbf{u}G.
+$$
+Si $G$ está en forma sistemática,
+$$
+G=[I_k\; P],
+$$
+entonces la palabra-código se escribe como
+$$
+\mathbf{c}=[\mathbf{u}\;\mathbf{p}],
+$$
+donde $\mathbf{p}=\mathbf{u}P$ contiene los bits de paridad.
+
+Esta forma es especialmente útil porque separa de manera explícita la información y la redundancia.
+
+**Ejemplo 4.16:** construcción de $G$ en forma sistemática.
+
+Tomando
 $$
 P=
 \begin{bmatrix}
 1&1&0\\
 1&0&1\\
-0&1&1\\
-1&1&1
+0&1&1
 \end{bmatrix},
 $$
-y por tanto
+se obtiene
 $$
-H=
-\begin{bmatrix}
-1&1&0&1&1&0&0\\
-1&0&1&1&0&1&0\\
-0&1&1&1&0&0&1
-\end{bmatrix}.
+G=
+\left[
+\begin{array}{ccc|ccc}
+1&0&0&1&1&0\\
+0&1&0&1&0&1\\
+0&0&1&0&1&1
+\end{array}
+\right].
 $$
+El código tiene longitud $n=6$, dimensión $k=3$ y tasa
+$$
+R=\frac{3}{6}=\frac{1}{2}.
+$$
+Las tres filas de $G$ forman una base del subespacio codificado.
 
-#### Codificación
-Sea el mensaje
-$$
-\mathbf{u}=1011.
-$$
-Entonces
-$$
-\mathbf{c}=\mathbf{u}G.
-$$
+## 4.3.4 Codificación usando $G$
 
-Calculamos:
+La codificación es una transformación lineal sobre $GF(2)$. Si
 $$
-\mathbf{c}=[1\;0\;1\;1]
-\begin{bmatrix}
-1 & 0 & 0 & 0 & 1 & 1 & 0\\
-0 & 1 & 0 & 0 & 1 & 0 & 1\\
-0 & 0 & 1 & 0 & 0 & 1 & 1\\
-0 & 0 & 0 & 1 & 1 & 1 & 1
-\end{bmatrix}.
+\mathbf{u}=[u_1\ u_2\ \dots\ u_k],
 $$
+entonces
+$$
+\mathbf{c}=u_1\mathbf{g}_1+u_2\mathbf{g}_2+\cdots+u_k\mathbf{g}_k,
+$$
+donde $\mathbf{g}_i$ son las filas de $G$.
 
-Sumamos las filas 1, 3 y 4:
-$$
-[1\;0\;0\;0\;1\;1\;0]
-\oplus
-[0\;0\;1\;0\;0\;1\;1]
-\oplus
-[0\;0\;0\;1\;1\;1\;1]
-=
-[1\;0\;1\;1\;0\;1\;0].
-$$
+**Ejemplo 4.17:** enumeración completa de palabras-código.
 
-Así,
-$$
-\mathbf{c}=1011010.
-$$
+Para la matriz del ejemplo anterior, se obtienen las palabras:
 
-#### Transmisión con error
-Supóngase un error en la posición 6:
-$$
-\mathbf{e}=0000010.
-$$
-Entonces se recibe
-$$
-\mathbf{r}=\mathbf{c}+\mathbf{e}=1011000.
-$$
+|Mensaje $\mathbf{u}$|Palabra-código $\mathbf{c}$|
+|---|---|
+|000|000000|
+|001|001011|
+|010|010101|
+|011|011110|
+|100|100110|
+|101|101101|
+|110|110011|
+|111|111000|
 
-#### Síndrome
-Calculamos
-$$
-\mathbf{s}=\mathbf{r}H^T.
-$$
-Como $\mathbf{r}=\mathbf{c}+\mathbf{e}$,
-$$
-\mathbf{s}=\mathbf{e}H^T.
-$$
-Como el error está en la posición 6, el síndrome es la columna 6 de $H$:
-$$
-\mathbf{s}=\begin{bmatrix}0\\1\\0\end{bmatrix}.
-$$
-
-Esto identifica la posición 6. Corrigiendo:
-$$
-\hat{\mathbf{c}}=\mathbf{r}+0000010 = 1011010.
-$$
-Se recupera el código correcto y, por ser sistemático, los primeros 4 bits dan el mensaje:
-$$
-\hat{\mathbf{u}}=1011.
-$$
-
-[Figura 4.8]: La figura debe representar el funcionamiento del código Hamming $(7,4)$: cuatro bits de información, tres bits de paridad, transmisión por canal, un error en una posición y cálculo del síndrome en el receptor. Conviene mostrar una tabla donde cada síndrome se asocia con una posición concreta del bit erróneo. Esta figura es especialmente útil para visualizar por qué un único error queda identificado de manera unívoca.
-
----
-
-## 4.2.13 Ejemplos adicionales integradores
-
-### Ejemplo 4.20: Relación entre distancia mínima y detección/corrección
-
-Supóngase un código lineal con palabras no nulas de pesos
-$$
-3,4,5,6.
-$$
-Entonces
+Los pesos no nulos son $3$, $3$, $3$, $3$, $4$, $4$ y $4$, por lo que
 $$
 d_{\min}=3.
 $$
-Por tanto:
-- Detecta hasta 2 errores.
-- Corrige 1 error.
+Así, el código corrige un error y detecta hasta dos.
 
-Si se producen exactamente 2 errores, el código puede advertir la anomalía, pero no necesariamente corregirla.
+## 4.3.5 Matriz de chequeo de paridad $H$ y relación con $G$
 
-### Ejemplo 4.21: Síndrome como firma del error
-
-Sea un código con matriz $H$ de columnas distintas y no nulas. Si ocurre un único error en la posición $i$, entonces el vector error es $\mathbf{e}_i$, y
+Para un código lineal sistemático con
 $$
-\mathbf{s}=\mathbf{e}_iH^T
+G=[I_k\;P],
 $$
-es la columna $i$ de $H$. Esto explica por qué los códigos Hamming, cuyas columnas cubren todas las combinaciones binarias no nulas, pueden corregir un error en cualquiera de las $n$ posiciones.
+una matriz de chequeo válida es
+$$
+H=[P^T\;I_{n-k}].
+$$
+Toda palabra-código satisface
+$$
+GH^T=0,
+$$
+y equivalentemente
+$$
+\mathbf{c}H^T=0.
+$$
+
+**Ejemplo 4.18:** construcción de $H$ a partir de $G$.
+
+Con el mismo $P$ del ejemplo anterior,
+$$
+H=
+\left[
+\begin{array}{ccc|ccc}
+1&1&0&1&0&0\\
+1&0&1&0&1&0\\
+0&1&1&0&0&1
+\end{array}
+\right].
+$$
+Se verifica que
+$$
+GH^T=0.
+$$
+Por ejemplo, para la primera fila de $G$,
+$$
+[1\ 0\ 0\ 1\ 1\ 0]H^T=[0\ 0\ 0].
+$$
+La misma verificación aplica a todas las palabras-código del subespacio generado.
+
+## 4.3.6 Síndrome: definición e interpretación
+
+Dado un vector recibido $\mathbf{r}$, su síndrome se define como
+$$
+\mathbf{s}=\mathbf{r}H^T.
+$$
+Si $\mathbf{r}=\mathbf{c}+\mathbf{e}$, entonces
+$$
+\mathbf{s}=\mathbf{c}H^T+\mathbf{e}H^T=\mathbf{e}H^T,
+$$
+porque $\mathbf{c}H^T=0$. El síndrome depende solo del error, no del mensaje transmitido.
+
+> **Concepto clave:** el síndrome es una “firma algebraica” del patrón de error respecto de las restricciones del código.
+
+**Ejemplo 4.19:** cálculo de síndrome.
+
+Supóngase que se transmitió
+$$
+\mathbf{c}=101101,
+$$
+y el error fue
+$$
+\mathbf{e}=000100.
+$$
+Entonces
+$$
+\mathbf{r}=101001.
+$$
+Con la matriz $H$ anterior,
+$$
+\mathbf{s}=\mathbf{r}H^T=\mathbf{e}H^T=[1\ 0\ 0].
+$$
+Ese síndrome coincide con la cuarta columna de $H$, por lo que el receptor identifica un error en la cuarta posición y corrige sumando $000100$.
+
+## 4.3.7 Capacidad de detección y corrección
+
+La interpretación geométrica en el espacio de Hamming es inmediata: para corregir $t$ errores, las esferas de radio $t$ alrededor de las palabras-código deben ser disjuntas. De ahí proviene la condición
+$$
+d_{\min}\ge 2t+1.
+$$
+Para detectar hasta $s$ errores basta exigir
+$$
+d_{\min}\ge s+1.
+$$
+
+**Ejemplo 4.20:** capacidad correctora de un código.
+
+Si un código tiene
+$$
+d_{\min}=5,
+$$
+entonces puede corregir
+$$
+t=\left\lfloor\frac{5-1}{2}\right\rfloor=2
+$$
+errores y detectar hasta
+$$
+5-1=4
+$$
+errores. Si ocurren tres errores, el código puede detectarlos en general, pero no garantizar su corrección unívoca.
+
+## 4.3.8 Arreglo estándar y líderes de coset
+
+Un **arreglo estándar** organiza todo $GF(2)^n$ en cosets del código:
+$$
+\mathbf{e}+C=\{\mathbf{e}+\mathbf{c}:\mathbf{c}\in C\}.
+$$
+Cada fila se etiqueta por un **líder de coset**, normalmente el vector de menor peso dentro del coset. La decodificación por probabilidad máxima en un canal binario simétrico asocia el recibido al coset cuyo líder tiene menor peso compatible con el síndrome observado.
+
+**Ejemplo 4.21:** arreglo estándar para un código sencillo de paridad.
+
+Considérese el código de paridad par de longitud $3$:
+$$
+C=\{000,011,101,110\}.
+$$
+El arreglo estándar es
+
+|Líder|Elementos del coset|
+|---|---|
+|000|000, 011, 101, 110|
+|001|001, 010, 100, 111|
+
+El síndrome distingue entre ambas filas: la primera tiene paridad par y la segunda, paridad impar. Si el canal produce un solo error, el líder $001$ representa el coset más probable.
+
+## 4.3.9 Decodificación por síndrome
+
+La decodificación por síndrome consiste en:
+
+1. calcular $\mathbf{s}=\mathbf{r}H^T$;
+2. buscar el líder de coset $\hat{\mathbf{e}}$ con ese síndrome;
+3. corregir como
+$$
+\hat{\mathbf{c}}=\mathbf{r}+\hat{\mathbf{e}}.
+$$
+
+**Ejemplo 4.22:** decodificación por síndrome.
+
+Recibido
+$$
+\mathbf{r}=111001,
+$$
+con la matriz $H$ del ejemplo 4.18. Se calcula
+$$
+\mathbf{s}=\mathbf{r}H^T=[0\ 1\ 0].
+$$
+Ese síndrome coincide con la quinta columna de $H$, luego el error estimado es
+$$
+\hat{\mathbf{e}}=000010.
+$$
+La palabra corregida es
+$$
+\hat{\mathbf{c}}=111001+000010=111011.
+$$
+Si se verifica que $\hat{\mathbf{c}}H^T=0$, la corrección es consistente.
+
+## 4.3.10 Códigos cíclicos: representación polinomial y codificación
+
+En un código cíclico, toda rotación cíclica de una palabra-código vuelve a ser una palabra-código. Si identificamos palabras con polinomios módulo $x^n-1$, la ciclicidad se expresa como clausura bajo multiplicación por $x$ módulo $x^n-1$.
+
+Un código cíclico binario de longitud $n$ tiene un generador mónico $g(x)$ tal que
+$$
+g(x)\mid (x^n-1).
+$$
+Toda palabra-código puede escribirse como
+$$
+c(x)=m(x)g(x), \qquad \deg m(x) < k.
+$$
+
+La codificación sistemática se obtiene mediante
+$$
+c(x)=x^{n-k}m(x)+r(x),
+$$
+donde $r(x)$ es el residuo de dividir $x^{n-k}m(x)$ por $g(x)$.
+
+**Ejemplo 4.23:** codificación cíclica con el Hamming $(7,4)$.
+
+Sea
+$$
+g(x)=x^3+x+1.
+$$
+Tomemos el mensaje
+$$
+m(x)=x^3+1.
+$$
+Entonces
+$$
+x^{3}m(x)=x^6+x^3.
+$$
+Al dividir por $g(x)$ se obtiene residuo
+$$
+r(x)=x^2+x.
+$$
+Por tanto, la palabra sistemática es
+$$
+c(x)=x^6+x^3+x^2+x.
+$$
+En forma binaria,
+$$
+\mathbf{c}=1001110.
+$$
+
+**Ejemplo 4.24:** detección de error por residuo.
+
+Sea la palabra recibida
+$$
+r(x)=x^6+x^3+x^2+1.
+$$
+Si se divide por
+$$
+g(x)=x^3+x+1,
+$$
+se obtiene un residuo no nulo. Como una palabra-código válida debe cumplir
+$$
+r(x) \bmod g(x)=0,
+$$
+la recepción se declara errónea. Esta es la base conceptual de la comprobación cíclica usada en CRC.
+
+## 4.3.11 Códigos de paridad
+
+El código de paridad simple añade un bit de control para imponer que el peso total sea par o impar. Para paridad par,
+$$
+p = u_1+u_2+\cdots+u_k.
+$$
+Se trata del código lineal más sencillo, con
+$$
+d_{\min}=2.
+$$
+Detecta un error, pero no corrige ninguno.
+
+**Ejemplo 4.25:** código de paridad simple.
+
+Si el mensaje es
+$$
+\mathbf{u}=1011,
+$$
+entonces su peso es $3$. Para paridad par, el bit de control debe ser $1$, pues
+$$
+1+0+1+1+1 = 4 \equiv 0 \pmod 2.
+$$
+La palabra transmitida es
+$$
+\mathbf{c}=10111.
+$$
+Si se recibe $10110$, la paridad total pasa a ser impar y el error se detecta.
+
+## 4.3.12 Códigos Hamming: construcción desde teoría de campos, propiedades y límites
+
+Los códigos Hamming binarios tienen parámetros
+$$
+(n,k)=(2^m-1,2^m-m-1), \qquad d_{\min}=3.
+$$
+Pueden construirse de dos maneras equivalentes:
+
+1. **vía matriz de chequeo**, tomando como columnas todos los vectores binarios no nulos de longitud $m$;
+2. **vía teoría de campos**, como BCH primitivos binarios con raíces $\alpha$ y $\alpha^2$ en $GF(2^m)$.
+
+La segunda construcción da directamente el polinomio generador
+$$
+g(x)=M_{\alpha}(x),
+$$
+donde $M_{\alpha}(x)$ es el polinomio mínimo del elemento primitivo $\alpha$.
+
+Limitaciones principales:
+
+- solo corrigen **un error**;
+- cuando la tasa crece, su ganancia de codificación es moderada frente a familias modernas;
+- no son adecuados para canales con ráfagas largas ni para longitudes muy grandes cuando se exige cercanía a capacidad.
+
+**Ejemplo 4.26:** construcción completa del Hamming $(7,4)$.
+
+Tomando $m=3$, las columnas de $H$ son todos los vectores binarios no nulos de longitud $3$:
+$$
+H=
+\begin{bmatrix}
+1&0&1&0&1&0&1\\
+0&1&1&0&0&1&1\\
+0&0&0&1&1&1&1
+\end{bmatrix}.
+$$
+Llevando $H$ a forma sistemática se obtiene una matriz generadora válida
+$$
+G=
+\begin{bmatrix}
+1&0&0&0&1&1&0\\
+0&1&0&0&1&0&1\\
+0&0&1&0&0&1&1\\
+0&0&0&1&1&1&1
+\end{bmatrix}.
+$$
+Si el mensaje es
+$$
+\mathbf{u}=1011,
+$$
+entonces
+$$
+\mathbf{c}=\mathbf{u}G=1011010.
+$$
+Si durante la transmisión ocurre un error en la sexta posición,
+$$
+\mathbf{r}=1011000.
+$$
+El síndrome es la sexta columna de $H$,
+$$
+\mathbf{s}=\mathbf{r}H^T=[0\ 1\ 1]^T,
+$$
+por lo que el receptor corrige invirtiendo ese bit.
+
+Desde el punto de vista de teoría de campos, el mismo código se obtiene con
+$$
+g(x)=x^3+x+1,
+$$
+que es el polinomio mínimo de $\alpha$ en $GF(2^3)$.
+
+## 4.3.13 Códigos BCH: diseño algebraico por raíces consecutivas
+
+Un código BCH binario primitivo de longitud
+$$
+n=2^m-1
+$$
+y distancia diseñada $\delta$ se construye imponiendo que su polinomio generador tenga como raíces consecutivas
+$$
+\alpha^b,\alpha^{b+1},\dots,\alpha^{b+\delta-2}.
+$$
+Entonces
+$$
+g(x)=\operatorname{mcm}\left(M_{\alpha^b}(x),M_{\alpha^{b+1}}(x),\dots,M_{\alpha^{b+\delta-2}}(x)\right).
+$$
+
+La cota BCH garantiza
+$$
+d_{\min}\ge \delta,
+$$
+y por tanto la capacidad correctora es al menos
+$$
+t\ge \left\lfloor\frac{\delta-1}{2}\right\rfloor.
+$$
+
+**Ejemplo 4.27:** BCH binario $(15,7)$ con $t=2$.
+
+En $GF(2^4)$ con $\alpha$ primitivo y $n=15$, para diseñar $\delta=5$ se imponen las raíces
+$$
+\alpha,\alpha^2,\alpha^3,\alpha^4.
+$$
+Las clases ciclotómicas relevantes son
+$$
+C_1=\{1,2,4,8\}, \qquad C_3=\{3,6,12,9\}.
+$$
+Por tanto,
+$$
+M_{\alpha}(x)=x^4+x+1,
+$$
+$$
+M_{\alpha^3}(x)=x^4+x^3+x^2+x+1.
+$$
+Luego,
+$$
+g(x)=M_{\alpha}(x)M_{\alpha^3}(x)=x^8+x^7+x^6+x^4+1.
+$$
+Como $\deg g=8$,
+$$
+k=15-8=7.
+$$
+El código puede corregir hasta
+$$
+t=2
+$$
+errores binarios por palabra.
+
+## 4.3.14 Códigos Reed-Solomon: BCH no binarios, símbolos y borrados
+
+Los códigos Reed-Solomon (RS) son una subfamilia de BCH definida sobre $GF(q)$, típicamente con $q=2^m$. Tienen parámetros
+$$
+(n,k), \qquad n\le q-1,
+$$
+y generador
+$$
+g(x)=\prod_{i=b}^{b+n-k-1}(x-\alpha^i).
+$$
+Trabajan a nivel de **símbolos** en lugar de bits, por lo que son extraordinariamente eficaces contra errores en ráfaga y borrados.
+
+Su capacidad viene dada por
+$$
+2e+s \le n-k,
+$$
+donde $e$ es el número de errores de símbolo y $s$ el número de borrados.
+
+> **Concepto clave:** un Reed-Solomon no “ve” bits aislados, sino símbolos de $m$ bits; por eso corrige muy bien paquetes perdidos o ráfagas largas concentradas.
+
+**Ejemplo 4.28:** generador y capacidad de un RS sobre $GF(2^3)$.
+
+Para un RS$(7,5)$ sobre $GF(2^3)$ con raíces $\alpha$ y $\alpha^2$,
+$$
+g(x)=(x-\alpha)(x-\alpha^2)=x^2+\alpha^4x+\alpha^3.
+$$
+Como
+$$
+n-k=2,
+$$
+puede corregir:
+
+- $1$ error de símbolo, porque $2e\le 2$ si $e=1$;
+- o $2$ borrados, porque $s\le 2$.
+
+Si un paquete Ethernet, una trama óptica o varios bytes contiguos se pierden, el descodificador RS puede reconstruirlos siempre que se respeten esas condiciones.
+
+## 4.3.15 LDPC: matrices dispersas, grafos de Tanner y propagación de creencias
+
+Los códigos **LDPC** (Low-Density Parity-Check) se definen mediante una matriz de paridad muy dispersa
+$$
+H\mathbf{c}^T=0,
+$$
+con operaciones en $GF(2)$. La baja densidad permite representar el código por un **grafo de Tanner**, con nodos de variable y nodos de chequeo, y descodificarlo mediante **belief propagation** o algoritmos de paso de mensajes.
+
+En variantes cuasi-cíclicas, la matriz de paridad puede describirse mediante polinomios en
+$$
+GF(2)[x]/\langle x^Z-1\rangle,
+$$
+lo cual enlaza de nuevo con la teoría algebraica de campos y anillos.
+
+Un generador $G$ puede obtenerse a partir de $H$ por eliminación gaussiana sobre $GF(2)$, pero en diseño práctico suele trabajarse directamente con $H$ por su estructura dispersa.
+
+**Ejemplo 4.29:** mini-LDPC y una iteración conceptual.
+
+Considérese
+$$
+H=
+\begin{bmatrix}
+1&1&0&1&0&0\\
+0&1&1&0&1&0\\
+1&0&1&0&0&1
+\end{bmatrix}.
+$$
+Las ecuaciones de paridad son
+$$
+c_1+c_2+c_4=0,
+$$
+$$
+c_2+c_3+c_5=0,
+$$
+$$
+c_1+c_3+c_6=0.
+$$
+Si una decisión dura inicial produce
+$$
+\hat{\mathbf{c}}^{(0)}=101100,
+$$
+entonces los chequeos dan
+$$
+1+0+1=0,
+$$
+$$
+0+1+0=1,
+$$
+$$
+1+1+0=0.
+$$
+Falla solo el segundo chequeo. En un algoritmo iterativo, ese nodo de chequeo “envía” evidencia correctiva a $c_2$, $c_3$ y $c_5$, y el bit menos confiable entre ellos se revisa. Esta filosofía local explica la excelente relación desempeño-complejidad de los LDPC modernos.
+
+## 4.3.16 Códigos polares: polarización de canal y generador sobre $GF(2)$
+
+Los códigos polares de Arıkan se construyen sobre el kernel binario
+$$
+F=
+\begin{bmatrix}
+1&0\\
+1&1
+\end{bmatrix},
+$$
+y su generador base es
+$$
+G_N = B_NF^{\otimes n}, \qquad N=2^n,
+$$
+donde $B_N$ es la permutación de bit-reversal y $F^{\otimes n}$ es la potencia de Kronecker. Toda la construcción ocurre sobre $GF(2)$.
+
+La idea esencial es la **polarización del canal**: al combinar y separar canales recursivamente, algunos subcanales se vuelven muy confiables y otros muy poco confiables. Los bits de información se colocan en los primeros y los demás se congelan.
+
+**Ejemplo 4.30:** generador polar de longitud $4$.
+
+Para $N=4$,
+$$
+F^{\otimes 2}=
+\begin{bmatrix}
+1&0&0&0\\
+1&1&0&0\\
+1&0&1&0\\
+1&1&1&1
+\end{bmatrix}.
+$$
+Si se eligen como congelados $u_1=u_2=0$ y como información $u_3=1$, $u_4=0$, entonces
+$$
+\mathbf{u}=[0\ 0\ 1\ 0].
+$$
+La palabra polar es
+$$
+\mathbf{x}=\mathbf{u}F^{\otimes 2}=[1\ 0\ 1\ 0].
+$$
+La matriz generadora es completamente binaria y, por tanto, también está anclada en la aritmética de $GF(2)$.
+
+## 4.3.17 Comparación de familias de códigos de bloques
+
+|Familia|Base algebraica|Generador desde teoría de campos|Ventaja principal|Limitación típica|Decodificación típica|
+|---|---|---|---|---|---|
+|Paridad|$GF(2)$|Una sola ecuación lineal de suma nula|Simplicidad extrema|Solo detecta 1 error|Comprobación de paridad|
+|Hamming|$GF(2)$ y $GF(2^m)$|$g(x)=M_\alpha(x)$ o columnas no nulas de $H$|Corrección de 1 error con alta tasa|No corrige múltiples errores|Síndrome|
+|BCH|$GF(2^m)$|m.c.m. de polinomios mínimos de raíces consecutivas|Diseño algebraico con $t$ controlable|Complejidad creciente|Berlekamp-Massey, Chien|
+|Reed-Solomon|$GF(2^m)$|$g(x)=\prod(x-\alpha^i)$|Excelente contra ráfagas y borrados|Opera por símbolos, no por bit aislado|Euclídeo extendido, BM, Forney|
+|LDPC|$GF(2)$ con $H$ dispersa|Matrices de paridad dispersas o polinomiales QC|Muy cerca de capacidad|Error floor, diseño delicado|Belief propagation|
+|Polar|$GF(2)$ y kernel de Kronecker|$G_N=B_NF^{\otimes n}$|Pruebas de capacidad, adoptados en 5G|Bloques largos y diseño de congelados|SC, SCL, CRC-aided SCL|
+
+## 4.3.18 Ejemplos integradores adicionales
+
+**Ejemplo 4.31:** relación entre distancia mínima y desempeño.
+
+Si dos códigos tienen la misma tasa pero uno posee $d_{\min}=3$ y otro $d_{\min}=5$, el segundo tolera un radio de corrección mayor:
+$$
+t_1=1, \qquad t_2=2.
+$$
+Sin embargo, esto no implica automáticamente mejor desempeño asintótico en todos los regímenes; también influyen la multiplicidad de palabras de bajo peso y el algoritmo de decodificación.
+
+**Ejemplo 4.32:** el síndrome como firma del error.
+
+Para el Hamming $(7,4)$, si ocurre un error único en la posición $i$, el síndrome es exactamente la columna $i$ de $H$. De esta forma, el espacio de errores de peso $1$ queda etiquetado sin ambigüedad. Esta observación es la esencia algebraica de la corrección de un error.
 
 ---
 
-# 4.3 Codificación Convolucional
+# 4.4 Codificación Convolucional
 
-## 4.3.1 Estructura del codificador convolucional: registros de desplazamiento, longitud de restricción, tasa
+## 4.4.1 Estructura del codificador convolucional: registros, memoria, tasa y matriz generadora
 
-A diferencia de los códigos de bloque, los **códigos convolucionales** introducen redundancia de forma secuencial y con memoria. La salida en cada instante depende del bit de entrada actual y de un número finito de bits anteriores almacenados en registros de desplazamiento.
+A diferencia de los códigos de bloques, un código convolucional introduce redundancia de manera secuencial. La salida actual depende del bit de entrada presente y de un número finito de bits anteriores almacenados en registros de desplazamiento.
 
-Un codificador convolucional se caracteriza por:
-- el número de bits de entrada por unidad de tiempo, $k$;
-- el número de bits de salida por unidad de tiempo, $n$;
-- la tasa de código
+Un codificador de tasa
 $$
-R=\frac{k}{n};
+R=\frac{k_0}{n_0}
 $$
-- la **longitud de restricción** $K$, relacionada con la memoria del codificador.
-
-Si hay $m$ elementos de memoria, usualmente
+convierte $k_0$ bits de entrada por instante en $n_0$ bits de salida. La **memoria** total $m$ determina la **longitud de restricción**
 $$
 K=m+1.
 $$
 
-En un codificador binario de tasa $1/2$, por cada bit de entrada se generan dos bits de salida mediante dos sumadores módulo 2 conectados a determinadas etapas del registro.
+En el caso binario de una entrada y dos salidas, la representación polinomial usa el retardo $D$ y generadores sobre $GF(2)$:
+$$
+G(D)=[g_1(D)\; g_2(D)].
+$$
+También puede representarse mediante una matriz semi-infinita de Toeplitz sobre $GF(2)$.
 
-[Figura 4.9]: La figura debe mostrar un codificador convolucional de tasa $1/2$ con tres etapas (una actual y dos de memoria), incluyendo registros de desplazamiento, conexiones hacia dos sumadores XOR y flechas que indiquen el avance temporal de los bits. La descripción debe remarcar que la salida no depende solo del bit presente sino también del “historial” reciente, lo que introduce memoria y permite distribuir la redundancia a lo largo del tiempo.
+> **Concepto clave:** en un código convolucional, la redundancia no está repartida por bloques aislados, sino “convolucionada” con la historia de la secuencia.
 
-### Ejemplo 4.22: Parámetros de un codificador
+**Ejemplo 4.33:** parámetros de un codificador clásico.
 
-Considérese un codificador con una entrada, dos salidas y dos memorias. Entonces:
-- $k=1$
-- $n=2$
-- $R=1/2$
-- $m=2$
-- $K=m+1=3$
-
-El número de estados del codificador es
+Sea
+$$
+G(D)=[1+D+D^2\; 1+D^2].
+$$
+Entonces el codificador produce dos bits por cada bit de entrada, luego
+$$
+R=\frac{1}{2}.
+$$
+El mayor grado de los generadores es $2$, por lo que
+$$
+m=2, \qquad K=3.
+$$
+El número de estados del trellis es
 $$
 2^m=4.
 $$
 
----
+## 4.4.2 Representación polinomial y construcción desde $GF(2)$
 
-## 4.3.2 Representación polinomial de generadores
+Los generadores de un código convolucional pertenecen al anillo de polinomios binarios en el retardo $D$. Por ejemplo,
+$$
+g_1(D)=1+D+D^2, \qquad g_2(D)=1+D^2.
+$$
+Si la secuencia de entrada se modela como
+$$
+u(D)=u_0+u_1D+u_2D^2+\cdots,
+$$
+las salidas son
+$$
+v_1(D)=u(D)g_1(D), \qquad v_2(D)=u(D)g_2(D),
+$$
+con operaciones módulo $2$.
 
-Las conexiones del codificador se describen mediante polinomios generadores. Si el bit actual corresponde al coeficiente de $D^0$ y cada retardo equivale a una potencia adicional de $D$, un generador puede escribirse como
-$$
-g(D)=g_0 + g_1D + g_2D^2 + \cdots + g_mD^m,
-$$
-con $g_i\in\{0,1\}$.
+Esto conecta de forma natural con la teoría de campos: toda la aritmética de codificación se hace en el campo base $GF(2)$, aunque la memoria temporal sustituya aquí a la estructura de bloque.
 
-Por ejemplo, para un codificador tasa $1/2$ con dos generadores
+**Ejemplo 4.34:** interpretación de generadores.
+
+Para
 $$
-g^{(1)}(D)=1+D+D^2,
+g_1(D)=1+D+D^2,
 $$
+la primera salida en el instante $k$ es
 $$
-g^{(2)}(D)=1+D^2,
+v_{1,k}=u_k+u_{k-1}+u_{k-2}.
 $$
-se suele escribir en octal como $(7,5)$, pues
+Para
 $$
-111_2=7_8, \qquad 101_2=5_8.
+g_2(D)=1+D^2,
+$$
+la segunda salida es
+$$
+v_{2,k}=u_k+u_{k-2}.
+$$
+Todas las sumas son en $GF(2)$. Esta forma hace explícito qué bits de memoria participan en cada rama del codificador.
+
+## 4.4.3 Códigos convolucionales sistemáticos y no sistemáticos
+
+Un código convolucional es **sistemático** si una de sus salidas reproduce directamente la entrada:
+$$
+v^{(s)}_k=u_k.
+$$
+Es **no sistemático** si todas las salidas son combinaciones lineales de bits actuales y pasados.
+
+Los códigos sistemáticos facilitan el intercambio de información extrínseca en decodificación iterativa y por ello son esenciales en turbo códigos. Los no sistemáticos suelen ofrecer mejor dispersión de peso para una misma complejidad.
+
+**Ejemplo 4.35:** comparación simple.
+
+- No sistemático:
+$$
+G(D)=[1+D+D^2\; 1+D^2].
+$$
+- Sistemático:
+$$
+G(D)=\left[1\; \frac{1+D^2}{1+D+D^2}\right].
 $$
 
-La salida correspondiente al instante $i$ se obtiene convolucionando la secuencia de entrada con cada generador, módulo 2.
+En el primero, ambos bits de salida son paridades. En el segundo, la primera salida es el bit de información y la segunda es una paridad recursiva. Esta diferencia será decisiva al construir turbo códigos.
 
-### Ejemplo 4.23: Interpretación de generadores
+## 4.4.4 Códigos RSC: Recursive Systematic Convolutional
 
-Si el estado del registro es $[u_i,u_{i-1},u_{i-2}]$, entonces con generadores $(7,5)$:
+Un código **RSC** posee una salida sistemática y una realimentación interna. En notación racional sobre $GF(2)$,
 $$
-v_i^{(1)} = u_i \oplus u_{i-1} \oplus u_{i-2},
+G(D)=\left[1\; \frac{P(D)}{F(D)}\right],
+$$
+donde $F(D)$ es el polinomio de realimentación y $P(D)$ el de avance.
+
+La realimentación introduce trayectorias con pesos más favorables para decodificación iterativa. Por esta razón, los RSC son los bloques elementales de los turbo códigos clásicos.
+
+**Ejemplo 4.36:** estructura RSC de tasa $1/2$.
+
+Sea
+$$
+G(D)=\left[1\;\frac{1+D^2}{1+D+D^2}\right].
+$$
+Definamos $x_k$ como la señal interna a la memoria. Entonces
+$$
+x_k = u_k + x_{k-1} + x_{k-2},
+$$
+y la paridad de salida es
+$$
+p_k = x_k + x_{k-2}.
+$$
+Si la secuencia de entrada comienza con $u_0=1$, $u_1=0$, $u_2=1$ y el estado inicial es cero, se calculan sucesivamente:
+$$
+x_0=1, \quad p_0=1,
 $$
 $$
-v_i^{(2)} = u_i \oplus u_{i-2}.
+x_1=0+1+0=1, \quad p_1=1,
 $$
-
-Cada bit de salida es una combinación lineal módulo 2 del contenido del registro.
-
----
-
-## 4.3.3 Diagrama de estados: construcción y análisis
-
-El **estado** de un codificador convolucional en un instante viene dado por el contenido de sus elementos de memoria. Para $m$ memorias hay
 $$
-2^m
+x_2=1+1+1=1, \quad p_2=0.
 $$
-estados posibles.
+La salida sistemática es $101$ y la paridad correspondiente es $110$.
 
-En el ejemplo de $m=2$, los estados son
+## 4.4.5 Códigos punzados: adaptación de tasa
+
+Un código punzado se obtiene eliminando periódicamente algunos bits de salida de un código madre. Si el código madre tiene tasa $1/2$ y se elimina un bit de cada cuatro salidas según un patrón periódico, la tasa efectiva aumenta.
+
+Formalmente, si el patrón de punción es una matriz binaria $P$, solo se transmiten las salidas cuyas posiciones contienen $1$.
+
+**Ejemplo 4.37:** adaptación de $R=1/2$ a $R=2/3$.
+
+Partamos de un código madre de tasa $1/2$ con salidas por tiempo
+$$
+(v_{1,k},v_{2,k}).
+$$
+Use el patrón periódico
+$$
+P=
+\begin{bmatrix}
+1&1\\
+1&0
+\end{bmatrix}.
+$$
+En dos instantes se generan cuatro bits,
+$$
+(v_{1,1},v_{2,1},v_{1,2},v_{2,2}),
+$$
+pero se transmite
+$$
+(v_{1,1},v_{2,1},v_{1,2}).
+$$
+Se enviaron $2$ bits de información y $3$ bits codificados, luego
+$$
+R_{\text{ef}}=\frac{2}{3}.
+$$
+La ventaja es la flexibilidad; la desventaja, una menor distancia libre.
+
+## 4.4.6 Diagrama de estados
+
+El estado de un codificador convolucional viene determinado por el contenido de sus memorias. Para memoria $m$, el número de estados es
+$$
+2^m.
+$$
+Cada transición está etiquetada por un bit de entrada y la salida correspondiente.
+
+**Ejemplo 4.38:** diagrama de estados para el código $(7,5)$ en octal.
+
+Los generadores octales
+$$
+(7,5)
+$$
+corresponden a
+$$
+g_1(D)=1+D+D^2, \qquad g_2(D)=1+D^2.
+$$
+Con memoria $m=2$, los estados son
 $$
 00,01,10,11.
 $$
+Desde cada estado parten dos ramas, una para entrada $0$ y otra para entrada $1$. Por ejemplo, desde el estado $10$:
 
-Cada transición de estado depende del bit de entrada actual. Además, cada transición produce una salida etiquetada.
+- con entrada $0$ la salida es $10$ y el siguiente estado es $01$;
+- con entrada $1$ la salida es $01$ y el siguiente estado es $11$.
 
-### Construcción
-1. Se enumeran todos los estados.
-2. Para cada estado, se considera entrada 0 y entrada 1.
-3. Se calcula el siguiente estado desplazando el registro.
-4. Se calcula la salida asociada usando los generadores.
+El diagrama de estados compacta la dinámica del codificador en una máquina finita.
 
-### Ejemplo 4.24: Diagrama de estados para el código $(7,5)$
+## 4.4.7 Diagrama de trellis
 
-Supóngase estado actual $10$, interpretado como $u_{i-1}=1$, $u_{i-2}=0$.
+El trellis despliega el diagrama de estados a lo largo del tiempo. Cada columna representa un instante y cada nodo un estado posible en ese instante. El algoritmo de Viterbi opera precisamente sobre este grafo temporal.
 
-- Si entra $u_i=0$:
-  - nuevo estado: $01$
-  - salida:
-  $$
-  v_i^{(1)}=0\oplus 1\oplus 0 =1,
-  $$
-  $$
-  v_i^{(2)}=0\oplus 0 =0.
-  $$
-  Etiqueta: $0/10$.
+**Ejemplo 4.39:** construcción inicial de un trellis.
 
-- Si entra $u_i=1$:
-  - nuevo estado: $11$
-  - salida:
-  $$
-  v_i^{(1)}=1\oplus 1\oplus 0 =0,
-  $$
-  $$
-  v_i^{(2)}=1\oplus 0 =1.
-  $$
-  Etiqueta: $1/01$.
+Para el código $(7,5)$ con estado inicial $00$, en la primera etapa solo existen dos transiciones posibles:
 
-Repitiendo el proceso para todos los estados se obtiene el diagrama completo.
+- $00 \xrightarrow{0/00} 00$,
+- $00 \xrightarrow{1/11} 10$.
 
-[Figura 4.10]: La figura debe mostrar el diagrama de estados del codificador convolucional $(7,5)$ con cuatro estados. Desde cada estado deben salir dos ramas: una para entrada 0 y otra para entrada 1, ambas etiquetadas con el formato entrada/salida. La explicación debe enfatizar que el diagrama resume la dinámica del codificador completo y sirve como base para la construcción del trellis y la decodificación Viterbi.
+En la segunda etapa, desde cada estado alcanzado vuelven a abrirse dos ramas. Después de pocas etapas, el trellis contiene múltiples caminos competidores que representan secuencias de entrada distintas pero compatibles con la misma longitud observada.
 
----
+## 4.4.8 Codificación paso a paso y ecuaciones recursivas
 
-## 4.3.4 Diagrama de trellis: construcción paso a paso
+La codificación secuencial puede seguirse directamente con los registros de desplazamiento o con las ecuaciones en $GF(2)$.
 
-El **trellis** es una expansión temporal del diagrama de estados. Cada columna representa un instante de tiempo, y cada nodo un estado posible en ese instante.
-
-### Procedimiento de construcción
-1. Se dibujan columnas temporales $t=0,1,2,\dots$.
-2. En cada columna se colocan todos los estados.
-3. Se conectan los estados entre columnas consecutivas según las transiciones del diagrama de estados.
-4. Cada rama se etiqueta con la salida correspondiente.
-
-El trellis es esencial para algoritmos de decodificación óptima, especialmente Viterbi.
-
-### Ejemplo 4.25: Construcción inicial de un trellis
-
-Para el código $(7,5)$ y estado inicial $00$:
-- En $t=0$ solo es posible el estado $00$.
-- Desde $00$, con entrada 0 se permanece en $00$ y la salida es $00$.
-- Desde $00$, con entrada 1 se pasa a $10$ y la salida es $11$.
-
-En el siguiente instante, desde cada nuevo estado vuelven a surgir dos ramas. Así, el número de trayectorias posibles crece exponencialmente con el tiempo, pero Viterbi evita explorarlas de forma ingenua.
-
-[Figura 4.11]: La figura debe representar varias etapas de un trellis, empezando en un estado inicial conocido y mostrando cómo las trayectorias se bifurcan a lo largo del tiempo. Una buena descripción debe subrayar que el trellis convierte el problema de decodificación en un problema de búsqueda de camino óptimo en un grafo acíclico orientado en el tiempo.
-
----
-
-## 4.3.5 Codificación: ejemplo completo
-
-Considérese el codificador de tasa $1/2$, longitud de restricción $K=3$, generadores $(7,5)$:
-$$
-g^{(1)}(D)=1+D+D^2,
-$$
-$$
-g^{(2)}(D)=1+D^2.
-$$
-
-Supongamos la secuencia de entrada
-$$
-\mathbf{u}=1011.
-$$
-
-Para vaciar el registro, añadimos dos bits de cola 0:
-$$
-\mathbf{u}_{\text{ext}}=101100.
-$$
+**Ejemplo 4.40:** codificación completa de la secuencia $101100$ con el código $(7,5)$.
 
 Estado inicial: $00$.
 
-### Instante 1: entrada 1
-Registro: $[1,0,0]$
+1. **Entrada $1$**:
 $$
-v_1^{(1)}=1\oplus 0\oplus 0=1,
+v_1=1+0+0=1, \qquad v_2=1+0=1.
 $$
-$$
-v_1^{(2)}=1\oplus 0=1.
-$$
-Salida: $11$
-Nuevo estado: $10$
+Salida: $11$. Nuevo estado: $10$.
 
-### Instante 2: entrada 0
-Registro: $[0,1,0]$
+2. **Entrada $0$**:
 $$
-v_2^{(1)}=0\oplus 1\oplus 0=1,
+v_1=0+1+0=1, \qquad v_2=0+0=0.
 $$
-$$
-v_2^{(2)}=0\oplus 0=0.
-$$
-Salida: $10$
-Nuevo estado: $01$
+Salida: $10$. Nuevo estado: $01$.
 
-### Instante 3: entrada 1
-Registro: $[1,0,1]$
+3. **Entrada $1$**:
 $$
-v_3^{(1)}=1\oplus 0\oplus 1=0,
+v_1=1+0+1=0, \qquad v_2=1+1=0.
 $$
-$$
-v_3^{(2)}=1\oplus 1=0.
-$$
-Salida: $00$
-Nuevo estado: $10$
+Salida: $00$. Nuevo estado: $10$.
 
-### Instante 4: entrada 1
-Registro: $[1,1,0]$
+4. **Entrada $1$**:
 $$
-v_4^{(1)}=1\oplus 1\oplus 0=0,
+v_1=1+1+0=0, \qquad v_2=1+0=1.
 $$
-$$
-v_4^{(2)}=1\oplus 0=1.
-$$
-Salida: $01$
-Nuevo estado: $11$
+Salida: $01$. Nuevo estado: $11$.
 
-### Instante 5: entrada 0
-Registro: $[0,1,1]$
+5. **Entrada $0$**:
 $$
-v_5^{(1)}=0\oplus 1\oplus 1=0,
+v_1=0+1+1=0, \qquad v_2=0+1=1.
 $$
-$$
-v_5^{(2)}=0\oplus 1=1.
-$$
-Salida: $01$
-Nuevo estado: $01$
+Salida: $01$. Nuevo estado: $01$.
 
-### Instante 6: entrada 0
-Registro: $[0,0,1]$
+6. **Entrada $0$**:
 $$
-v_6^{(1)}=0\oplus 0\oplus 1=1,
+v_1=0+0+1=1, \qquad v_2=0+1=1.
 $$
-$$
-v_6^{(2)}=0\oplus 1=1.
-$$
-Salida: $11$
-Nuevo estado: $00$
+Salida: $11$. Nuevo estado: $00$.
 
 La secuencia codificada es
 $$
 11\;10\;00\;01\;01\;11.
 $$
-Es decir,
+
+La misma salida puede verificarse con las ecuaciones recursivas del ejemplo 4.34, confirmando la consistencia entre las representaciones temporal, polinomial y de estados.
+
+## 4.4.9 Algoritmo de Viterbi
+
+El algoritmo de Viterbi realiza decodificación de máxima verosimilitud sobre el trellis. En cada instante:
+
+1. calcula métricas de rama;
+2. acumula métricas de camino;
+3. conserva, para cada estado, solo el superviviente de menor métrica;
+4. al final, realiza traza hacia atrás.
+
+Con decisión dura, la métrica de rama es una distancia de Hamming. Con decisión suave, es habitual usar distancia euclidiana o log-verosimilitudes.
+
+> **Concepto clave:** Viterbi no examina exhaustivamente todos los caminos; elimina tempranamente los peores y conserva solo los supervivientes óptimos estado a estado.
+
+**Ejemplo 4.41:** Viterbi con decisión dura.
+
+Supóngase que el receptor observa la secuencia de pares
 $$
-111000010111.
+11,\ 10,\ 01.
 $$
+Para el código $(7,5)$ y estado inicial $00$:
 
-### Ejemplo 4.26: Verificación mediante ecuaciones recursivas
+- **Etapa 1:** las transiciones posibles desde $00$ son $0/00$ y $1/11$. Como se recibió $11$, las métricas son $2$ y $0$, respectivamente. Sobrevive el camino hacia $10$ con métrica $0$.
+- **Etapa 2:** desde los estados alcanzables se comparan las ramas compatibles con el recibido $10$. El algoritmo suma distancias de Hamming y conserva, para cada estado de llegada, el camino de menor métrica acumulada.
+- **Etapa 3:** se repite el proceso con $01$.
 
-El mismo resultado puede obtenerse aplicando las ecuaciones generadoras directamente sobre la secuencia extendida $101100$.
+Tras completar las tres etapas, el camino de menor métrica corresponde a la secuencia de entrada más probable. El procedimiento exacto depende de las ramas concretas del trellis, pero la regla general es siempre la misma: **mínima métrica acumulada**.
 
----
+## 4.4.10 Decisión dura frente a decisión suave
 
-## 4.3.6 Algoritmo de Viterbi
+Con decisión dura, cada símbolo recibido se cuantiza primero a $0$ o $1$. Con decisión suave, el decodificador conserva información analógica adicional, por ejemplo muestras o LLR.
 
-### Descripción completa del algoritmo
-
-El algoritmo de Viterbi realiza decodificación de máxima verosimilitud sobre el trellis. En lugar de evaluar todas las trayectorias posibles, conserva en cada estado y cada instante solo la trayectoria de menor métrica acumulada: la **trayectoria superviviente**.
-
-### Idea central
-Sea una secuencia recibida segmentada en símbolos de rama. Para cada transición del trellis se calcula una **métrica de rama**, y para cada camino una **métrica de camino** acumulada.
-
-En cada nodo del trellis:
-1. llegan usualmente dos caminos candidatos;
-2. se suma la métrica de la rama a la métrica acumulada previa;
-3. se selecciona el camino con menor métrica (o mayor correlación, según formulación);
-4. el camino descartado se elimina.
-
-Al final, se elige el camino superviviente de menor métrica total y se retrotraza para reconstruir la secuencia de entrada.
-
-### Métricas de rama y de camino
-
-#### Decisión dura
-Si el receptor cuantiza cada salida recibida a bits 0/1, la métrica de rama es la distancia de Hamming entre la salida recibida y la salida ideal de la rama.
-
-Si la rama esperada es $\mathbf{v}$ y la rama recibida cuantizada es $\mathbf{r}$,
+Para BPSK,
 $$
-M_B = d_H(\mathbf{r},\mathbf{v}).
+0 \mapsto +1, \qquad 1 \mapsto -1,
 $$
-
-La métrica de camino es la suma acumulada:
+y si se recibe una muestra $y$, la métrica euclidiana para una rama candidata $\mathbf{x}$ es
 $$
-M_P = \sum M_B.
-$$
-
-#### Decisión suave
-Si el receptor conserva muestras analógicas, la métrica de rama adecuada en AWGN es la distancia euclidiana:
-$$
-M_B = \sum_{j}(r_j-v_j)^2.
+\mu(\mathbf{x})=\sum_i (y_i-x_i)^2.
 $$
 
-La decisión suave aprovecha más información y suele ofrecer una ganancia de aproximadamente 2 dB frente a la decisión dura.
+**Ejemplo 4.42:** comparación dura vs. suave.
 
-[Figura 4.12]: La figura debe mostrar un fragmento de trellis con dos caminos convergiendo a un mismo estado. Cada rama debe estar etiquetada con su salida ideal y su métrica de rama, mientras que en el nodo se compara la suma acumulada de ambos candidatos para elegir el superviviente. La finalidad pedagógica es visualizar cómo el algoritmo realiza una poda sistemática sin perder optimalidad ML.
-
-### Ejemplo 4.27: Viterbi con decisión dura paso a paso
-
-Usaremos el mismo código $(7,5)$, estado inicial $00$, y suponemos que la secuencia transmitida corresponde a la entrada $101$ seguida de bits de cola $00$, es decir, $10100$.
-
-Primero codificamos:
-- entrada 1 desde $00$ $\to$ salida $11$, estado $10$
-- entrada 0 desde $10$ $\to$ salida $10$, estado $01$
-- entrada 1 desde $01$ $\to$ salida $00$, estado $10$
-- entrada 0 desde $10$ $\to$ salida $10$, estado $01$
-- entrada 0 desde $01$ $\to$ salida $11$, estado $00$
-
-Secuencia ideal transmitida:
+Supóngase que una rama candidata transmite $[+1,-1]$ y otra $[-1,+1]$, mientras que el receptor observa
 $$
-11\;10\;00\;10\;11.
+\mathbf{y}=[0.2,-0.9].
 $$
-
-Supóngase que el receptor observa, tras decisión dura,
+Las métricas euclidianas son
 $$
-11\;10\;01\;10\;11.
-$$
-Solo hay un error en la tercera rama.
-
-#### Etapa 0
-Estado inicial conocido: $00$ con métrica 0. Los demás estados tienen métrica infinita.
-
-#### Etapa 1, recibido 11
-Desde $00$:
-- rama entrada 0 produce $00$, métrica de rama
-$$
-d_H(11,00)=2.
-$$
-- rama entrada 1 produce $11$, métrica de rama
-$$
-d_H(11,11)=0.
-$$
-
-Se actualiza:
-- estado $00$: métrica 2
-- estado $10$: métrica 0
-
-#### Etapa 2, recibido 10
-Desde estado $00$ (métrica 2):
-- con entrada 0: salida 00, métrica rama 1, total 3
-- con entrada 1: salida 11, métrica rama 1, total 3
-
-Desde estado $10$ (métrica 0):
-- con entrada 0: salida 10, métrica rama 0, total 0
-- con entrada 1: salida 01, métrica rama 2, total 2
-
-Tras comparar supervivientes:
-- estado $00$: min(3 desde 00) = 3
-- estado $10$: min(3 desde 00) = 3
-- estado $01$: 0 desde 10
-- estado $11$: 2 desde 10
-
-#### Etapa 3, recibido 01
-Ahora se evalúan todas las transiciones desde los estados con métricas finitas. Tomemos las principales:
-
-Desde $01$ (métrica 0):
-- entrada 0 $\to$ estado $00$, salida 11
-$$
-d_H(01,11)=1 \Rightarrow \text{total}=1.
-$$
-- entrada 1 $\to$ estado $10$, salida 00
-$$
-d_H(01,00)=1 \Rightarrow \text{total}=1.
-$$
-
-Desde $11$ (métrica 2):
-- entrada 0 $\to$ estado $01$, salida 01
-$$
-d_H(01,01)=0 \Rightarrow \text{total}=2.
-$$
-- entrada 1 $\to$ estado $11$, salida 10
-$$
-d_H(01,10)=2 \Rightarrow \text{total}=4.
-$$
-
-Desde $00$ y $10$ con métricas 3 se calculan también sus aportes, pero resultan peores. Tras seleccionar supervivientes, quedan las mejores métricas alrededor de 1 o 2, dominadas por la trayectoria correcta.
-
-#### Etapas finales
-Repitiendo el proceso, la trayectoria de menor métrica final coincide con la entrada original $10100$. Al eliminar los bits de cola se obtiene
-$$
-\hat{\mathbf{u}}=101.
-$$
-
-**Conclusión:** aunque una rama se recibió con error, la estructura global del trellis permitió recuperar correctamente la secuencia transmitida.
-
-### Ejemplo 4.28: Comparación dura vs. suave
-
-Supóngase que una rama ideal BPSK para salida binaria 10 es
-$$
-(+1,-1),
-$$
-y que se recibe analógicamente
-$$
-(0.2,-0.7).
-$$
-
-- Decisión dura: cuantizamos a $(+1,-1)$, luego la métrica de Hamming frente a 10 es 0.
-- Frente a otra rama posible 11, cuya imagen BPSK es $(+1,+1)$, la decisión dura también daría distancia 1.
-
-Pero con decisión suave:
-$$
-M_B(10)=(0.2-1)^2+(-0.7+1)^2=0.64+0.09=0.73,
+\mu_1=(0.2-1)^2+(-0.9+1)^2=0.64+0.01=0.65,
 $$
 $$
-M_B(11)=(0.2-1)^2+(-0.7-1)^2=0.64+2.89=3.53.
+\mu_2=(0.2+1)^2+(-0.9-1)^2=1.44+3.61=5.05.
 $$
+La decisión suave favorece contundentemente a la primera rama. Si se hubiera cuantizado duramente a $[0,1]$, se perdería parte de esa evidencia.
 
-La diferencia es mucho más informativa. Esto explica la ganancia de la decodificación suave.
+## 4.4.11 Turbo códigos: concatenación paralela de RSC e iteración
 
----
+Un turbo código clásico concatena en paralelo dos codificadores RSC idénticos. El primero recibe la secuencia original y el segundo una versión permutada por un **interleaver**.
 
-## 4.3.7 Distancia libre y rendimiento de códigos convolucionales
+La palabra transmitida suele contener:
 
-La magnitud análoga a la distancia mínima en códigos de bloque es la **distancia libre** $d_{free}$.
+- la salida sistemática,
+- una primera paridad RSC,
+- una segunda paridad RSC.
 
-Se define como la mínima distancia de Hamming entre dos trayectorias distintas del trellis que parten y vuelven al mismo estado (usualmente el estado cero), o equivalentemente, entre la secuencia nula y cualquier otra secuencia codificada no nula de longitud finita.
+La decodificación se realiza iterativamente mediante intercambio de información extrínseca entre dos decodificadores SISO.
 
-Formalmente,
+**Ejemplo 4.43:** estructura conceptual de un turbo código.
+
+Sea la secuencia de entrada
 $$
-d_{free}=\min_{\mathbf{v}\ne \mathbf{0}} w_H(\mathbf{v}),
+\mathbf{u}=1011.
 $$
-donde $\mathbf{v}$ recorre todas las secuencias de salida no nulas producidas por secuencias de entrada no nulas que parten y terminan en el estado cero.
-
-Cuanto mayor sea $d_{free}$, mejor el rendimiento asintótico del código frente a ruido.
-
-Para el conocido código convolucional de tasa $1/2$ y generadores $(7,5)$,
+Si el interleaver aplica la permutación
 $$
-d_{free}=5.
+\pi=(1,3,4,2),
 $$
+la segunda rama procesa
+$$
+\pi(\mathbf{u})=1110.
+$$
+El primer RSC genera una paridad $\mathbf{p}^{(1)}$ a partir de $1011$ y el segundo una paridad $\mathbf{p}^{(2)}$ a partir de $1110$. La transmisión turbo queda conceptualmente como
+$$
+[\mathbf{u}\;\mathbf{p}^{(1)}\;\mathbf{p}^{(2)}].
+$$
+La ganancia turbo no proviene de una gran distancia mínima clásica, sino del refinamiento iterativo de probabilidades a través del interleaver.
 
-### Relación cualitativa con el error
-En regímenes de alta SNR, la probabilidad de error de bit decae aproximadamente de forma dominada por eventos a distancia libre, de manera análoga a cómo la distancia mínima domina en códigos de bloque.
+## 4.4.12 Distancia libre y rendimiento
 
-### Ejemplo 4.29: Interpretación de $d_{free}$
+La **distancia libre** $d_{free}$ de un código convolucional es la mínima distancia de Hamming entre dos trayectorias distintas del trellis que parten y regresan al mismo estado de referencia. Es el análogo convolucional de $d_{\min}$.
 
-Si un código A tiene
+A altas relaciones señal-ruido, la probabilidad de error está fuertemente influida por $d_{free}$ y por la multiplicidad de trayectorias asociadas.
+
+**Ejemplo 4.44:** interpretación de $d_{free}$.
+
+Si un código convolucional tiene
 $$
 d_{free}=5,
 $$
-y un código B tiene
+su desempeño asintótico será mejor que el de otro con
 $$
-d_{free}=7,
+d_{free}=3,
 $$
-entonces, en general, B ofrecerá mejor capacidad de corrección asintótica, aunque podría requerir mayor complejidad de decodificación si su longitud de restricción es mayor.
+si ambos se decodifican óptimamente y tienen complejidad comparable. Sin embargo, aumentar $d_{free}$ suele requerir mayor memoria y, por tanto, más estados en el trellis.
 
-[Figura 4.13]: La figura debe mostrar dos trayectorias en el trellis que coinciden al inicio y al final, pero divergen en una sección intermedia. La distancia libre debe interpretarse como el número mínimo de símbolos de salida diferentes entre trayectorias competidoras. Esta representación ayuda a entender por qué el trellis es la estructura natural para analizar el rendimiento de códigos con memoria.
+## 4.4.13 Comparación de variantes convolucionales
 
----
+|Familia|Generador sobre $GF(2)$|Rasgo estructural|Ventaja|Limitación|Uso típico|
+|---|---|---|---|---|---|
+|No sistemático|$[g_1(D),g_2(D),\dots]$|Todas las salidas son paridades|Buena dispersión de peso|Menor transparencia del bit fuente|Enlaces clásicos con Viterbi|
+|Sistemático|$[1,p_2(D),\dots]$|Una salida replica la entrada|Útil para iteración y análisis|Puede penalizar algo la distancia|Turbo, HARQ|
+|RSC|$[1,P(D)/F(D)]$|Realimentación interna|Excelente para turbo|Más delicado de terminar|Turbo clásicos|
+|Punzado|Código madre + patrón $P$|Elimina bits de salida|Adaptación flexible de tasa|Reduce distancia libre|Estándares con múltiples tasas|
+|Turbo|Paralelo de dos RSC + interleaver|Decodificación iterativa|Muy cerca de capacidad|Latencia y complejidad iterativa|3G/4G, satélite, espacio profundo|
 
-## 4.3.8 Ejemplos resueltos adicionales
+## 4.4.14 Ejemplos resueltos adicionales
 
-### Ejemplo 4.30: Número de estados y complejidad
+**Ejemplo 4.45:** número de estados y complejidad.
 
-Para un codificador convolucional con memoria $m=4$:
+Si un codificador binario tiene memoria $m=4$, entonces posee
 $$
-\text{número de estados}=2^4=16.
+2^4=16
 $$
+estados. Viterbi debe mantener un superviviente por estado y por etapa, de modo que la complejidad crece exponencialmente con la memoria.
 
-Si se usa Viterbi, en cada etapa deben actualizarse 16 métricas de estado. Esto ilustra el compromiso entre rendimiento y complejidad: aumentar la memoria suele mejorar la protección, pero incrementa exponencialmente la complejidad del decodificador.
+**Ejemplo 4.46:** tasa efectiva con bits de cola.
 
-### Ejemplo 4.31: Tasa efectiva con bits de cola
-
-Si una secuencia de información tiene longitud $L=100$ bits y se usa un codificador de tasa nominal $1/2$ con memoria $m=2$, deben añadirse 2 bits de cola. Entonces se transmiten
+Supóngase un código de tasa nominal $1/2$, memoria $m=2$ y una trama de $L=100$ bits. Para volver al estado cero se añaden $m=2$ bits de cola. El número total de bits codificados es
 $$
-2(L+m)=2(102)=204
+2(L+m)=2(102)=204.
 $$
-bits codificados.
-
 La tasa efectiva es
 $$
-R_{\text{ef}}=\frac{100}{204}\approx 0.4902,
+R_{\text{ef}}=\frac{100}{204}\approx 0.4902.
 $$
-ligeramente menor que la tasa nominal $1/2$.
+Se observa que la terminación reduce ligeramente la tasa real.
 
-### Ejemplo 4.32: Métrica de rama euclidiana en BPSK
+**Ejemplo 4.47:** métrica de rama euclidiana en BPSK.
 
-Sea una rama esperada correspondiente a salida binaria 01, que bajo BPSK se mapea como
+Si una rama candidata del trellis transmite la palabra binaria $10$, su imagen BPSK puede tomarse como
 $$
-(-1,+1)
+[-1,+1].
 $$
-según la convención $0\mapsto -1$, $1\mapsto +1$.
-
-Si se recibe
+Si el receptor observa
 $$
-(-0.6,0.1),
+\mathbf{y}=[-0.8,0.3],
 $$
 la métrica euclidiana es
 $$
-M_B = (-0.6+1)^2 + (0.1-1)^2 = 0.16+0.81=0.97.
+(-0.8+1)^2+(0.3-1)^2=0.04+0.49=0.53.
 $$
-
-Si otra rama competidora fuera 11, es decir $(+1,+1)$,
+Para la rama alternativa $01\mapsto [+1,-1]$,
 $$
-M_B = (-0.6-1)^2 + (0.1-1)^2 = 2.56+0.81=3.37.
+( -0.8-1)^2+(0.3+1)^2=3.24+1.69=4.93.
 $$
-
-La rama 01 es claramente más verosímil.
+Luego la primera rama es mucho más verosímil.
 
 ---
 
 # Resumen de conceptos clave
 
-En esta unidad se han establecido los fundamentos geométricos y algebraicos de la codificación de canal.
-
-1. En **espacio de señal**, las señales pueden representarse como vectores en una base ortonormal, obtenida si es necesario mediante **Gram-Schmidt**. La detección óptima en AWGN se interpreta como una regla de mínima distancia euclidiana. La separación geométrica entre señales determina directamente la probabilidad de error.
-
-2. En **codificación de bloques**, un código $(n,k)$ añade redundancia controlada con tasa
-$$
-R=\frac{k}{n}.
-$$
-La magnitud clave es la **distancia mínima** $d_{\min}$, que fija la capacidad de detección y corrección:
-$$
-\text{detección} = d_{\min}-1,
-$$
-$$
-\text{corrección} = \left\lfloor \frac{d_{\min}-1}{2} \right\rfloor.
-$$
-Los códigos lineales se describen mediante la **matriz generadora** $G$ y la **matriz de chequeo** $H$, y su decodificación puede realizarse elegantemente mediante el **síndrome**. También se estudiaron códigos cíclicos, códigos de paridad y el importante **código Hamming**, ejemplo clásico de corrección de un error.
-
-3. En **codificación convolucional**, la redundancia se reparte en el tiempo usando memoria y registros de desplazamiento. La descripción mediante generadores polinomiales, diagramas de estados y trellis conduce naturalmente al **algoritmo de Viterbi**, que realiza decodificación de máxima verosimilitud con complejidad manejable. La magnitud de diseño más importante es la **distancia libre** $d_{free}$.
-
-En conjunto, la codificación de canal es el mecanismo que permite acercar el rendimiento de un sistema real a la transmisión confiable en presencia de ruido. Su estudio constituye la base conceptual para técnicas más avanzadas como códigos Reed–Solomon, BCH, turbo códigos, LDPC y codificación polar.
+- La representación vectorial de señales permite formular la detección óptima como un problema de distancia euclidiana.
+- Gram-Schmidt produce bases ortonormales equivalentes y facilita el diseño de receptores correladores.
+- La teoría de campos de Galois explica la construcción de $GF(p)$ y $GF(p^m)$, el papel de los elementos primitivos y de los polinomios mínimos.
+- Los polinomios generadores de códigos cíclicos, BCH y Reed-Solomon se obtienen a partir de raíces en campos finitos.
+- En un código lineal, la matriz generadora $G$ produce palabras válidas y la matriz de paridad $H$ permite calcular síndromes.
+- La distancia mínima $d_{\min}$ gobierna la capacidad de detección y corrección en códigos de bloques.
+- Los códigos Hamming son BCH de corrección simple; los BCH generalizan la corrección múltiple y los Reed-Solomon trabajan sobre símbolos de $GF(2^m)$.
+- Los LDPC se describen con matrices dispersas y grafos de Tanner; los códigos polares se construyen por polarización de canal y potencias de Kronecker sobre $GF(2)$.
+- Los códigos convolucionales introducen memoria; su descripción natural usa polinomios en el retardo $D$ sobre $GF(2)$.
+- La distancia libre $d_{free}$ juega en códigos convolucionales el mismo papel que $d_{\min}$ en códigos de bloques.
+- Los códigos RSC, punzados y turbo extienden la familia convolucional para ofrecer flexibilidad de tasa y ganancias iterativas cercanas a capacidad.
 
 ---
 
 # Referencias
 
-1. S. Lin and D. J. Costello, Jr., *Error Control Coding*, 2nd ed., Upper Saddle River, NJ, USA: Pearson Prentice Hall, 2004. ISBN conocido; libro de referencia clásica sobre códigos de bloque, cíclicos, BCH, Reed–Solomon y convolucionales.
-2. J. G. Proakis and M. Salehi, *Digital Communications*, 5th ed., New York, NY, USA: McGraw-Hill, 2008. ISBN conocido; texto de referencia sobre espacio de señal, detección óptima y codificación.
-3. B. Sklar, *Digital Communications: Fundamentals and Applications*, 2nd ed., Upper Saddle River, NJ, USA: Prentice Hall, 2001. ISBN conocido; texto ampliamente usado en introducción y aplicaciones.
-4. S. Haykin, *Communication Systems*, 4th ed., New York, NY, USA: Wiley, 2001. ISBN conocido; referencia clásica para fundamentos de señales y detección.
-5. A. J. Viterbi, “Error bounds for convolutional codes and an asymptotically optimum decoding algorithm,” *IEEE Transactions on Information Theory*, vol. 13, no. 2, pp. 260–269, Apr. 1967, doi: 10.1109/TIT.1967.1054010.
-6. C. E. Shannon, “A mathematical theory of communication,” *Bell System Technical Journal*, vol. 27, no. 3, pp. 379–423, Jul. 1948, doi: 10.1002/j.1538-7305.1948.tb01338.x.
-7. R. W. Hamming, “Error detecting and error correcting codes,” *Bell System Technical Journal*, vol. 29, no. 2, pp. 147–160, Apr. 1950, doi: 10.1002/j.1538-7305.1950.tb00463.x.
+1. S. Lin y D. J. Costello, *Error Control Coding*, 2nd ed., Pearson, 2004.
+2. F. J. MacWilliams y N. J. A. Sloane, *The Theory of Error-Correcting Codes*, North-Holland, 1977.
+3. T. K. Moon, *Error Correction Coding: Mathematical Methods and Algorithms*, Wiley, 2005.
+4. B. Sklar, *Digital Communications: Fundamentals and Applications*, 2nd ed., Prentice Hall, 2001.
+5. J. G. Proakis y M. Salehi, *Digital Communications*, 5th ed., McGraw-Hill, 2008.
+6. R. E. Blahut, *Algebraic Codes for Data Transmission*, Cambridge University Press, 2003.
+7. S. B. Wicker y V. K. Bhargava (eds.), *Reed-Solomon Codes and Their Applications*, IEEE Press, 1994.
+8. T. Richardson y R. Urbanke, *Modern Coding Theory*, Cambridge University Press, 2008.
+9. E. Arıkan, “Channel Polarization: A Method for Constructing Capacity-Achieving Codes for Symmetric Binary-Input Memoryless Channels,” *IEEE Transactions on Information Theory*, vol. 55, no. 7, pp. 3051–3073, 2009.
+10. C. Berrou, A. Glavieux y P. Thitimajshima, “Near Shannon Limit Error-Correcting Coding and Decoding: Turbo Codes,” *Proceedings of ICC*, 1993.
