@@ -262,7 +262,7 @@ $$
 
 con $w[k]$ ruido gaussiano complejo circular.
 
-En la práctica, sin embargo, aparecen desajustes de frecuencia, fase, temporización, desbalance I/Q, cuantización del ADC y desvanecimiento multitrayecto. Esos efectos se analizarán con detalle en la Sección 3.5.
+En la práctica, sin embargo, aparecen desajustes de frecuencia, fase, temporización, cuantización del ADC y desvanecimiento multitrayecto. Esos efectos se analizarán con detalle en la Sección 3.5.
 
 **[Figura 3.3]:** diagrama del receptor en cuadratura: antena, filtro de RF, LNA, mezclador con $\cos(2\pi f_c t)$ y $-\sin(2\pi f_c t)$, filtros pasabajo, ADC, filtro adaptado, recuperación de reloj, recuperación de portadora y bloque de decisión. La figura debe enfatizar que el receptor no sólo detecta símbolos: también debe estimar parámetros ocultos del canal y del hardware.
 
@@ -585,7 +585,7 @@ Los cuatro puntos están ubicados a $45^\circ$, $135^\circ$, $225^\circ$ y $315^
 QPSK puede interpretarse como dos BPSK ortogonales, una en la rama I y otra en la rama Q. Con codificación Gray,
 
 $$
-P_b=Q\left(\sqrt{\frac{2E_b}{N_0}}\right),
+P_b=Q\left(\sqrt{\frac{2E_b}{N_0}}\right).
 $$
 
 igual que en BPSK a igualdad de energía por bit.
