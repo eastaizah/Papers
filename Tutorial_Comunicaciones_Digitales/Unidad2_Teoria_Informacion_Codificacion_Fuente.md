@@ -963,7 +963,13 @@ Es un modelo matemático exacto, pero no realizable físicamente porque requerir
 
 #### Muestreo natural
 
-En el muestreo natural, la señal se multiplica por un tren periódico de pulsos rectangulares de duración finita $\tau$:
+En el muestreo natural, la señal se multiplica por un tren periódico de pulsos rectangulares de duración finita $\tau$. Se utiliza la función pulso rectangular $\Pi(t)$, definida como:
+
+$$
+\Pi(t)=\begin{cases}1,&|t|\le\tfrac{1}{2},\\0,&|t|>\tfrac{1}{2}.\end{cases}
+$$
+
+Con esta definición, el tren de pulsos es:
 
 $$
 p(t)=\sum_{n=-\infty}^{\infty} \Pi\left(\frac{t-nT_s}{\tau}\right)

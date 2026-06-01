@@ -111,16 +111,16 @@ u_2(t)=g_2(t)-\langle g_2,\phi_1\rangle\phi_1(t).
 $$
 Luego se normaliza:
 $$
-\phi_2(t)=\frac{\nu_2(t)}{\|\nu_2(t)\|}.
+\phi_2(t)=\frac{u_2(t)}{\|u_2(t)\|}.
 $$
 
 ### Paso general
 Para $k\ge 2$,
 $$
-\nu_k(t)=g_k(t)-\sum_{i=1}^{k-1}\langle g_k,\phi_i\rangle\phi_i(t),
+u_k(t)=g_k(t)-\sum_{i=1}^{k-1}\langle g_k,\phi_i\rangle\phi_i(t),
 $$
 $$
-\phi_k(t)=\frac{\nu_k(t)}{\|\nu_k(t)\|}.
+\phi_k(t)=\frac{u_k(t)}{\|u_k(t)\|}.
 $$
 
 Estas funciones satisfacen
