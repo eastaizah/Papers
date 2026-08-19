@@ -1,0 +1,66 @@
+Compliance report
+Template: /home/runner/work/Papers/Papers/ConversionMDPI/futureinternet-template.dot
+Generated: /home/runner/work/Papers/Papers/ConversionMDPI/LiSAT_futureinternet_test.docx
+
+Style mapping used:
+- abstract: MDPI_1.7_abstract
+- abstract_heading: MDPI_1.7_abstract
+- affiliations: MDPI_1.6_affiliation
+- authors: MDPI_1.3_authornames
+- blank: MDPI_3.2_text_no_indent
+- body: MDPI_3.1_text
+- caption: figure/table caption resolved by text
+- heading1: MDPI_2.1_heading1
+- heading2: MDPI_2.2_heading2
+- heading3: MDPI_2.3_heading3
+- keywords: MDPI_1.8_keywords
+- keywords_heading: MDPI_1.8_keywords
+- references: MDPI_8.1_references
+- references_heading: MDPI_2.1_heading1
+- title: MDPI_1.2_title
+
+Paragraph styles applied:
+- MDPI_1.2_title: 1 paragraph(s) (template style)
+- MDPI_1.3_authornames: 1 paragraph(s) (template style)
+- MDPI_1.6_affiliation: 3 paragraph(s) (template style)
+- MDPI_1.7_abstract: 1 paragraph(s) (template style)
+- MDPI_1.8_keywords: 1 paragraph(s) (template style)
+- MDPI_2.1_heading1: 1 paragraph(s) (template style)
+- MDPI_2.2_heading2: 35 paragraph(s) (template style)
+- MDPI_3.1_text: 97 paragraph(s) (template style)
+- MDPI_3.2_text_no_indent: 12 paragraph(s) (template style)
+- MDPI_4.1_table_caption: 8 paragraph(s) (template style)
+- MDPI_4.2_table_body: 233 paragraph(s) (template style)
+- MDPI_5.1_figure_caption: 11 paragraph(s) (template style)
+- MDPI_8.1_references: 40 paragraph(s) (template style)
+
+Page setup comparison:
+- Section 1 page setup: PASS
+  top_margin: generated=2.499cm template=2.499cm
+  bottom_margin: generated=1.600cm template=1.600cm
+  left_margin: generated=1.270cm template=1.270cm
+  right_margin: generated=1.270cm template=1.270cm
+  page_width: generated=21.001cm template=21.001cm
+  page_height: generated=29.700cm template=29.700cm
+  different_first_page: generated=True template=True
+- Section 2 page setup: PASS
+  top_margin: generated=2.499cm template=2.499cm
+  bottom_margin: generated=1.600cm template=1.600cm
+  left_margin: generated=1.270cm template=1.270cm
+  right_margin: generated=1.270cm template=1.270cm
+  page_width: generated=21.001cm template=21.001cm
+  page_height: generated=29.700cm template=29.700cm
+  different_first_page: generated=True template=True
+
+Line numbering: PASS
+- template active=True xml=[{'{http://schemas.openxmlformats.org/wordprocessingml/2006/main}countBy': '1', '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}distance': '255', '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}restart': 'continuous'}]
+- generated active=True xml=[{'{http://schemas.openxmlformats.org/wordprocessingml/2006/main}countBy': '1', '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}distance': '255', '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}restart': 'continuous'}, {'{http://schemas.openxmlformats.org/wordprocessingml/2006/main}countBy': '1', '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}distance': '255', '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}restart': 'continuous'}]
+
+Header presence: PASS
+- template header parts=['word/header2.xml', 'word/header1.xml', 'word/header3.xml']
+- generated header parts=['word/header2.xml', 'word/header1.xml', 'word/header3.xml']
+- generated header text=['Future Internet', '2026', ',', '18', ', x', 'FOR PEER REVIEW', '2', 'of', '8']
+Footer presence: PASS
+- template footer parts=['word/footer3.xml', 'word/footer2.xml', 'word/footer1.xml']
+- generated footer parts=['word/footer3.xml', 'word/footer2.xml', 'word/footer1.xml']
+- generated footer text=['Future Internet', '2026', ',', '18', ',', 'x', 'https://doi.org/10.3390/xxxxx', 'https://doi.org/10.3390/xxxxx']
