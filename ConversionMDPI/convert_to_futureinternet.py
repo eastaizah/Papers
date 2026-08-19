@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import copy
 import os
+import posixpath
 import re
 import shutil
 import tempfile
@@ -31,23 +32,23 @@ TEMPLATE_CONTENT_TYPE = (
 REL_HEADER = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"
 REL_FOOTER = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer"
 ROLE_STYLE_HINTS = {
-    "title": ["title"],
-    "authors": ["authornames", "author"],
-    "affiliations": ["affiliation"],
-    "abstract_heading": ["abstract"],
-    "abstract": ["abstract"],
-    "keywords_heading": ["keywords"],
-    "keywords": ["keywords"],
-    "heading1": ["heading1"],
-    "heading2": ["heading2"],
-    "heading3": ["heading3"],
-    "body": ["text", "body text", "normal"],
-    "body_no_indent": ["text_no_indent", "no_indent", "text"],
-    "figure_caption": ["figure_caption", "figure caption", "caption"],
-    "table_caption": ["table_caption", "one_table_caption", "caption"],
-    "table_body": ["table_body", "table body"],
-    "references_heading": ["heading1", "references"],
-    "references": ["references"],
+    "title": ["MDPI_1.2_title", "title"],
+    "authors": ["MDPI_1.3_authornames", "authornames", "author"],
+    "affiliations": ["MDPI_1.6_affiliation", "affiliation"],
+    "abstract_heading": ["MDPI_1.7_abstract", "abstract"],
+    "abstract": ["MDPI_1.7_abstract", "abstract"],
+    "keywords_heading": ["MDPI_1.8_keywords", "keywords"],
+    "keywords": ["MDPI_1.8_keywords", "keywords"],
+    "heading1": ["MDPI_2.1_heading1", "heading1"],
+    "heading2": ["MDPI_2.2_heading2", "heading2"],
+    "heading3": ["MDPI_2.3_heading3", "heading3"],
+    "body": ["MDPI_3.1_text", "text", "body text", "normal"],
+    "body_no_indent": ["MDPI_3.2_text_no_indent", "text_no_indent", "no_indent", "text"],
+    "figure_caption": ["MDPI_5.1_figure_caption", "figure_caption", "figure caption", "caption"],
+    "table_caption": ["MDPI_4.1_table_caption", "one_table_caption", "table_caption", "caption"],
+    "table_body": ["MDPI_4.2_table_body", "table_body", "table body"],
+    "references_heading": ["MDPI_2.1_heading1", "heading1", "references"],
+    "references": ["MDPI_8.1_references", "references"],
 }
 PARAGRAPH_DIRECT_FORMATTING_TAGS = {
     qn("w:jc"),
@@ -74,6 +75,8 @@ RUN_DIRECT_FORMATTING_TAGS = {
     qn("w:sz"),
     qn("w:szCs"),
     qn("w:color"),
+    qn("w:highlight"),
+    qn("w:shd"),
 }
 
 
@@ -109,6 +112,11 @@ _RE_ABSTRACT = re.compile(r"^abstract[:.]?\s*$", re.IGNORECASE)
 _RE_KEYWORDS = re.compile(r"^keywords?[:.]?\s*$", re.IGNORECASE)
 _RE_AUTHOR_EMAIL = re.compile(r"@")
 _RE_SUPERSCRIPT_AFFIL = re.compile(r"^\d[\d,;]*\s+\w")
+_RE_CORRESPONDENCE = re.compile(r"^(\*|†|‡|\u2020|\u2021|correspondence:)", re.IGNORECASE)
+_RE_AFFILIATION_KEYWORDS = re.compile(
+    r"\b(university|institute|department|faculty|school|laboratory|lab|center|centre|college|hospital)\b",
+    re.IGNORECASE,
+)
 
 
 class RoleDetector:
@@ -151,23 +159,28 @@ class RoleDetector:
                     self.roles.append(self.TITLE)
                     front_count += 1
                     continue
-                if front_count == 1:
-                    self.roles.append(self.AUTHORS)
-                    front_count += 1
-                    continue
                 if _RE_ABSTRACT.match(txt) or low.startswith("abstract"):
                     self.roles.append(self.ABSTRACT_H)
                     state = "abstract"
                     continue
+                if len(txt) >= 200 or self._looks_like_sentence(txt):
+                    self.roles.append(self.BODY)
+                    state = "body"
+                    continue
                 if (
-                    _RE_AUTHOR_EMAIL.search(txt)
-                    or _RE_SUPERSCRIPT_AFFIL.match(txt)
-                    or len(txt) < 160
+                    _RE_SUPERSCRIPT_AFFIL.match(txt)
+                    or _RE_CORRESPONDENCE.match(txt)
+                    or _RE_AUTHOR_EMAIL.search(txt)
+                    or _RE_AFFILIATION_KEYWORDS.search(txt)
                 ):
                     self.roles.append(self.AFFILIATIONS)
                     front_count += 1
                     continue
-                self.roles.append(self.AFFILIATIONS)
+                if self._looks_like_authors(txt):
+                    self.roles.append(self.AUTHORS)
+                    front_count += 1
+                    continue
+                self.roles.append(self.AUTHORS if front_count == 1 else self.AFFILIATIONS)
                 front_count += 1
                 continue
 
@@ -227,6 +240,32 @@ class RoleDetector:
                 continue
             self.roles.append(self.BODY)
 
+    @staticmethod
+    def _looks_like_authors(txt: str) -> bool:
+        if len(txt) >= 200 or _RE_AFFILIATION_KEYWORDS.search(txt):
+            return False
+        if _RE_AUTHOR_EMAIL.search(txt) or _RE_CORRESPONDENCE.match(txt):
+            return False
+        lower = txt.lower()
+        if "abstract" in lower or "keywords" in lower:
+            return False
+        words = [w for w in re.split(r"\s+", txt) if w]
+        if len(words) < 2:
+            return False
+        separators = ("," in txt) or (";" in txt) or (" and " in lower)
+        title_case_words = sum(1 for w in words if w[:1].isupper())
+        return separators and title_case_words >= max(2, len(words) // 3)
+
+    @staticmethod
+    def _looks_like_sentence(txt: str) -> bool:
+        if len(txt) < 60:
+            return False
+        if any(punct in txt for punct in (". ", "? ", "! ")):
+            return True
+        words = [w for w in re.split(r"\s+", txt) if w]
+        lowercase_words = sum(1 for w in words[1:] if w[:1].islower())
+        return lowercase_words >= max(3, len(words) // 3)
+
 
 class StyleResolver:
     def __init__(self, template_doc):
@@ -248,6 +287,15 @@ class StyleResolver:
             return self._cache[key]
 
         lowered = [(name, name.lower()) for name in self.style_names]
+        for hint in hints:
+            exact_matches = [name for name, lower in lowered if hint.lower() == lower]
+            if exact_matches:
+                best = sorted(
+                    exact_matches,
+                    key=lambda name: (0 if name.upper().startswith("MDPI") else 1, len(name), name),
+                )[0]
+                self._cache[key] = best
+                return best
         for hint in hints:
             matches = [name for name, lower in lowered if hint.lower() in lower]
             if matches:
@@ -341,15 +389,15 @@ def next_rid(existing_ids: set[str]) -> str:
 
 
 def unique_filename(path: str, used: set[str], prefix: str = "template_") -> str:
-    candidate = path
+    candidate = path.replace("\\", "/").replace(os.sep, "/")
     if candidate not in used:
         used.add(candidate)
         return candidate
-    p = Path(path)
+    p = Path(candidate)
     stem = re.sub(r"[^A-Za-z0-9_.-]+", "_", p.stem)
     index = 1
     while True:
-        renamed = str(p.with_name(f"{prefix}{stem}_{index}{p.suffix}"))
+        renamed = p.with_name(f"{prefix}{stem}_{index}{p.suffix}").as_posix()
         if renamed not in used:
             used.add(renamed)
             return renamed
@@ -378,6 +426,7 @@ def merge_template_structure(input_dir: Path, template_dir: Path) -> None:
         "word/fontTable.xml",
         "word/webSettings.xml",
         "word/theme/theme1.xml",
+        "word/numbering.xml",
     ):
         src = template_dir / relative
         if src.exists():
@@ -390,6 +439,12 @@ def merge_template_structure(input_dir: Path, template_dir: Path) -> None:
             )
             if match:
                 ensure_content_type_override(content_types_root, relative, match[0].get("ContentType"))
+
+    template_settings_rels = template_dir / "word/_rels/settings.xml.rels"
+    if template_settings_rels.exists():
+        dst_settings_rels = input_dir / "word/_rels/settings.xml.rels"
+        dst_settings_rels.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(template_settings_rels, dst_settings_rels)
 
     input_doc_root = load_xml(input_dir / "word/document.xml")
     template_doc_root = load_xml(template_dir / "word/document.xml")
@@ -407,14 +462,15 @@ def merge_template_structure(input_dir: Path, template_dir: Path) -> None:
         rel_type = rel.get("Type")
         if rel_type not in {REL_HEADER, REL_FOOTER}:
             continue
-        old_target = f"word/{rel.get('Target')}"
+        rel_target = (rel.get("Target") or "").replace("\\", "/")
+        old_target = posixpath.normpath(f"word/{rel_target}").replace("\\", "/")
         new_target = unique_filename(old_target, used_word_paths)
-        src_part = template_dir / old_target
-        dst_part = input_dir / new_target
+        src_part = template_dir / Path(old_target)
+        dst_part = input_dir / Path(new_target)
         dst_part.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src_part, dst_part)
 
-        header_rel_src = template_dir / "word/_rels" / f"{Path(old_target).name}.rels"
+        header_rel_src = template_dir / Path("word/_rels") / f"{Path(old_target).name}.rels"
         if header_rel_src.exists():
             rels_root = load_xml(header_rel_src)
             for child_rel in rels_root:
@@ -422,14 +478,27 @@ def merge_template_structure(input_dir: Path, template_dir: Path) -> None:
                 target = child_rel.get("Target")
                 if target_mode == "External" or not target:
                     continue
-                if not target.startswith("media/"):
+                target_norm = target.replace("\\", "/")
+                if target_norm.startswith("/"):
+                    source_media = posixpath.normpath(target_norm.lstrip("/"))
+                else:
+                    source_media = posixpath.normpath(posixpath.join(posixpath.dirname(old_target), target_norm))
+                if not source_media.startswith("word/media/"):
                     continue
-                src_media = template_dir / "word" / target
-                new_media = unique_filename(f"word/{target}", used_word_paths, prefix=f"{Path(new_target).stem}_")
-                dst_media = input_dir / new_media
+                src_media = template_dir / Path(source_media)
+                if target_norm.startswith("/"):
+                    dest_media = source_media
+                else:
+                    dest_media = posixpath.normpath(posixpath.join(posixpath.dirname(new_target), target_norm))
+                new_media = unique_filename(dest_media, used_word_paths, prefix=f"{Path(new_target).stem}_")
+                dst_media = input_dir / Path(new_media)
                 dst_media.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src_media, dst_media)
-                child_rel.set("Target", new_media.removeprefix("word/"))
+                rel_target_media = posixpath.relpath(
+                    new_media.replace("\\", "/"),
+                    posixpath.dirname(new_target),
+                ).replace("\\", "/")
+                child_rel.set("Target", rel_target_media)
             copied_rels_path = input_dir / "word/_rels" / f"{Path(new_target).name}.rels"
             save_xml(copied_rels_path, rels_root)
 
@@ -437,7 +506,8 @@ def merge_template_structure(input_dir: Path, template_dir: Path) -> None:
         template_rel_id_map[rel.get("Id")] = new_rid
         new_rel = copy.deepcopy(rel)
         new_rel.set("Id", new_rid)
-        new_rel.set("Target", new_target.removeprefix("word/"))
+        new_target_posix = new_target.replace("\\", "/")
+        new_rel.set("Target", new_target_posix.removeprefix("word/"))
         input_rels_root.append(new_rel)
 
         template_override = template_content_types_root.xpath(
@@ -608,7 +678,16 @@ def build_compliance_report(
     tracker: ComplianceTracker,
 ) -> list[str]:
     template_doc = open_template_document(template_path)
-    generated_doc = Document(str(output_path))
+    try:
+        generated_doc = Document(str(output_path))
+    except Exception as exc:
+        return [
+            "Compliance report",
+            f"Template: {template_path}",
+            f"Generated: {output_path}",
+            "",
+            f"WARNING: could not open generated output for compliance report: {exc}",
+        ]
     template_line_numbers, template_ln_xml = has_line_numbering(template_path)
     generated_line_numbers, generated_ln_xml = has_line_numbering(output_path)
     template_hf = header_footer_summary(template_path)
@@ -651,10 +730,23 @@ def build_compliance_report(
     return lines
 
 
+def find_template(input_path: Path, explicit: str | None, script_dir: Path) -> Path:
+    if explicit:
+        return Path(explicit).resolve()
+    candidates = [
+        input_path.parent / "futureinternet-template.dot",
+        script_dir / "futureinternet-template.dot",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate.resolve()
+    return candidates[-1].resolve()
+
+
 def convert(input_path: str, output_path: str | None = None, template_path: str | None = None) -> Path:
     input_file = Path(input_path).resolve()
     script_dir = Path(__file__).resolve().parent
-    template_file = Path(template_path).resolve() if template_path else script_dir / "futureinternet-template.dot"
+    template_file = find_template(input_file, template_path, script_dir)
     if output_path is None:
         output_file = input_file.with_name(f"{input_file.stem}_futureinternet.docx")
     else:
@@ -725,7 +817,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("output_docx", nargs="?", help="Output .docx file")
     parser.add_argument(
         "--template",
-        default=str(Path(__file__).resolve().parent / "futureinternet-template.dot"),
+        default=None,
         help="Path to the Future Internet .dot template",
     )
     return parser.parse_args()
