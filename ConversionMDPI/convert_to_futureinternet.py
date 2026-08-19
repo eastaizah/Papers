@@ -13,6 +13,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 import docx.api
 from docx import Document
 from docx.enum.style import WD_STYLE_TYPE
+from docx.opc.constants import CONTENT_TYPE as CT
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.opc.part import PartFactory
 from docx.parts.document import DocumentPart
@@ -79,12 +80,12 @@ RUN_DIRECT_FORMATTING_TAGS = {
 def open_template_document(path: str | os.PathLike[str]):
     """Open a .dot/.dotx Word template via python-docx Document()."""
     PartFactory.part_type_for[TEMPLATE_CONTENT_TYPE] = DocumentPart
-    original = docx.api.CT.WML_DOCUMENT_MAIN
-    docx.api.CT.WML_DOCUMENT_MAIN = TEMPLATE_CONTENT_TYPE
+    original = CT.WML_DOCUMENT_MAIN
+    CT.WML_DOCUMENT_MAIN = TEMPLATE_CONTENT_TYPE
     try:
         return docx.api.Document(str(path))
     finally:
-        docx.api.CT.WML_DOCUMENT_MAIN = original
+        CT.WML_DOCUMENT_MAIN = original
 
 
 def _full_text(para) -> str:
@@ -155,7 +156,7 @@ class RoleDetector:
                     front_count += 1
                     continue
                 if _RE_ABSTRACT.match(txt) or low.startswith("abstract"):
-                    self.roles.append(self.ABSTRACT_H if _RE_ABSTRACT.match(txt) else self.ABSTRACT)
+                    self.roles.append(self.ABSTRACT_H)
                     state = "abstract"
                     continue
                 if (
@@ -298,15 +299,12 @@ def apply_style_to_paragraph(paragraph, style_name: str, tracker: ComplianceTrac
 
 
 def apply_table_styles(doc, resolver: StyleResolver, tracker: ComplianceTracker) -> None:
-    header_style = resolver.resolve("table_body", fallback="Normal")
-    body_style = resolver.resolve("table_body", fallback=header_style)
-    table_header_style = resolver.resolve("table_caption", text="Table 1.", fallback=header_style)
+    body_style = resolver.resolve("table_body", fallback="Normal")
     for table in doc.tables:
-        for row_idx, row in enumerate(table.rows):
+        for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
-                    target = table_header_style if row_idx == 0 else body_style
-                    apply_style_to_paragraph(paragraph, target, tracker)
+                    apply_style_to_paragraph(paragraph, body_style, tracker)
 
 
 def xml_texts(root: etree._Element) -> list[str]:

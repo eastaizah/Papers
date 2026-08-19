@@ -29,8 +29,8 @@ Paragraph styles applied:
 - MDPI_2.2_heading2: 35 paragraph(s) (template style)
 - MDPI_3.1_text: 97 paragraph(s) (template style)
 - MDPI_3.2_text_no_indent: 12 paragraph(s) (template style)
-- MDPI_4.1_table_caption: 64 paragraph(s) (template style)
-- MDPI_4.2_table_body: 177 paragraph(s) (template style)
+- MDPI_4.1_table_caption: 8 paragraph(s) (template style)
+- MDPI_4.2_table_body: 233 paragraph(s) (template style)
 - MDPI_5.1_figure_caption: 11 paragraph(s) (template style)
 - MDPI_8.1_references: 40 paragraph(s) (template style)
 
